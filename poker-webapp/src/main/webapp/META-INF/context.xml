@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- In case of issues in development enable the antiJARLocking attribute -->
+<!-- This attribute is mandatory to prevent JAR files from being locked -->
+<!-- If you do not face any issue related to JAR locking you can delete this file -->
+<Context antiJARLocking="false">
+</Context>

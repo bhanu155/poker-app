@@ -1,0 +1,9 @@
+target
+Users
+bin
+*.log
+.DS_Store
+node_modules
+bower_components
+thumbs.db
+*.iml
