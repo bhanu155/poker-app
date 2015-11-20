@@ -13,18 +13,12 @@ var actions = new sap.ui.test.Opa5({});
 var assertions = new sap.ui.test.Opa5({
 	iShouldSeeAppAndPage : function() {
 		return this.waitFor({
-			id : "poker-app",
-			check : function(oApp) {
-				if (!oApp) {
-					return false;
-				} else {
-					return true;
-				}
+			id : "players",
+			viewName : "Table",
+			success : function(players) {
+				strictEqual(players.getItems().length, 1);
 			},
-			success : function(oApp) {
-				ok(false, "not yet implemented");
-			},
-			errorMessage : "not yet implemented"
+			errorMessage : "did not find the players on the table"
 		});
 	}
 });

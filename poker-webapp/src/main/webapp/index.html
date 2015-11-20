@@ -1,5 +1,4 @@
 <!DOCTYPE HTML>
-
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -8,14 +7,19 @@
 
 <script id="sap-ui-bootstrap" type="text/javascript"
 	src="resources/sap-ui-core.js" data-sap-ui-theme="sap_bluecrystal"
-	data-sap-ui-libs="sap.m">
-	
-</script>
+	data-sap-ui-libs="sap.m"
+	data-sap-ui-resourceRoots='{ "poker" : "./" }'></script>
 
 <script type="text/javascript">
-	new sap.m.Text("input1", {
-		text : "some other value"
-	}).placeAt("content");
+	(function() {
+		var app = new sap.m.App("poker-app");
+		var tableView = sap.ui.xmlview({
+			viewName : "poker.views.Table"
+		});
+		tableView.setModel(new sap.ui.model.json.JSONModel("api/table/1"));
+		app.addPage(tableView);
+		app.placeAt("content");
+	}());
 </script>
 </head>
 
