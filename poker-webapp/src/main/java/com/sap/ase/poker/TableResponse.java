@@ -1,5 +1,8 @@
 package com.sap.ase.poker;
 
+import com.sap.ase.poker.model.Card;
+import com.sap.ase.poker.model.Player;
+
 public class TableResponse {
 
 	private Player[] players;
@@ -19,38 +22,5 @@ public class TableResponse {
 
 	public void setCards(Card[] cards) {
 		this.cards = cards;
-	}
-	
-	public static class Player {
-		private String name;
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-	}
-
-	public static class Card {
-		private String suit;
-		private String kind;
-
-		public String getSuit() {
-			return suit;
-		}
-
-		public void setSuit(String suit) {
-			this.suit = suit;
-		}
-
-		public String getKind() {
-			return kind;
-		}
-
-		public void setKind(String kind) {
-			this.kind = kind;
-		}
 	}
 }

@@ -2,9 +2,12 @@ package com.sap.ase.poker.model;
 
 import java.util.ArrayList;
 
+import com.sap.ase.poker.Bet;
+
 public class Table {
 	private ArrayList<Player> players = new ArrayList<>();
-
+	private Player currentPlayer;
+	
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
@@ -27,5 +30,16 @@ public class Table {
 		cards.add(c2);
 		
 		players.get(0).setCards(cards);
+		currentPlayer = players.get(0);
+	}
+	
+	
+	
+	public void placeBet(int value){
+		currentPlayer.bet(value);
+	}
+
+	public Player getCurrentPlayer() {
+		return currentPlayer;
 	}
 }

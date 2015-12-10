@@ -13,7 +13,7 @@
                 <headerToolbar>
                     <Toolbar>
                         <content>
-                            <Title text="Players" level="H2" />
+                            <Title text="Table Players" level="H2" />
                         </content>
                     </Toolbar>
                 </headerToolbar>
@@ -21,6 +21,11 @@
                     iconDensityAware="false" iconInset="false" press="handlePress"
                     detailPress="handleDetailPress" />
             </List>
+
+            <HBox>
+                <Input id="valueInputField" placeholder="value"></Input>
+                <Button id="betButton" text="Bet" press="placeBet"></Button>
+            </HBox>
 
             <TileContainer id="cards" tiles="{/cards}">
                 <StandardTile title="{suit}" number="{kind}" />

@@ -3,13 +3,18 @@ var Opa5 = sap.ui.test.Opa5;
 QUnit.config.testTimeout = 60000;
 
 var arrangements = new sap.ui.test.Opa5({
-	iStartMyApp : function() {
+	appStarted : function() {
+		jQuery.ajax({
+			url : "api/table/1",
+			method : "DELETE",
+			async : false
+		});
 		return this.iStartMyAppInAFrame("./index.html");
 	}
 });
 
 var actions = new sap.ui.test.Opa5({
-	iJoinTheGame : function(playerName) {
+	playerJoins : function(playerName) {
 		return this.waitFor({
 			id : "nameInputField",
 			viewName : "Table",
@@ -26,7 +31,7 @@ var actions = new sap.ui.test.Opa5({
 			errorMessage : "did not find the join button"
 		});
 	},
-	iStartTheGame : function() {
+	gameStarted : function() {
 		return this.waitFor({
 			id : "startButton",
 			viewName : "Table",
@@ -35,11 +40,28 @@ var actions = new sap.ui.test.Opa5({
 			},
 			errorMessage : "did not find the start button"
 		});
+	},
+	betPlaced : function(value) {
+		return this.waitFor({
+			id : "valueInputField",
+			viewName : "Table",
+			success : function(valueInputField) {
+				valueInputField.setValue(value);
+			},
+			errorMessage : "did not find the value input field"
+		}).and.waitFor({
+			id : "betButton",
+			viewName : "Table",
+			success : function(betButton) {
+				betButton.$().tap();
+			},
+			errorMessage : "did not find the bet button"
+		});
 	}
 });
 
 var assertions = new sap.ui.test.Opa5({
-	iShouldSeeAnEmptyTable : function() {
+	playerListShouldBeEmpty : function() {
 		return this.waitFor({
 			id : "players",
 			viewName : "Table",
@@ -49,7 +71,7 @@ var assertions = new sap.ui.test.Opa5({
 			errorMessage : "did not find the players on the table"
 		});
 	},
-	iShouldAppearInThePlayersList : function(playerName) {
+	nameShouldAppearInThePlayersList : function(playerName) {
 		return this.waitFor({
 			controlType : "sap.m.ListItemBase",
 			matchers : new sap.ui.test.matchers.Properties({
@@ -62,7 +84,7 @@ var assertions = new sap.ui.test.Opa5({
 			errorMessage : "did not find the players on the table"
 		});
 	},
-	iShouldGetTwoCards : function() {
+	playerShouldGetTwoCards : function() {
 		return this.waitFor({
 			controlType : "sap.m.StandardTile",
 			viewName : "Table",
@@ -82,19 +104,25 @@ Opa5.extendConfig({
 });
 
 opaTest("Should see the list of players", function(Given, When, Then) {
-	Given.iStartMyApp();
-	Then.iShouldSeeAnEmptyTable();
-	Then.iTeardownMyAppFrame();
+	Given.appStarted();
+	Then.playerListShouldBeEmpty();
 });
 
 opaTest("Should be able to join the table", function(Given, When, Then) {
-	Given.iStartMyApp();
-	When.iJoinTheGame("john");
-	Then.iShouldAppearInThePlayersList("john");
+	Given.appStarted();
+	When.playerJoins("john");
+	Then.nameShouldAppearInThePlayersList("john");
 });
 
 opaTest("Should be able to start the game", function(Given, When, Then) {
-	Given.iStartMyApp();
-	When.iJoinTheGame("cindy").and.iStartTheGame();
-	Then.iShouldGetTwoCards();
+	Given.appStarted();
+	When.playerJoins("john").and.playerJoins("cindy").and.gameStarted();
+	Then.playerShouldGetTwoCards("john");
+});
+
+opaTest("Should be able to place a bet", function(Given, When, Then) {
+	Given.appStarted();
+	When.playerJoins("john").and.playerJoins("cindy").and.gameStarted();
+	When.betPlaced(10);
+	Then.betShouldBeDisplayed(10, "john"); //.and.nextPlayerShouldBe("cindy");
 });
