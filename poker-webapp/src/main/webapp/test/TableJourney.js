@@ -36,7 +36,9 @@ var actions = new sap.ui.test.Opa5({
 			id : "startButton",
 			viewName : "Table",
 			success : function(startButton) {
-				startButton.$().tap();
+				setTimeout(function() {
+					startButton.$().tap();
+				}, 10);
 			},
 			errorMessage : "did not find the start button"
 		});
@@ -53,7 +55,9 @@ var actions = new sap.ui.test.Opa5({
 			id : "betButton",
 			viewName : "Table",
 			success : function(betButton) {
-				betButton.$().tap();
+				setTimeout(function() {
+					betButton.$().tap();
+				}, 10);
 			},
 			errorMessage : "did not find the bet button"
 		});
@@ -89,9 +93,47 @@ var assertions = new sap.ui.test.Opa5({
 			controlType : "sap.m.StandardTile",
 			viewName : "Table",
 			success : function(items) {
+				ok(true);
 				strictEqual(items.length, 2);
 			},
 			errorMessage : "did not find the cards"
+		});
+	},
+	betShouldBeDisplayed : function(value, playerName) {
+		return this.waitFor({
+			controlType : "sap.m.ListItemBase",
+			matchers : new sap.ui.test.matchers.Properties({
+				title : playerName,
+				description : value
+			}),
+			viewName : "Table",
+			success : function(items) {
+				ok(true);
+			},
+			errorMessage : "did not find the players on the table"
+		});
+	},
+	currentPlayerShouldBe : function(playerName) {
+		return this.waitFor({
+			id : "currentPlayer",
+			viewName : "Table",
+			matchers : function(currentPlayerText) {
+				return currentPlayerText.getText() === playerName;
+			},
+			errorMessage : "did not find the current player info on the table"
+		});
+	},
+	communityCardsShouldBeShown : function() {
+		return this.waitFor({
+			id : "communityCards",
+			viewName : "Table",
+			matchers : function(communityCards) {
+				return communityCards.getTiles().length === 3;
+			},
+			success : function(communityCards) {
+				ok(true);
+			},
+			errorMessage : "did not find the community cards"
 		});
 	}
 });
@@ -122,7 +164,13 @@ opaTest("Should be able to start the game", function(Given, When, Then) {
 
 opaTest("Should be able to place a bet", function(Given, When, Then) {
 	Given.appStarted();
-	When.playerJoins("john").and.playerJoins("cindy").and.gameStarted();
-	When.betPlaced(10);
-	Then.betShouldBeDisplayed(10, "john"); //.and.nextPlayerShouldBe("cindy");
+	When.playerJoins("john").and.playerJoins("cindy").and.gameStarted().and
+			.betPlaced(10);
+	Then.betShouldBeDisplayed("10", "john").and.currentPlayerShouldBe("cindy");
+});
+
+opaTest("Should display community cards when bets are equal", function(Given, When, Then) {
+	Given.appStarted();
+	When.playerJoins("john").and.playerJoins("cindy").and.gameStarted().and.betPlaced(10).and.betPlaced(10);
+	Then.communityCardsShouldBeShown();// .and.currentPlayerShouldBe("john");
 });

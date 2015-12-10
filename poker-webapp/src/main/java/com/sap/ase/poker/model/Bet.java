@@ -1,4 +1,4 @@
-package com.sap.ase.poker;
+package com.sap.ase.poker.model;
 
 public class Bet {
 

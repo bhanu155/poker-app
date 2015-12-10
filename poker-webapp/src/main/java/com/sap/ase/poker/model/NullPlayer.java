@@ -3,33 +3,30 @@ package com.sap.ase.poker.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player {
+public class NullPlayer extends Player {
 
-	private String name;
-	private List<Card> cards = new ArrayList<Card>();
-	private int bet;
-
+	@Override
 	public String getName() {
-		return name;
+		return "nobody";
 	}
 
+	@Override
 	public void setName(String name) {
-		this.name = name;
+		throw new IllegalAccessError();
 	}
 
+	@Override
 	public List<Card> getCards() {
-		return cards;
+		return new ArrayList<Card>();
 	}
 
+	@Override
 	public void setCards(List<Card> cards) {
-		this.cards = cards;
+		throw new IllegalAccessError();
 	}
 
+	@Override
 	public void bet(int bet) {
-		this.bet += bet;
-	}
-
-	public int getBet() {
-		return bet;
+		throw new IllegalAccessError();
 	}
 }
