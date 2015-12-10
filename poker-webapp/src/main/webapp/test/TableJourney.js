@@ -5,8 +5,8 @@ QUnit.config.testTimeout = 60000;
 var arrangements = new sap.ui.test.Opa5({
 	appStarted : function() {
 		jQuery.ajax({
-			url : "api/table/1",
-			method : "DELETE",
+			url : "api/table/1/init",
+			method : "POST",
 			async : false
 		});
 		return this.iStartMyAppInAFrame("./index.html");

@@ -6,13 +6,13 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 		joinTable : function() {
 			var jsonModel = this.getView().getModel();
 
-			var name = this.byId("nameInputField").getValue();
+			var playerName = this.byId("nameInputField").getValue();
 
 			jQuery.ajax({
 				url : "api/table/1/players",
 				method : "POST",
 				data : JSON.stringify({
-					"name" : name
+					"playerName" : playerName
 				}),
 				contentType : "application/json",
 				success : function() {
@@ -37,13 +37,13 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 		placeBet : function() {
 			var jsonModel = this.getView().getModel();
 
-			var value = this.byId("valueInputField").getValue();
+			var amount = this.byId("valueInputField").getValue();
 
 			jQuery.ajax({
 				url : "api/table/1/bets",
 				method : "POST",
 				data : JSON.stringify({
-					"value" : value
+					"amount" : amount
 				}),
 				contentType : "application/json",
 				success : function() {

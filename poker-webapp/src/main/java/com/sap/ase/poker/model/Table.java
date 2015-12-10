@@ -1,18 +1,21 @@
 package com.sap.ase.poker.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Table {
 	private ArrayList<Player> players = new ArrayList<>();
-	private Player currentPlayer = new NullPlayer();
+	private Player currentPlayer = new InitialPlayer();
 	private ArrayList<Card> communityCards = new ArrayList<>();
 
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
 
-	public void setPlayers(ArrayList<Player> players) {
-		this.players = players;
+	public void addPlayer(String name) {
+		Player player = new Player();
+		player.setName(name);
+		this.players.add(player);
 	}
 
 	public void startGame() {
@@ -36,13 +39,16 @@ public class Table {
 	public void placeBet(int value) {
 		currentPlayer.bet(value);
 		currentPlayer = players.get(1);
+		if (players.get(0).getBet() == players.get(1).getBet()) {
+			showCommunityCards();
+		}
 	}
 
 	public Player getCurrentPlayer() {
 		return currentPlayer;
 	}
 
-	public void showCommunityCards() {
+	private void showCommunityCards() {
 		Card c1 = new Card();
 		c1.setSuit("hearts");
 		c1.setKind("seven");
@@ -62,5 +68,34 @@ public class Table {
 
 	public ArrayList<Card> getCommunityCards() {
 		return communityCards;
+	}
+	
+	
+	private class InitialPlayer extends Player {
+
+		@Override
+		public String getName() {
+			return "nobody";
+		}
+
+		@Override
+		public void setName(String name) {
+			throw new IllegalAccessError();
+		}
+
+		@Override
+		public List<Card> getCards() {
+			return new ArrayList<Card>();
+		}
+
+		@Override
+		public void setCards(List<Card> cards) {
+			throw new IllegalAccessError();
+		}
+
+		@Override
+		public void bet(int bet) {
+			throw new IllegalAccessError();
+		}
 	}
 }

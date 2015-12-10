@@ -34,7 +34,7 @@
         </init-param>
         <init-param>
             <param-name>jaxrs.serviceClasses</param-name>
-            <param-value>com.sap.ase.poker.TexasPokerService</param-value>
+            <param-value>com.sap.ase.poker.rest.TableService</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
