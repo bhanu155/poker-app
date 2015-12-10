@@ -13,7 +13,8 @@
 
         <content>
 
-            <Text id="currentPlayer" text="Current Player: {/currentPlayer}"></Text>
+            <Text text="Current Player: "></Text>
+            <Text id="currentPlayer" text="{/currentPlayer}"></Text>
 
             <List id="players" items="{/players}"
                 includeItemInSelection="true">
