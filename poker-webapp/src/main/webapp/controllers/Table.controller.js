@@ -34,6 +34,19 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 			});
 		},
 		
+		resetTable: function() {
+			var jsonModel = this.getView().getModel();
+
+			jQuery.ajax({
+				url : "api/table/1/init",
+				method : "POST",
+				contentType : "application/json",
+				success : function() {
+					jsonModel.loadData("api/table/1");
+				}
+			});
+		},
+		
 		placeBet : function() {
 			var jsonModel = this.getView().getModel();
 

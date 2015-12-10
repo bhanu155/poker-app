@@ -30,7 +30,7 @@ public class GetTableResponse {
 		return players.toArray(new Player[0]);
 	}
 
-	public Card[] getCards() {
+	public Card[] getPlayerCards() {
 		return playerCards.toArray(new Card[0]);
 	}
 

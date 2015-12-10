@@ -1,40 +1,52 @@
 <mvc:View controllerName="poker.controllers.Table" xmlns:mvc="sap.ui.core.mvc"
-	xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns="sap.m">
-	<Page title="Table">
-		<content>
-			<HBox>
-				<Input id="nameInputField" placeholder="Name"></Input>
-				<Button id="joinButton" text="Join Table" press="joinTable"></Button>
-			</HBox>
-			<Button id="startButton" text="Start Game" press="startGame"></Button>
+    xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns="sap.m">
+    <Page title="Table">
+        <subHeader>
+            <Toolbar>
+                <Input id="nameInputField" placeholder="Name"></Input>
+                <Button id="joinButton" text="Join Table" press="joinTable"></Button>
+                <Button id="startButton" text="Start Game" press="startGame"></Button>
+                <Button id="resetButton" text="Reset Table"
+                    press="resetTable"></Button>
+            </Toolbar>
+        </subHeader>
 
-			<List id="players" items="{/players}" includeItemInSelection="true">
-				<headerToolbar>
-					<Toolbar>
-						<content>
-							<Title text="Table Players" level="H2" />
-						</content>
-					</Toolbar>
-				</headerToolbar>
-				<StandardListItem title="{name}" description="{bet}"
-					iconDensityAware="false" iconInset="false" press="handlePress"
-					detailPress="handleDetailPress" />
-			</List>
+        <content>
 
-			<Text id="currentPlayer" text="{/currentPlayer}"></Text>
+            <Text id="currentPlayer" text="Current Player: {/currentPlayer}"></Text>
 
-			<HBox>
-				<Input id="valueInputField" placeholder="value"></Input>
-				<Button id="betButton" text="Bet" press="placeBet"></Button>
-			</HBox>
+            <List id="players" items="{/players}"
+                includeItemInSelection="true">
+                <headerToolbar>
+                    <Toolbar>
+                        <content>
+                            <Title text="Table Players" level="H2" />
+                        </content>
+                    </Toolbar>
+                </headerToolbar>
+                <StandardListItem title="{name}"
+                    description="{bet}" iconDensityAware="false"
+                    iconInset="false" press="handlePress" detailPress="handleDetailPress" />
+            </List>
 
-			<TileContainer id="communityCards" tiles="{/communityCards}">
-				<StandardTile title="{suit}" number="{kind}" />
-			</TileContainer>
-			
-			<TileContainer id="cards" tiles="{/cards}">
-				<StandardTile title="{suit}" number="{kind}" />
-			</TileContainer>
-		</content>
-	</Page>
+            <Text text="Your Cards:"></Text>
+            <TileContainer height="50%" id="cards"
+                tiles="{/playerCards}">
+                <StandardTile title="{suit}" number="{kind}" />
+            </TileContainer>
+
+            <Text text="Community Cards:"></Text>
+            <TileContainer height="50%" id="communityCards"
+                tiles="{/communityCards}">
+                <StandardTile title="{suit}" number="{kind}" />
+            </TileContainer>
+        </content>
+
+        <footer>
+            <Toolbar>
+                <Input id="valueInputField" placeholder="value"></Input>
+                <Button id="betButton" text="Bet" press="placeBet"></Button>
+            </Toolbar>
+        </footer>
+    </Page>
 </mvc:View>
