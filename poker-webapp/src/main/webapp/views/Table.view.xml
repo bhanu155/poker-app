@@ -1,20 +1,7 @@
 <mvc:View controllerName="poker.controllers.Table" xmlns:mvc="sap.ui.core.mvc"
     xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns="sap.m">
     <Page title="Table">
-        <subHeader>
-            <Toolbar>
-                <Input id="nameInputField" placeholder="Name"></Input>
-                <Button id="joinButton" text="Join Table" press="joinTable"></Button>
-                <Button id="startButton" text="Start Game" press="startGame"></Button>
-                <Button id="resetButton" text="Reset Table"
-                    press="resetTable"></Button>
-            </Toolbar>
-        </subHeader>
-
         <content>
-
-            <Text text="Current Player: "></Text>
-            <Text id="currentPlayer" text="{/currentPlayer}"></Text>
 
             <List id="players" items="{/players}"
                 includeItemInSelection="true">
@@ -26,27 +13,44 @@
                     </Toolbar>
                 </headerToolbar>
                 <StandardListItem title="{name}"
-                    description="{bet}" iconDensityAware="false"
-                    iconInset="false" press="handlePress" detailPress="handleDetailPress" />
+                    counter="{bet}" />
             </List>
 
-            <Text text="Your Cards:"></Text>
-            <TileContainer height="50%" id="cards"
-                tiles="{/playerCards}">
-                <StandardTile title="{suit}" number="{kind}" />
-            </TileContainer>
+            <Panel headerText="Your Cards">
+                <content>
+                    <l:Grid id="cards" content="{/playerCards}">
+                        <ObjectListItem title="{suit}"
+                            intro="{kind}">
+                            <layoutData>
+                                <l:GridData span="L2 M2 S2" />
+                            </layoutData>
+                        </ObjectListItem>
+                    </l:Grid>
+                </content>
+            </Panel>
 
-            <Text text="Community Cards:"></Text>
-            <TileContainer height="50%" id="communityCards"
-                tiles="{/communityCards}">
-                <StandardTile title="{suit}" number="{kind}" />
-            </TileContainer>
+            <Panel headerText="Community Cards">
+                <content>
+                    <l:Grid id="communityCards" content="{/communityCards}">
+                        <ObjectListItem title="{kind}"
+                            intro="{suit}">
+                            <layoutData>
+                                <l:GridData span="L2 M2 S2" />
+                            </layoutData>
+                        </ObjectListItem>
+                    </l:Grid>
+                </content>
+            </Panel>
         </content>
 
         <footer>
             <Toolbar>
-                <Input id="valueInputField" placeholder="value"></Input>
-                <Button id="betButton" text="Bet" press="placeBet"></Button>
+                <Input id="amount" width="6em" placeholder="amount" />
+                <Button id="bet" text="Bet" press="placeBet" />
+                <ToolbarSpacer />
+                <Button id="call" text="Call" press="placeBet" />
+                <Button id="check" text="Check" press="placeBet" />
+                <Button id="fold" text="Fold" press="placeBet" />
             </Toolbar>
         </footer>
     </Page>

@@ -50,7 +50,7 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 		placeBet : function() {
 			var jsonModel = this.getView().getModel();
 
-			var amount = this.byId("valueInputField").getValue();
+			var amount = this.byId("amount").getValue();
 
 			jQuery.ajax({
 				url : "api/table/1/bets",
@@ -63,6 +63,10 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 					jsonModel.loadData("api/table/1");
 				}
 			});
+		},
+		
+		refreshData : function() {
+			this.getView().getModel().loadData("api/table/1");
 		}
 	});
 });
