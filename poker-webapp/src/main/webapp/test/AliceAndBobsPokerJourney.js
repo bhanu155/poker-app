@@ -97,7 +97,7 @@ var assertions = new sap.ui.test.Opa5({
 		}));
 	},
 	playerShouldGetTwoCards : function() {
-		return this.waitFor(controlTypePresent("Table", "sap.m.ObjectListItem", {
+		return this.waitFor(controlTypePresent("Table", "poker.controls.Card", {
 			success : function(items) {
 				strictEqual(items.length, 2);
 			}
@@ -112,7 +112,15 @@ var assertions = new sap.ui.test.Opa5({
 		}));
 	},
 	communityCardsShouldBeShown : function(numberOfCards) {
-		return this.waitFor(controlTypePresent("Table", "poker.controls.Card", {
+		var communityCardsId;
+		return this.waitFor(elementPresent("Table", "communityCards", {
+			success : function(communityCards) {
+				communityCardsId = communityCards.getId();
+			}
+		})).and.waitFor(controlTypePresent("Table", "poker.controls.Card", {
+			matchers : function(item) {
+				return item.getParent().getId() === communityCardsId;
+			},
 			success : function(items) {
 				strictEqual(items.length, numberOfCards);
 			}

@@ -1,5 +1,5 @@
 <mvc:View controllerName="poker.controllers.Table" xmlns:mvc="sap.ui.core.mvc"
-    xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns="sap.m">
+    xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:poker="poker.controls" xmlns="sap.m">
     <Page title="Table">
         <content>
 
@@ -18,27 +18,27 @@
 
             <Panel headerText="Your Cards">
                 <content>
-                    <l:Grid id="cards" content="{/playerCards}">
-                        <ObjectListItem title="{suit}"
-                            intro="{kind}">
-                            <layoutData>
-                                <l:GridData span="L2 M2 S2" />
-                            </layoutData>
-                        </ObjectListItem>
-                    </l:Grid>
+                    <l:HorizontalLayout id="playerCards" content="{/playerCards}">
+                        <poker:Card kind="{kind}"
+                            suit="{suit}">
+                        </poker:Card>
+                    </l:HorizontalLayout>
+
                 </content>
             </Panel>
 
             <Panel headerText="Community Cards">
                 <content>
-                    <l:Grid id="communityCards" content="{/communityCards}">
-                        <ObjectListItem title="{kind}"
-                            intro="{suit}">
-                            <layoutData>
-                                <l:GridData span="L2 M2 S2" />
-                            </layoutData>
-                        </ObjectListItem>
-                    </l:Grid>
+                    <l:HorizontalLayout id="communityCards" content="{/communityCards}">
+                        <poker:Card kind="{kind}"
+                            suit="{suit}">
+                        </poker:Card>
+                    </l:HorizontalLayout>
+<!--                     <l:Grid id="communityCards" content="{/communityCards}"> -->
+<!--                         <poker:Card kind="{kind}" -->
+<!--                             suit="{suit}"> -->
+<!--                         </poker:Card> -->
+<!--                     </l:Grid> -->
                 </content>
             </Panel>
         </content>

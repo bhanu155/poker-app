@@ -28,7 +28,7 @@ public class Table {
 
 		Card c2 = new Card();
 		c2.setSuit("spades");
-		c2.setKind("ten");
+		c2.setKind("10");
 		cards.add(c2);
 
 		players.get(0).setCards(cards);
@@ -51,17 +51,17 @@ public class Table {
 	private void showCommunityCards() {
 		Card c1 = new Card();
 		c1.setSuit("hearts");
-		c1.setKind("seven");
+		c1.setKind("7");
 		this.communityCards.add(c1);
 
 		Card c2 = new Card();
 		c2.setSuit("spades");
-		c2.setKind("nine");
+		c2.setKind("9");
 		this.communityCards.add(c2);
 
 		Card c3 = new Card();
 		c3.setSuit("spades");
-		c3.setKind("ten");
+		c3.setKind("10");
 		this.communityCards.add(c3);
 
 	}
