@@ -11,6 +11,10 @@
 	data-sap-ui-resourceRoots='{ "poker" : "./" }'
 	data-sap-ui-bindingSyntax='complex'></script>
 
+<style>
+      .sapMLIB.currentPlayer { background: #009de0; }
+</style>
+    
 <script type="text/javascript">
 	(function() {
 		var app = new sap.m.App("poker-app");
@@ -21,9 +25,11 @@
 		app.addPage(lobbyView);
 
 		var tableView = sap.ui.xmlview({
-			viewName : "poker.views.Table"
+			viewName : "poker.views.Table",
+			viewData : {
+				model : new sap.ui.model.json.JSONModel("api/table/1")
+			}
 		});
-		tableView.setModel(new sap.ui.model.json.JSONModel("api/table/1"));
 		app.addPage(tableView);
 		
 		lobbyView.getController().attachEvent("startGame", function() {

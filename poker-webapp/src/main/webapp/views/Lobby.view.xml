@@ -4,7 +4,7 @@
         <content>
             <Input id="player1" placeholder="Player 1"></Input>
             <Input id="player2" placeholder="Player 2"></Input>
-            <Button id="startButton" text="Start Game" press="startGame"></Button>
+            <Button id="start" text="Start Game" press="startGame"></Button>
         </content>
     </Page>
 </mvc:View>
