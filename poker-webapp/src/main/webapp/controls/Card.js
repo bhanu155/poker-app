@@ -1,87 +1,70 @@
 sap.ui.define([ "sap/ui/core/Control" ], function(Control) {
 	"use strict";
 
-	var toUnicode = function(suit, kind) {
+	// Unicodes: https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
 
-		// See here for unicodes
-		// https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
-		// insert in your view:
-		// <poker:Card class="sapUiSmallMarginBeginEnd" suit="spades" kind="10"/>
-
-		var unicode = "&#x1F0"
+	function suitToUnicodeChar(suit) {
 		if (suit === "spades") {
-			unicode = unicode + "A";
+			return "A";
 		} else if (suit === "hearts") {
-			unicode = unicode + "B";
+			return "B";
 		} else if (suit === "diamonds") {
-			unicode = unicode + "C";
+			return "C";
 		} else if (suit === "clubs") {
-			unicode = unicode + "D";
-		}
-		if (kind >= 2 && kind <= 9) {
-			unicode = unicode + kind;
+			return "D";
 		} else {
-			if (kind === "10") {
-				unicode = unicode + "A";
-			} else if (kind === "jack") {
-				unicode = unicode + "B";
-			} else if (kind === "queen") {
-				unicode = unicode + "D";
-			} else if (kind === "king") {
-				unicode = unicode + "E";
-			} else if (kind === "ace") {
-				unicode = unicode + "1";
-			}
+			throw new Error("unknown suit: " + suit);
 		}
+	}
 
-		if (suit === "default" || kind === "default") {
-			unicode = unicode + "F1";
+	function kindToUnicodeChar(kind) {
+		if (kind === "ace") {
+			return "1";
+		} else if (parseInt(kind) >= 2 && parseInt(kind) <= 9) {
+			return kind;
+		} else if (kind === "10") {
+			return "A";
+		} else if (kind === "jack") {
+			return "B";
+		} else if (kind === "queen") {
+			return "D";
+		} else if (kind === "king") {
+			return "E";
+		} else {
+			throw new Error("unknown kind: " + kind);
 		}
-
-		return unicode;
-
+	}
+	
+	var toUnicode = function(suit, kind) {
+		return "&#x1F0" + suitToUnicodeChar(suit) + kindToUnicodeChar(kind);
 	};
 
 	var getFontColor = function(suit) {
-		if (suit === "hearts" || suit === "diamonds") {
-			return "red";
-		}
-		return "black";
+		return (suit === "hearts" || suit === "diamonds") ? "red" : "black";
 	}
 
 	return Control.extend("poker.controls.Card", {
 		metadata : {
 			properties : {
 				suit : {
-					type : "string",
-					defaultValue : "default"
+					type : "string"
 				},
 				kind : {
-					type : "string",
-					defaultValue : "default"
+					type : "string"
 				}
-			},
-			aggregations : {
-
-			},
-			events : {
-
 			}
-		},
-		init : function() {
-
 		},
 		renderer : function(oRM, oControl) {
 			oRM.write("<div");
 			oRM.writeControlData(oControl);
 			oRM.writeClasses();
 			if (getFontColor(oControl.getSuit()) === "red") {
-				oRM.write("><div style=\"font-size:200px;color:red;\">");
+				oRM.write("><div style=\"font-size:5.5em;color:red;\">");
 			} else {
-				oRM.write("><div style=\"font-size:200px;color:black;\">");
+				oRM.write("><div style=\"font-size:5.5em;color:black;\">");
 			}
 			oRM.write(toUnicode(oControl.getSuit(), oControl.getKind()));
-			oRM.write("</div></div></br></br>");
+			oRM.write("</div></div>");
 		}
 	});
 });
