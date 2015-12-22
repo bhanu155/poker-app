@@ -1,22 +1,32 @@
 package com.sap.ase.poker.model;
 
 public class Card {
-	private String suit;
-	private String kind;
+	private Suit suit;
+	private Kind kind;
 
-	public String getSuit() {
+	public Card(Suit suit, Kind kind) {
+		this.suit = suit;
+		this.kind = kind;				
+	}
+	
+	public Suit getSuit() {
 		return suit;
 	}
 
-	public void setSuit(String suit) {
-		this.suit = suit;
-	}
-
-	public String getKind() {
+	public Kind getKind() {
 		return kind;
 	}
+	
+	@Override
+	public String toString() {
+		return "Card [suit=" + suit + ", kind=" + kind + "]";
+	}
 
-	public void setKind(String kind) {
-		this.kind = kind;
+	public static enum Suit {
+		SPADES, HEARTS, DIAMONDS, CLUBS
+	}
+	
+	public static enum Kind {
+		ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING
 	}
 }

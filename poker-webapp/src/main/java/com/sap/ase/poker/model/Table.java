@@ -7,6 +7,7 @@ public class Table {
 	private ArrayList<Player> players = new ArrayList<>();
 	private Player currentPlayer = new InitialPlayer();
 	private ArrayList<Card> communityCards = new ArrayList<>();
+	private Deck deck = new Deck();
 
 	public ArrayList<Player> getPlayers() {
 		return players;
@@ -21,15 +22,8 @@ public class Table {
 	public void startGame() {
 		ArrayList<Card> cards = new ArrayList<>();
 
-		Card c1 = new Card();
-		c1.setSuit("hearts");
-		c1.setKind("ace");
-		cards.add(c1);
-
-		Card c2 = new Card();
-		c2.setSuit("spades");
-		c2.setKind("10");
-		cards.add(c2);
+		cards.add(deck.dealCard());
+		cards.add(deck.dealCard());
 
 		players.get(0).setCards(cards);
 		players.get(1).setCards(cards);
@@ -49,28 +43,15 @@ public class Table {
 	}
 
 	private void showCommunityCards() {
-		Card c1 = new Card();
-		c1.setSuit("hearts");
-		c1.setKind("7");
-		this.communityCards.add(c1);
-
-		Card c2 = new Card();
-		c2.setSuit("spades");
-		c2.setKind("9");
-		this.communityCards.add(c2);
-
-		Card c3 = new Card();
-		c3.setSuit("spades");
-		c3.setKind("10");
-		this.communityCards.add(c3);
-
+		this.communityCards.add(deck.dealCard());
+		this.communityCards.add(deck.dealCard());
+		this.communityCards.add(deck.dealCard());
 	}
 
 	public ArrayList<Card> getCommunityCards() {
 		return communityCards;
 	}
-	
-	
+
 	private class InitialPlayer extends Player {
 
 		@Override
