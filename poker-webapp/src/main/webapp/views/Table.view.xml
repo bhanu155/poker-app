@@ -35,8 +35,8 @@
                 <Input id="amount" width="6em" placeholder="amount" />
                 <Button id="bet" text="Bet" press="placeBet" />
                 <ToolbarSpacer />
-                <Button id="call" text="Call" />
-                <Button id="check" text="Check" />
+                <Button id="call" text="Call" press="call" />
+                <Button id="check" text="Check" press="check" />
                 <Button id="fold" text="Fold" />
             </Toolbar>
         </footer>

@@ -45,6 +45,13 @@ public class TableService {
 	@POST
 	@Path("{tableId}/bets")
 	public void placeBet(BetRequest betRequest, @PathParam("tableId") int tableId) {
-		table.placeBet(betRequest.getAmount());
+		switch (betRequest.getAction()){
+		case "call":
+			table.call();
+			break;
+		case "check":
+			table.check();
+			break;
+		}
 	}
 }

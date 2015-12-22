@@ -71,14 +71,21 @@ sap.ui.define([], function() {
 			},
 			placeBet : function(amount) {
 				return this.waitFor(fillInput("Table", "amount", amount)).and.waitFor(tapButton("Table", "bet"));
+			},
+			check : function(){
+				return this.waitFor(tapButton("Table", "check"));
+			},
+			call : function(){
+				return this.waitFor(tapButton("Table", "call"));
 			}
 		}),
 
 		assertions : new sap.ui.test.Opa5({
-			nameShouldAppearInPlayerList : function(playerName) {
+			playerShouldHaveBet : function(playerName, bet) {
 				return this.waitFor(controlTypePresent("Table", "sap.m.ListItemBase", {
 					matchers : new sap.ui.test.matchers.Properties({
-						title : playerName
+						title : playerName,
+						counter : bet
 					})
 				}));
 			},

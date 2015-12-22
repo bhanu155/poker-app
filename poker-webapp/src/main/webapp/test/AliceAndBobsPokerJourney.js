@@ -9,30 +9,30 @@ sap.ui.require([ "poker/test/operations" ], function(operations) {
 		assertions : operations.assertions
 	});
 
-	opaTest("Start game", function(Given, When, Then) {
+	opaTest("Start game, small and big blind should be set", function(Given, When, Then) {
 		Given.appStarted();
 		When.startGameWithTwoPlayers("Alice", "Bob");
-		Then.nameShouldAppearInPlayerList("Alice").
-			and.nameShouldAppearInPlayerList("Bob").
+		Then.playerShouldHaveBet("Alice", 1).
+			and.playerShouldHaveBet("Bob", 2).
 			and.currentPlayerShouldBe("Alice").
 			and.playerShouldGetTwoCards().
 			and.iTeardownMyAppFrame();
 	});
 
-	opaTest("Alice bets", function(Given, When, Then) {
+	opaTest("Alice calls", function(Given, When, Then) {
 		Given.appStarted();
 		When.startGameWithTwoPlayers("Alice", "Bob").
-			and.placeBet(1);
-		Then.betShouldBeDisplayed(1, "Alice").
+			and.call();
+		Then.betShouldBeDisplayed(2, "Alice").
 			and.currentPlayerShouldBe("Bob").
 			and.iTeardownMyAppFrame();
 	});
 
-	opaTest("Alice and Bob bet, show the flop", function(Given, When, Then) {
+	opaTest("Alice calls, Bob checks, show the flop", function(Given, When, Then) {
 		Given.appStarted();
 		When.startGameWithTwoPlayers("Alice", "Bob").
-			and.placeBet(1).
-			and.placeBet(1);
+			and.call().
+			and.check();
 		Then.communityCardsShouldBeShown(3).
 			and.iTeardownMyAppFrame();
 	});
