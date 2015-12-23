@@ -8,6 +8,7 @@ public class Player {
 	private String name;
 	private List<Card> cards = new ArrayList<Card>();
 	private int bet;
+	private int cash;
 
 	public String getName() {
 		return name;
@@ -27,9 +28,22 @@ public class Player {
 
 	public void bet(int bet) {
 		this.bet += bet;
+		this.cash -= bet;
 	}
 
 	public int getBet() {
 		return bet;
+	}
+
+	public int getCash() {
+		return cash;
+	}
+	
+	public void setCash(int cash) {
+		this.cash = cash;
+	}
+
+	public void addCash(int pot) {
+		cash += pot;
 	}
 }

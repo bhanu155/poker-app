@@ -70,21 +70,21 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 			});
 		},
 		
-//		fold : function() {
-//			var model = this.getView().getModel();
-//
-//			jQuery.ajax({
-//				url : "api/table/1/bets",
-//				method : "POST",
-//				data : JSON.stringify({
-//					"action" : "check"
-//				}),
-//				contentType : "application/json",
-//				success : function() {
-//					model.loadData("api/table/1");
-//				}
-//			});
-//		},
+		fold : function() {
+			var model = this.getView().getModel();
+
+			jQuery.ajax({
+				url : "api/table/1/bets",
+				method : "POST",
+				data : JSON.stringify({
+					"action" : "fold"
+				}),
+				contentType : "application/json",
+				success : function() {
+					model.loadData("api/table/1");
+				}
+			});
+		},
 
 		refreshData : function() {
 			this.getView().getModel().loadData("api/table/1");

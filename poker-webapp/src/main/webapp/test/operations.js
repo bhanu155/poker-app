@@ -69,15 +69,19 @@ sap.ui.define([], function() {
 				return this.waitFor(fillInput("Lobby", "player1", player1)).and.waitFor(fillInput("Lobby", "player2",
 						player2)).and.waitFor(tapButton("Lobby", "start"));
 			},
-			placeBet : function(amount) {
-				return this.waitFor(fillInput("Table", "amount", amount)).and.waitFor(tapButton("Table", "bet"));
+			raiseTo : function(amount) {
+				return this.waitFor(fillInput("Table", "amount", amount)).and.waitFor(tapButton("Table", "raise"));
 			},
 			check : function(){
 				return this.waitFor(tapButton("Table", "check"));
 			},
 			call : function(){
 				return this.waitFor(tapButton("Table", "call"));
-			}
+			},
+			fold : function(){
+				return this.waitFor(tapButton("Table", "fold"));
+			}	
+			
 		}),
 
 		assertions : new sap.ui.test.Opa5({
@@ -85,7 +89,15 @@ sap.ui.define([], function() {
 				return this.waitFor(controlTypePresent("Table", "sap.m.ListItemBase", {
 					matchers : new sap.ui.test.matchers.Properties({
 						title : playerName,
-						counter : bet
+						info : "Bet: " + bet
+					})
+				}));
+			},
+			playerShouldHaveCash : function(playerName, cash) {
+				return this.waitFor(controlTypePresent("Table", "sap.m.ListItemBase", {
+					matchers : new sap.ui.test.matchers.Properties({
+						title : playerName,
+						description : "Cash: " + cash
 					})
 				}));
 			},

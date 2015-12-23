@@ -12,18 +12,18 @@ sap.ui.require([ "poker/test/operations" ], function(operations) {
 	opaTest("Start game, small and big blind should be set", function(Given, When, Then) {
 		Given.appStarted();
 		When.startGameWithTwoPlayers("Alice", "Bob");
-		Then.playerShouldHaveBet("Alice", 1).
-			and.playerShouldHaveBet("Bob", 2).
+		Then.playerShouldHaveCash("Alice", 99).and.playerShouldHaveBet("Alice", 1).
+			and.playerShouldHaveCash("Bob", 98).and.playerShouldHaveBet("Bob", 2).
 			and.currentPlayerShouldBe("Alice").
 			and.playerShouldGetTwoCards().
 			and.iTeardownMyAppFrame();
 	});
 
-	opaTest("Alice calls", function(Given, When, Then) {
+	opaTest("Alice calls, next player should be bob", function(Given, When, Then) {
 		Given.appStarted();
 		When.startGameWithTwoPlayers("Alice", "Bob").
 			and.call();
-		Then.betShouldBeDisplayed(2, "Alice").
+		Then.playerShouldHaveBet("Alice", 2).
 			and.currentPlayerShouldBe("Bob").
 			and.iTeardownMyAppFrame();
 	});
@@ -34,6 +34,14 @@ sap.ui.require([ "poker/test/operations" ], function(operations) {
 			and.call().
 			and.check();
 		Then.communityCardsShouldBeShown(3).
+			and.currentPlayerShouldBe("Alice").
 			and.iTeardownMyAppFrame();
+	});
+	
+	opaTest("Alice folds, Bob should win the small blind from Alice", function(Given, When, Then) {
+		Given.appStarted();
+		When.startGameWithTwoPlayers("Alice", "Bob").
+			and.fold();
+		Then.playerShouldHaveCash("Bob", 101).and.iTeardownMyAppFrame();
 	});
 });

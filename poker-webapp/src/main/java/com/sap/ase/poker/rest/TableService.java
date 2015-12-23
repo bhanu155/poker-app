@@ -7,7 +7,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.Table;
 
 @Path("table")
@@ -37,9 +36,7 @@ public class TableService {
 	@POST
 	@Path("{tableId}/players")
 	public void joinTable(JoinTableRequest joinRequest, @PathParam("tableId") int tableId) {
-		Player newPlayer = new Player();
-		newPlayer.setName(joinRequest.getPlayerName());
-		table.getPlayers().add(newPlayer);
+		table.addPlayer(joinRequest.getPlayerName());
 	}
 
 	@POST
@@ -52,6 +49,8 @@ public class TableService {
 		case "check":
 			table.check();
 			break;
+		case "fold":
+			table.fold();
 		}
 	}
 }

@@ -47,12 +47,14 @@ public class GetTableResponse {
 
 	public static class Player {
 
-		private String name;
-		private int bet;
+		private final String name;
+		private final int bet;
+		private final int cash;
 
 		public Player(com.sap.ase.poker.model.Player player) {
 			this.name = player.getName();
 			this.bet = player.getBet();
+			this.cash = player.getCash();
 		}
 
 		public String getName() {
@@ -61,6 +63,10 @@ public class GetTableResponse {
 
 		public int getBet() {
 			return bet;
+		}
+
+		public int getCash() {
+			return cash;
 		}
 	}
 

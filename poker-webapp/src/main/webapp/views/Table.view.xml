@@ -1,5 +1,5 @@
-<mvc:View controllerName="poker.controllers.Table" xmlns:mvc="sap.ui.core.mvc"
-    xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:poker="poker.controls" xmlns="sap.m">
+<mvc:View controllerName="poker.controllers.Table" xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core" xmlns:poker="poker.controls" xmlns="sap.m">
     <Page title="Table">
         <content>
             <List id="players" items="{/players}">
@@ -10,16 +10,8 @@
                         </content>
                     </Toolbar>
                 </headerToolbar>
-                <StandardListItem title="{name}" counter="{bet}" />
+                <StandardListItem title="{name}" description="Cash: {cash}" info="Bet: {bet}" />
             </List>
-
-            <Panel headerText="Your Cards">
-                <content>
-                    <l:HorizontalLayout id="playerCards" content="{/playerCards}">
-                        <poker:Card kind="{kind}" suit="{suit}" />
-                    </l:HorizontalLayout>
-                </content>
-            </Panel>
 
             <Panel headerText="Community Cards">
                 <content>
@@ -28,16 +20,24 @@
                     </l:HorizontalLayout>
                 </content>
             </Panel>
+
+            <Panel headerText="Your Cards">
+                <content>
+                    <l:HorizontalLayout id="playerCards" content="{/playerCards}">
+                        <poker:Card kind="{kind}" suit="{suit}" />
+                    </l:HorizontalLayout>
+                </content>
+            </Panel>
         </content>
 
         <footer>
             <Toolbar>
-                <Input id="amount" width="6em" placeholder="amount" />
-                <Button id="bet" text="Bet" press="placeBet" />
+                <Button id="raise" text="Raise to" press="placeBet" type="Accept" />
+                <Input id="amount" width="5em" placeholder="amount" />
                 <ToolbarSpacer />
-                <Button id="call" text="Call" press="call" />
-                <Button id="check" text="Check" press="check" />
-                <Button id="fold" text="Fold" />
+                <Button id="check" text="Check" press="check" type="Accept" />
+                <Button id="call" text="Call" press="call" type="Accept" />
+                <Button id="fold" text="Fold" press="fold" type="Reject" />
             </Toolbar>
         </footer>
     </Page>
