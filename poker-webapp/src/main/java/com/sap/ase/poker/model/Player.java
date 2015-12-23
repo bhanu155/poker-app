@@ -9,7 +9,7 @@ public class Player {
 	private List<Card> cards = new ArrayList<Card>();
 	private int bet;
 	private int cash;
-
+	
 	public String getName() {
 		return name;
 	}

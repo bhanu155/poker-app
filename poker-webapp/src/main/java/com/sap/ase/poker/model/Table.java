@@ -1,5 +1,6 @@
 package com.sap.ase.poker.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class Table {
 	private static final int BIG_BLIND = 2;
 	private static final int DEFAULT_START_CASH = 100;
 	private int pot = 0;
+	private int currentMaxBet = BIG_BLIND;
 	
 	public Iterable<Player> getPlayers() {
 		return players;
@@ -41,6 +43,7 @@ public class Table {
 		currentPlayer = players.get(0);
 		forcedBet(SMALL_BLIND);
 		forcedBet(BIG_BLIND);
+		currentMaxBet = BIG_BLIND;
 	}
 
 	public Player getCurrentPlayer() {
@@ -52,7 +55,7 @@ public class Table {
 	}
 	
 	public void call() {
-		bet(1);
+		betDelta(currentMaxBet - currentPlayer.getBet());
 		onPlayerPerformedAction();
 	}
 
@@ -65,14 +68,20 @@ public class Table {
 		currentPlayer.addCash(pot);
 	}
 
-	private void forcedBet(int value) {
-		bet(value);
+	public void raiseTo(int amount) {
+		currentMaxBet = amount;
+		betDelta(amount - currentPlayer.getBet());
+		onPlayerPerformedAction();
+	}
+	
+	private void forcedBet(int amount) {
+		betDelta(amount);
 		nextPlayer();		
 	}
 	
-	private void bet(int value) {
-		currentPlayer.bet(value);
-		pot += value;
+	private void betDelta(int delta) {
+		currentPlayer.bet(delta);
+		pot += delta;
 	}
 
 	private void onPlayerPerformedAction() {
@@ -133,4 +142,6 @@ public class Table {
 			throw new IllegalAccessError();
 		}
 	}
+
+
 }

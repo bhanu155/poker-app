@@ -28,7 +28,7 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 				url : "api/table/1/bets",
 				method : "POST",
 				data : JSON.stringify({
-					"action" : "call"						
+					"action" : "call"
 				}),
 				contentType : "application/json",
 				success : function() {
@@ -36,23 +36,24 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 				}
 			});
 		},
-//		placeBet : function() {
-//			
-//			var amount = this.byId("amount").getValue();
-//			var model = this.getView().getModel();
-//			
-//			jQuery.ajax({
-//				url : "api/table/1/bets",
-//				method : "POST",
-//				data : JSON.stringify({
-//					"amount" : amount						
-//				}),
-//				contentType : "application/json",
-//				success : function() {
-//					model.loadData("api/table/1");
-//				}
-//			});
-//		},
+		raiseTo : function() {
+
+			var amount = this.byId("amount").getValue();
+			var model = this.getView().getModel();
+
+			jQuery.ajax({
+				url : "api/table/1/bets",
+				method : "POST",
+				data : JSON.stringify({
+					"action" : "raiseTo",
+					"amount" : amount
+				}),
+				contentType : "application/json",
+				success : function() {
+					model.loadData("api/table/1");
+				}
+			});
+		},
 
 		check : function() {
 			var model = this.getView().getModel();
@@ -69,7 +70,7 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 				}
 			});
 		},
-		
+
 		fold : function() {
 			var model = this.getView().getModel();
 

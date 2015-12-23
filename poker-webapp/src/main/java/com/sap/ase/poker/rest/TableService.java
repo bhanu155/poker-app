@@ -51,6 +51,10 @@ public class TableService {
 			break;
 		case "fold":
 			table.fold();
+			break;
+		case "raiseTo":
+			table.raiseTo(betRequest.getAmount());
+			break;
 		}
 	}
 }
