@@ -9,7 +9,7 @@ import com.sap.ase.poker.model.Card.Suit;
 
 public class Deck {
 
-	private ArrayList<Card> cards = new ArrayList<>();
+	private final ArrayList<Card> cards = new ArrayList<>();
 	
 	public Deck(){
 		for (Suit suit : Suit.values()) {

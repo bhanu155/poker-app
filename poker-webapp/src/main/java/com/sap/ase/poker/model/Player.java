@@ -1,29 +1,31 @@
 package com.sap.ase.poker.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Player {
 
-	private String name;
+	private final String name;
 	private List<Card> cards = new ArrayList<Card>();
 	private int bet;
 	private int cash;
 	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
+	public Player(String name, int cash) {
 		this.name = name;
+		this.cash = cash;
+	}
+	
+	public String getName() {
+		return name;		
 	}
 
-	public List<Card> getCards() {
+	public Iterable<Card> getCards() {
 		return cards;
 	}
 
-	public void setCards(List<Card> cards) {
-		this.cards = cards;
+	public void setCards(Collection<Card> cards) {
+		this.cards = new ArrayList<Card>(cards);
 	}
 
 	public void bet(int bet) {
@@ -39,10 +41,6 @@ public class Player {
 		return cash;
 	}
 	
-	public void setCash(int cash) {
-		this.cash = cash;
-	}
-
 	public void addCash(int pot) {
 		cash += pot;
 	}

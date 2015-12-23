@@ -1,8 +1,8 @@
 package com.sap.ase.poker.model;
 
 public class Card {
-	private Suit suit;
-	private Kind kind;
+	private final Suit suit;
+	private final Kind kind;
 
 	public Card(Suit suit, Kind kind) {
 		this.suit = suit;

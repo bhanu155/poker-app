@@ -10,7 +10,7 @@ public class GetTableResponse {
 
 	private List<Player> players = new ArrayList<>();
 	private List<Card> playerCards = new ArrayList<>();
-	private String currentPlayer;
+	private String currentPlayer = "nobody";
 	private List<Card> communityCards = new ArrayList<>();
 
 	public GetTableResponse(com.sap.ase.poker.model.Table table) {
@@ -25,7 +25,7 @@ public class GetTableResponse {
 		for (com.sap.ase.poker.model.Card card : table.getCommunityCards()) {
 			communityCards.add(new Card(card));
 		}
-
+		
 		currentPlayer = table.getCurrentPlayer().getName();
 	}
 

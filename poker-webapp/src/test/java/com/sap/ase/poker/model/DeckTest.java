@@ -33,7 +33,6 @@ public class DeckTest {
 
 		for (int i = 0; i < 52; i++) {
 			Card c = texDeck.dealCard();
-			System.out.println(c);
 			uniqueCards.add(c.getSuit() + "_" + c.getKind());
 		}
 		

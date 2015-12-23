@@ -1,14 +1,13 @@
 package com.sap.ase.poker.model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public class Table {
 	private ArrayList<Player> players = new ArrayList<>();
 	private int numOfPlayersThatPerformedAction = 0;
 	
-	private Player currentPlayer = new InitialPlayer();
+	private Player currentPlayer = new NullPlayer();
 	private int currentIndex = 0;
 	private ArrayList<Card> communityCards = new ArrayList<>();
 	private Deck deck = new Deck();
@@ -23,9 +22,8 @@ public class Table {
 	}
 
 	public void addPlayer(String name) {
-		Player player = new Player();
-		player.setName(name);
-		player.setCash(DEFAULT_START_CASH);
+		Player player = new Player(name,DEFAULT_START_CASH);
+		
 		this.players.add(player);
 	}
 
@@ -115,33 +113,33 @@ public class Table {
 		this.communityCards.add(deck.dealCard());
 	}
 
-	private class InitialPlayer extends Player {
+	private class NullPlayer extends Player {
 
-		@Override
-		public String getName() {
-			return "nobody";
+		public NullPlayer() {
+			super("nobody", -1);
 		}
 
 		@Override
-		public void setName(String name) {
-			throw new IllegalAccessError();
-		}
-
-		@Override
-		public List<Card> getCards() {
-			return new ArrayList<Card>();
-		}
-
-		@Override
-		public void setCards(List<Card> cards) {
-			throw new IllegalAccessError();
+		public void setCards(Collection<Card> cards) {
+			throw new NullPlayerException();
 		}
 
 		@Override
 		public void bet(int bet) {
-			throw new IllegalAccessError();
+			throw new NullPlayerException();
+		}
+
+		@Override
+		public void addCash(int pot) {
+			throw new NullPlayerException();
 		}
 	}
+	
+	@SuppressWarnings("serial")
+	private class NullPlayerException extends IllegalStateException {
 
-
+		public NullPlayerException() {
+			super("tried to play the game without a player");
+		}
+	}
 }
