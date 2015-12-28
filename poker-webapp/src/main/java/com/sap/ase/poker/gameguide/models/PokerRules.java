@@ -88,26 +88,32 @@ public class PokerRules {
 
 		ArrayList<PlayerHandAggregate> pHAs = getAggregatePlayerHand(playerHand.getCards());
 
+		System.out.println("####### Aggregates:");
 		for (PlayerHandAggregate pHA : pHAs) {
-			System.out.println("Kind: " + pHA.getKind().value + " Count: " + pHA.getCountKinds());
+			System.out.println("Kind: " + pHA.getKind().value + " | Count: " + pHA.getCountKinds());
 			for (Card.Suits s : pHA.getSuits()) {
 				System.out.println(" Suit: " + s);
 			}
 		}
 
 		for (Hand hand : this.hands) {
-			checkRulesFulfilled(pHAs, hand, playerHand);
-
-			// if (checkRulesFulfilled(pHAs, hand, playerHand).size() != 0) {
-			// // playerHand.setBestPossibleHand(hand);
-			// // break;
-			// }
+			ArrayList<RuleMatcher> ruleMatchers = determineBestHand(pHAs, hand, playerHand);
+			if (ruleMatchers != null) {
+				System.out.println("Yeah, you got: " + hand.getName());
+				System.out.println("Your Cards:");
+				for (RuleMatcher ruleMatcher : ruleMatchers) {
+					PlayerHandAggregate pHA = ruleMatcher.getpHAUsedForHand();
+					System.out.println(pHA.getKind());
+					for (Card.Suits suit : pHA.getSuits()) {
+						System.out.println("  " + suit.name());
+					}
+				}
+			}
 		}
-
 		return playerHand;
 	}
 
-	public ArrayList<PlayerHandAggregate> getAggregatePlayerHand(ArrayList<Card> cards) {
+	private ArrayList<PlayerHandAggregate> getAggregatePlayerHand(ArrayList<Card> cards) {
 
 		PlayerHandAggregate pHA = new PlayerHandAggregate();
 		ArrayList<PlayerHandAggregate> pHAs = new ArrayList<PlayerHandAggregate>();
@@ -144,9 +150,9 @@ public class PokerRules {
 		return pHAs;
 	}
 
-	public ArrayList<Integer> checkRulesFulfilled(ArrayList<PlayerHandAggregate> pHAs, Hand hand,
+	private ArrayList<RuleMatcher> determineBestHand(ArrayList<PlayerHandAggregate> pHAs, Hand hand,
 			PlayerHand playerHand) {
-		System.out.println("####### " + hand.getName());
+		System.out.println("\n\n\n####### " + hand.getName());
 		ArrayList<RuleMatcher> ruleMatchers = determineAggregatesWhichFitToRule(pHAs, hand);
 		if (ruleMatchers == null) {
 			return null;
@@ -157,10 +163,10 @@ public class PokerRules {
 		ArrayList<RuleMatcher> finalRuleMatchers = new ArrayList<RuleMatcher>();
 		ArrayList<RuleMatcher> ruleMatchersToBeOptimized = new ArrayList<RuleMatcher>();
 
-		for (int rMIteratorComp = 0; rMIteratorComp < ruleMatchers.size(); rMIteratorComp++) {
+		for (int i = 0; i < ruleMatchers.size(); i++) {
 			// distribute RuleMatchers into two different Lists => final or
 			// optimizeable
-			RuleMatcher ruleMatcher = ruleMatchers.get(rMIteratorComp);
+			RuleMatcher ruleMatcher = ruleMatchers.get(i);
 			Collections.sort(ruleMatcher.getPotentialAggregates());
 			int potSize = ruleMatcher.getPotentialAggregates().size();
 
@@ -169,7 +175,10 @@ public class PokerRules {
 			} else if (potSize == 1 && !finalRuleMatchers.contains(ruleMatcher)) {
 				ruleMatcher.setpHAUsedForHand(ruleMatcher.getPotentialAggregates().get(0));
 				finalRuleMatchers.add(ruleMatcher);
+				// System.out.println("add something to final: " +
+				// ruleMatcher.getpHAUsedForHand().getKind());
 			} else {
+				// System.out.println("add something to be optimized");
 				ruleMatchersToBeOptimized.add(ruleMatcher);
 			}
 		}
@@ -177,9 +186,8 @@ public class PokerRules {
 			// all rules are fulfilled
 			return null;
 		}
-
-		this.optimateResult(finalRuleMatchers, ruleMatchersToBeOptimized);
-		return null;
+		ArrayList<RuleMatcher> result = this.optimateResult(finalRuleMatchers, ruleMatchersToBeOptimized);
+		return result;
 
 	}
 
@@ -227,7 +235,7 @@ public class PokerRules {
 		return ruleMatchers;
 	}
 
-	private void optimateResult(ArrayList<RuleMatcher> finalRuleMatchers,
+	private ArrayList<RuleMatcher> optimateResult(ArrayList<RuleMatcher> finalRuleMatchers,
 			ArrayList<RuleMatcher> ruleMatchersToBeOptimized) {
 
 		// - braucht eine andere Regel diese Karte? Wenn ja, wie viele?
@@ -237,29 +245,44 @@ public class PokerRules {
 		for (int i = 0; i < ruleMatchersToBeOptimized.size(); i++) {
 			RuleMatcher ruleMatcherToOpt = ruleMatchersToBeOptimized.get(i);
 			for (PlayerHandAggregate pHAPotential : ruleMatcherToOpt.getPotentialAggregates()) {
-				int count = 0;
+				int countUsedCards = 0;
 				for (int j = 0; j < finalRuleMatchers.size(); j++) {
-					RuleMatcher ruleMatcherComp = finalRuleMatchers.get(j);
-					if (ruleMatcherComp.getpHAUsedForHand().getKind() == pHAPotential.getKind()) {
-						count = count + ruleMatcherComp.getpHAUsedForHand().getCountKinds();
+					// check if there are still cards which can be used to
+					// use the aggregate for the current rule
+					RuleMatcher finalRuleMatcher = finalRuleMatchers.get(j);
+					if (finalRuleMatcher.getpHAUsedForHand().getKind() == pHAPotential.getKind()) {
+						countUsedCards = countUsedCards + finalRuleMatcher.getpHAUsedForHand().getSuits().size();
 					}
 				}
-				if (pHAPotential.getSuits().size() - count >= 0) {
-					// es sind noch kinds übrig
-				} else if (pHAPotential.getSuits().size() - count < 0
+				if (pHAPotential.getSuits().size() - countUsedCards > 0) {
+					// es sind noch kinds übrig die verwendet werden können
+					if (ruleMatcherToOpt.getHandRule().getConsideredCartsCount() - countUsedCards > 0) {
+						// it is possible to fulfill the rule with this kind
+					}
+				} else if (pHAPotential.getSuits().size() - countUsedCards <= 0
 						&& ruleMatcherToOpt.getPotentialAggregates().size() == 2) {
-					// wenn zur erfüllung einer regel zwei aggregate zur
-					// verfügung stehen, aber eines davon bereits vollständig
-					// für eine
-					// andere regel verwendet wurde und keine karten zur
-					// erfüllung der aktuelle regel verfügbar sind ==> dann
-					// bleibt nur noch übrig, das andere aggregat zu nutzen
+					/*
+					 * wenn zur erfüllung einer regel zwei oder mehr aggregate
+					 * zur verfügung stehen, aber alle bis auf eines bereits
+					 * vollständig für andere regeln verwendet werden und keine
+					 * weiteren karten zur erfüllung der aktuelle regel
+					 * verfügbar sind ==> dann bleibt nur noch übrig, das
+					 * verbleibende aggregat zu nutzen
+					 */
 					ruleMatcherToOpt.setpHAUsedForHand(pHAPotential);
 					finalRuleMatchers.add(ruleMatcherToOpt);
-					System.out.println("zweites aggregat wurde zwangs-gesetzt");
+					ruleMatchersToBeOptimized.remove(i);
+				}
+
+				if (ruleMatchersToBeOptimized.size() == 0) {
+					// result found
+					return finalRuleMatchers;
 				}
 			}
 		}
+
+		System.out.println("final size: " + finalRuleMatchers.size());
+		System.out.println("opt size: " + ruleMatchersToBeOptimized.size());
 
 		for (int i = 0; i < ruleMatchersToBeOptimized.size(); i++) {
 			RuleMatcher ruleMatcher = ruleMatchersToBeOptimized.get(i);
@@ -306,5 +329,6 @@ public class PokerRules {
 					j++;
 			}
 		}
+		return null;
 	}
 }

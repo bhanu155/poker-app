@@ -73,7 +73,40 @@ public class Main {
 		// ArrayList<Card> myCards = new ArrayList<Card>(Arrays.asList(a, b, c,
 		// d, e, f, g));
 		ArrayList<Card> myCards = new ArrayList<Card>(Arrays.asList(h, i, j, k, l, m, n, o, q, r, s, t, u));
-		playerHand.setCards(myCards);
+
+		Card pc1 = new Card();
+		pc1.setKind(Card.Kinds.TEN);
+		pc1.setSuit(Card.Suits.HEARTS);
+
+		Card pc2 = new Card();
+		pc2.setKind(Card.Kinds.TEN);
+		pc2.setSuit(Card.Suits.CLUBS);
+
+		Card pc3 = new Card();
+		pc3.setKind(Card.Kinds.TEN);
+		pc3.setSuit(Card.Suits.DIAMONDS);
+
+		Card pc4 = new Card();
+		pc4.setKind(Card.Kinds.KING);
+		pc4.setSuit(Card.Suits.DIAMONDS);
+
+		Card pc5 = new Card();
+		pc5.setKind(Card.Kinds.KING);
+		pc5.setSuit(Card.Suits.CLUBS);
+
+		Card pc6 = new Card();
+		pc6.setKind(Card.Kinds.FOUR);
+		pc6.setSuit(Card.Suits.HEARTS);
+
+		Card pc7 = new Card();
+		pc7.setKind(Card.Kinds.FOUR);
+		pc7.setSuit(Card.Suits.DIAMONDS);
+
+		ArrayList<Card> fullHouse = new ArrayList<Card>(Arrays.asList(pc1, pc2, pc3, pc4, pc5));
+		ArrayList<Card> fullHouseAllCards = new ArrayList<Card>(Arrays.asList(pc1, pc2, pc3, pc4, pc5, pc6, pc7));
+
+		// playerHand.setCards(fullHouse);
+		playerHand.setCards(fullHouseAllCards);
 		pR.getBestHandForPlayer(playerHand);
 
 	}
