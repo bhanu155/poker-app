@@ -27,12 +27,13 @@
 		var tableView = sap.ui.xmlview({
 			viewName : "poker.views.Table",
 			viewData : {
-				model : new sap.ui.model.json.JSONModel("api/table/1")
+				model : new sap.ui.model.json.JSONModel()
 			}
 		});
 		app.addPage(tableView);
 		
 		lobbyView.getController().attachEvent("startGame", function() {
+			tableView.getController().setPlayer("a");
 			tableView.getController().refreshData();
 			app.to(tableView.getId());              
 		});

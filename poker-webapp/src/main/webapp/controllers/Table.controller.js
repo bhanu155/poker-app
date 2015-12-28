@@ -23,6 +23,7 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 
 		call : function() {
 			var model = this.getView().getModel();
+			var playerName = this.playerName;
 
 			jQuery.ajax({
 				url : "api/table/1/bets",
@@ -32,7 +33,7 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 				}),
 				contentType : "application/json",
 				success : function() {
-					model.loadData("api/table/1");
+					loadData(model, playerName);
 				}
 			});
 		},
@@ -40,6 +41,7 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 
 			var amount = this.byId("amount").getValue();
 			var model = this.getView().getModel();
+			var playerName = this.playerName;
 
 			jQuery.ajax({
 				url : "api/table/1/bets",
@@ -50,13 +52,14 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 				}),
 				contentType : "application/json",
 				success : function() {
-					model.loadData("api/table/1");
+					loadData(model, playerName);
 				}
 			});
 		},
 
 		check : function() {
 			var model = this.getView().getModel();
+			var playerName = this.playerName;
 
 			jQuery.ajax({
 				url : "api/table/1/bets",
@@ -66,14 +69,14 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 				}),
 				contentType : "application/json",
 				success : function() {
-					model.loadData("api/table/1");
+					loadData(model, playerName);
 				}
 			});
 		},
 
 		fold : function() {
 			var model = this.getView().getModel();
-
+			var playerName = this.playerName;
 			jQuery.ajax({
 				url : "api/table/1/bets",
 				method : "POST",
@@ -82,13 +85,21 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 				}),
 				contentType : "application/json",
 				success : function() {
-					model.loadData("api/table/1");
+					loadData(model, playerName);
 				}
 			});
 		},
 
 		refreshData : function() {
-			this.getView().getModel().loadData("api/table/1");
+			loadData(this.getView().getModel(), this.playerName);
+		},
+		
+		setPlayer : function(name) {
+			this.playerName = name;
 		}
 	});
+	
+	function loadData(model, playerName) {
+		model.loadData("api/table/1", undefined, undefined, undefined, undefined, undefined, { "Player" : playerName })
+	}
 });

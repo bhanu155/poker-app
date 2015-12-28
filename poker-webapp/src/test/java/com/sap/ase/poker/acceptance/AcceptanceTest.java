@@ -31,8 +31,7 @@ public class AcceptanceTest {
 	public void gameNotStarted_shouldGetBasicInfo() throws Exception {
 		table = new Table();
 		Player currentPlayer = table.getCurrentPlayer();
-		currentPlayer.getBet();
-		currentPlayer.getCards();
+		currentPlayer.getBet();		
 		currentPlayer.getCash();
 		currentPlayer.getName();
 		table.getCommunityCards();

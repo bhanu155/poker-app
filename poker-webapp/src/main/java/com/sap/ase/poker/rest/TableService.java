@@ -1,6 +1,7 @@
 package com.sap.ase.poker.rest;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -13,12 +14,13 @@ import com.sap.ase.poker.model.Table;
 @Produces(MediaType.APPLICATION_JSON)
 public class TableService {
 	
+	private static final String PLAYERNAME = "Player";
 	private Table table = new Table();
 
 	@GET
 	@Path("{tableId}")
-	public GetTableResponse getTable(@PathParam("tableId") int tableId) {
-		return new GetTableResponse(table);
+	public GetTableResponse getTable(@PathParam("tableId") int tableId, @HeaderParam(PLAYERNAME) String playerName) {
+		return new GetTableResponse(table, playerName);
 	}
 
 	@POST
