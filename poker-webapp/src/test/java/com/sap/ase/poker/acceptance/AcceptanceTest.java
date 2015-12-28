@@ -1,11 +1,14 @@
 package com.sap.ase.poker.acceptance;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import com.sap.ase.poker.Exceptions.IllegalOperationException;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.Table;
 
@@ -13,6 +16,8 @@ public class AcceptanceTest {
 	private Table table;
 	private static final String ALICE = "alice";
 	private static final String BOB = "bob";
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
 	@Before
 	public void setup() {
@@ -105,6 +110,37 @@ public class AcceptanceTest {
 		assertThat(findPlayer(ALICE).getBet(), is(2));
 	}
 
+	@Test(expected = IllegalOperationException.class)
+	public void illegalCheck() throws Exception {
+		table.check();
+	}
+
+	@Test(expected = IllegalOperationException.class)
+	public void illegalRaiseExceedsCash() throws Exception {
+		table.raiseTo(101);
+	}
+
+	@Test
+	public void legalRaiseMaximum() throws Exception {
+		table.raiseTo(100);
+	}
+	@Test(expected = IllegalOperationException.class)
+	public void illegalRaiseLessOrEqualMaxBet() throws Exception {
+		table.raiseTo(2);
+	}
+	
+	@Test
+	public void legalRaiseMinimum() throws Exception {
+		table.raiseTo(3);
+	}
+
+	@Test
+	public void illegalCall() throws Exception {
+		table.call();
+		thrown.expect(IllegalOperationException.class);
+		table.call();
+	}
+	
 	private void assertBetAndCash(String playerName, int bet, int cash) {
 		Player player = findPlayer(playerName);
 		assertThat(player.getBet(), is(bet));

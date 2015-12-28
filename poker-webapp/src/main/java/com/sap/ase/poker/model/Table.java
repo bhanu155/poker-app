@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.sap.ase.poker.Exceptions.IllegalOperationException;
+
 public class Table {
 	private int numOfPlayersOnTable = 0;
 	private int numOfPlayersThatPerformedAction = 0;
@@ -51,11 +53,20 @@ public class Table {
 	}
 
 	public void call() {
-		betDelta(currentMaxBet - getCurrentPlayer().getBet());
+		
+		final int delta = currentMaxBet - getCurrentPlayer().getBet();
+		if(delta==0){
+			throw new IllegalOperationException();
+		}
+		betDelta(delta);
+		
 		onPlayerPerformedAction();
 	}
 
 	public void check() {
+		if (getCurrentPlayer().getBet() != currentMaxBet) {
+			throw new IllegalOperationException();
+		}
 		onPlayerPerformedAction();
 	}
 
@@ -65,8 +76,12 @@ public class Table {
 	}
 
 	public void raiseTo(int amount) {
+		int delta = amount - getCurrentPlayer().getBet();
+		if (getCurrentPlayer().getCash() < delta || amount <= currentMaxBet) {
+			throw new IllegalOperationException();
+		}
 		currentMaxBet = amount;
-		betDelta(amount - getCurrentPlayer().getBet());
+		betDelta(delta);
 		onPlayerPerformedAction();
 	}
 
