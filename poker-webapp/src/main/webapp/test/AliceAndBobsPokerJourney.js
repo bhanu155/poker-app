@@ -42,7 +42,8 @@ sap.ui.require([ "poker/test/operations" ], function(operations) {
 		Given.appStarted();
 		When.startGameWithTwoPlayers("Alice", "Bob").
 			and.fold();
-		Then.playerShouldHaveCash("Bob", 101).
+		Then.playerShouldHaveCash("Bob", 100).
+			and.playerShouldHaveCash("Alice", 97).
 			and.iTeardownMyAppFrame();
 	});
 	
