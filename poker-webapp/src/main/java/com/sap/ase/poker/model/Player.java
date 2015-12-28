@@ -36,6 +36,10 @@ public class Player {
 	public int getBet() {
 		return bet;
 	}
+	
+	public void clearBet(){
+		bet =0;
+	}
 
 	public int getCash() {
 		return cash;
@@ -44,4 +48,6 @@ public class Player {
 	public void addCash(int pot) {
 		cash += pot;
 	}
+	
+	
 }

@@ -3,8 +3,6 @@ package com.sap.ase.poker.acceptance;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.Iterator;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,6 +20,18 @@ public class AcceptanceTest {
 		table.addPlayer(ALICE);
 		table.addPlayer(BOB);
 		table.startGame();
+	}
+
+	@Test
+	public void gameNotStarted_shouldGetBasicInfo() throws Exception {
+		table = new Table();
+		Player currentPlayer = table.getCurrentPlayer();
+		currentPlayer.getBet();
+		currentPlayer.getCards();
+		currentPlayer.getCash();
+		currentPlayer.getName();
+		table.getCommunityCards();
+		table.getPlayers();
 	}
 
 	@Test
@@ -57,6 +67,44 @@ public class AcceptanceTest {
 		assertBetAndCash(BOB, 3, 97);
 	}
 
+	@Test
+	public void checkThroughTillEnd() throws Exception {
+		table.call();
+		table.check();
+		assertThat(table.getCommunityCards().size(), is(3));
+		table.check();
+		table.check();
+		assertThat(table.getCommunityCards().size(), is(4));
+		table.check();
+		table.check();
+		assertThat(table.getCommunityCards().size(), is(5));
+		table.check();
+		table.check();
+
+		assertThat(table.getCurrentPlayer().getName(), is(BOB));
+		assertThat(findPlayer(BOB).getBet(), is(1));
+		assertThat(findPlayer(ALICE).getBet(), is(2));
+	}
+
+	@Test
+	public void raiseAndCallTillEnd() throws Exception {
+		table.raiseTo(3);
+		table.call();
+		assertThat(table.getCommunityCards().size(), is(3));
+		table.raiseTo(4);
+		table.call();
+		assertThat(table.getCommunityCards().size(), is(4));
+		table.raiseTo(5);
+		table.call();
+		assertThat(table.getCommunityCards().size(), is(5));
+		table.raiseTo(6);
+		table.call();
+
+		assertThat(table.getCurrentPlayer().getName(), is(BOB));
+		assertThat(findPlayer(BOB).getBet(), is(1));
+		assertThat(findPlayer(ALICE).getBet(), is(2));
+	}
+
 	private void assertBetAndCash(String playerName, int bet, int cash) {
 		Player player = findPlayer(playerName);
 		assertThat(player.getBet(), is(bet));
@@ -66,9 +114,10 @@ public class AcceptanceTest {
 	private Player findPlayer(String playerName) {
 		for (Player p : table.getPlayers()) {
 			if (p.getName().equals(playerName)) {
-				return p;				
+				return p;
 			}
 		}
 		throw new RuntimeException("player " + playerName + " does not exist");
 	}
+
 }
