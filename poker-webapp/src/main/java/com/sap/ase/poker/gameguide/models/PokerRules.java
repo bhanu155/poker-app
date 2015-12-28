@@ -281,6 +281,16 @@ public class PokerRules {
 			}
 		}
 
+		if (ruleMatchersToBeOptimized.size() == 1) {
+			// set the best. Remark: The Aggregates are sorted, so we can use
+			// the first one
+			ruleMatchersToBeOptimized.get(0)
+					.setpHAUsedForHand(ruleMatchersToBeOptimized.get(0).getPotentialAggregates().get(0));
+			finalRuleMatchers.add(ruleMatchersToBeOptimized.get(0));
+			ruleMatchersToBeOptimized.remove(0);
+			return finalRuleMatchers;
+		}
+
 		System.out.println("final size: " + finalRuleMatchers.size());
 		System.out.println("opt size: " + ruleMatchersToBeOptimized.size());
 
