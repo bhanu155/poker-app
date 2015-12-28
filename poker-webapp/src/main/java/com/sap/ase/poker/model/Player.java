@@ -10,10 +10,12 @@ public class Player {
 	private List<Card> cards = new ArrayList<Card>();
 	private int bet;
 	private int cash;
+	private boolean isActive;
 	
 	public Player(String name, int cash) {
 		this.name = name;
 		this.cash = cash;
+		this.isActive = true;
 	}
 	
 	public String getName() {
@@ -45,9 +47,16 @@ public class Player {
 		return cash;
 	}
 	
-	public void addCash(int pot) {
-		cash += pot;
+	public void addCash(int amount) {
+		cash += amount;
 	}
 	
+	public void setIsActive(boolean active){
+		this.isActive = active; 
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
 	
 }

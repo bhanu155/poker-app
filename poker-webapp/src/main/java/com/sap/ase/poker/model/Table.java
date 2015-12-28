@@ -8,7 +8,6 @@ import java.util.Set;
 import com.sap.ase.poker.Exceptions.IllegalOperationException;
 
 public class Table {
-	private int numOfPlayersOnTable = 0;
 	private int numOfPlayersThatPerformedAction = 0;
 	private TablePlayers players = new TablePlayers();
 	private ArrayList<Card> communityCards = new ArrayList<>();
@@ -25,7 +24,6 @@ public class Table {
 	}
 
 	public void addPlayer(String name) {
-		numOfPlayersOnTable++;
 		this.players.add(new Player(name, DEFAULT_START_CASH));
 	}
 
@@ -37,6 +35,7 @@ public class Table {
 			cards.add(deck.dealCard());
 			p.setCards(cards);
 			p.clearBet();
+			p.setIsActive(true);
 		}
 		round = 0;
 		forcedBet(SMALL_BLIND);
@@ -53,13 +52,13 @@ public class Table {
 	}
 
 	public void call() {
-		
+
 		final int delta = currentMaxBet - getCurrentPlayer().getBet();
-		if(delta==0){
+		if (delta == 0) {
 			throw new IllegalOperationException();
 		}
 		betDelta(delta);
-		
+
 		onPlayerPerformedAction();
 	}
 
@@ -71,8 +70,8 @@ public class Table {
 	}
 
 	public void fold() {
+		getCurrentPlayer().setIsActive(false);
 		onPlayerPerformedAction();
-		getCurrentPlayer().addCash(pot);
 	}
 
 	public void raiseTo(int amount) {
@@ -99,7 +98,12 @@ public class Table {
 		numOfPlayersThatPerformedAction++;
 		players.nextPlayer();
 
-		if (isRoundFinished()) {
+		if (onlyOneActivePlayer()) {
+			getCurrentPlayer().addCash(pot);
+			// TODO nextGame should be moved to startGame
+			players.nextGame();
+			startGame();
+		} else if (isRoundFinished()) {
 			numOfPlayersThatPerformedAction = 0;
 			if (round == 0) {
 				showCommunityCards(3);
@@ -116,6 +120,10 @@ public class Table {
 		}
 	}
 
+	private boolean onlyOneActivePlayer() {
+		return players.activePlayersCount() == 1;
+	}
+
 	private boolean isRoundFinished() {
 		return areAllBetsEven() && didAllPlayersPerformAnAction();
 	}
@@ -123,13 +131,15 @@ public class Table {
 	private boolean areAllBetsEven() {
 		Set<Integer> uniqueBets = new HashSet<Integer>();
 		for (Player p : players) {
-			uniqueBets.add(p.getBet());
+			if (p.isActive()) {
+				uniqueBets.add(p.getBet());
+			}
 		}
 		return uniqueBets.size() == 1;
 	}
 
 	private boolean didAllPlayersPerformAnAction() {
-		return numOfPlayersThatPerformedAction == numOfPlayersOnTable;
+		return numOfPlayersThatPerformedAction >= players.activePlayersCount();
 	}
 
 	private void showCommunityCards(int count) {

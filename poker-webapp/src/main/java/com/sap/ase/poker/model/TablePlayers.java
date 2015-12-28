@@ -5,12 +5,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class TablePlayers implements Iterable<Player>{
+public class TablePlayers implements Iterable<Player> {
 
-	private List<Player> players = new ArrayList<Player>();
+	private List<Player> players = new ArrayList<>();
 	private int currentIndex = 0;
 	private int startIndex = 0;
-	
+
 	public void add(Player player) {
 		players.add(player);
 	}
@@ -18,13 +18,26 @@ public class TablePlayers implements Iterable<Player>{
 	public Player getCurrentPlayer() {
 		return players.size() == 0 ? new NullPlayer() : players.get(currentIndex);
 	}
+	
+	public int activePlayersCount(){
+		int count = 0;
+		for (Player p : players) {
+			if (p.isActive()) {
+				count++;
+			}
+		}
+		return count;
+	}
 
 	public void nextPlayer() {
-		currentIndex = (currentIndex + 1) % players.size();		
+		currentIndex = (currentIndex + 1) % players.size();
+		if (!players.get(currentIndex).isActive()) {
+			nextPlayer();
+		}
 	}
 
 	public void nextGame() {
-		startIndex = (startIndex + 1) % players.size();		
+		startIndex = (startIndex + 1) % players.size();
 		currentIndex = startIndex;
 	}
 
@@ -32,7 +45,7 @@ public class TablePlayers implements Iterable<Player>{
 	public Iterator<Player> iterator() {
 		return players.iterator();
 	}
-	
+
 	private class NullPlayer extends Player {
 
 		public NullPlayer() {
