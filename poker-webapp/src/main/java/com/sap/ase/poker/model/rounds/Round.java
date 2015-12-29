@@ -10,7 +10,7 @@ import com.sap.ase.poker.model.TablePlayers;
 
 public abstract class Round {
 
-	private final TablePlayers players;
+	protected final TablePlayers players;
 	private final Deck deck;
 	private final List<Card> communityCards;
 	
@@ -44,7 +44,6 @@ public abstract class Round {
 		currentPlayer.bet(amount);
 		currentMaxBet = Math.max(currentMaxBet, currentPlayer.getBet());
 		pot += amount;
-		players.nextPlayer();
 	}
 	
 	public int getPot() {

@@ -18,6 +18,8 @@ public class PreFlop extends Round {
 	public void start() {
 		dealCardsToEachPlayer();
 		bet(SMALL_BLIND);
+		players.nextPlayer();
 		bet(BIG_BLIND);
+		players.nextPlayer();
 	}
 }

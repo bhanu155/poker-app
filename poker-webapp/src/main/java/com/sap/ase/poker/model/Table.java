@@ -33,14 +33,8 @@ public class Table {
 	}
 
 	public void startGame() {
-		rounds.clear();
-		rounds.add(new PreFlop(players, deck, communityCards));
-		rounds.add(new Flop(players, deck, communityCards));
-		rounds.add(new Turn(players, deck, communityCards));
-		rounds.add(new River(players, deck, communityCards));
-		
-		nextRound();
-		
+		initTexasHoldemRounds();
+		startNextRound();
 		currentMaxBet = currentRound.getCurrentMaxBet();
 		pot = currentRound.getPot();
 	}
@@ -106,12 +100,19 @@ public class Table {
 				players.nextStartPlayer();
 				startGame();
 			} else {
-				nextRound();
+				startNextRound();
 			}
 		}
 	}
 	
-	private void nextRound() {
+	private void initTexasHoldemRounds() {
+		rounds.clear();
+		rounds.add(new PreFlop(players, deck, communityCards));
+		rounds.add(new Flop(players, deck, communityCards));
+		rounds.add(new Turn(players, deck, communityCards));
+		rounds.add(new River(players, deck, communityCards));
+	}
+	private void startNextRound() {
 		currentRound = rounds.remove();
 		currentRound.start();
 	}
