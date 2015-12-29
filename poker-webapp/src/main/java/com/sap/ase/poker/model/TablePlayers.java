@@ -40,7 +40,7 @@ public class TablePlayers implements Iterable<Player> {
 		}
 	}
 
-	public void nextGame() {
+	public void nextStartPlayer() {
 		startIndex = (startIndex + 1) % players.size();
 		currentIndex = startIndex;
 	}

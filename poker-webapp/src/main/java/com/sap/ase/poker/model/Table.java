@@ -1,8 +1,8 @@
 package com.sap.ase.poker.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Table {
@@ -28,10 +28,7 @@ public class Table {
 	public void startGame() {
 
 		for (Player p : players) {
-			List<Card> cards = new ArrayList<>();
-			cards.add(deck.dealCard());
-			cards.add(deck.dealCard());
-			p.setCards(cards);
+			p.setCards(Arrays.asList(deck.dealCard(), deck.dealCard()));
 			p.clearBet();
 			p.setActive();
 		}
@@ -98,10 +95,9 @@ public class Table {
 
 		if (onlyOneActivePlayer()) {
 			getCurrentPlayer().addCash(pot);
-			// TODO nextGame should be moved to startGame
-			players.nextGame();
+			players.nextStartPlayer();
 			startGame();
-		} else if (isRoundFinished()) {
+		} else if (shouldNextRoundStart()) {
 			numOfPlayersThatPerformedAction = 0;
 			if (round == 0) {
 				showCommunityCards(3);
@@ -110,9 +106,8 @@ public class Table {
 				showCommunityCards(1);
 				round++;
 			} else if (round == 3) {
-				// TODO determine winner and start next round;
-				// TODO nextGame should be moved to startGame
-				players.nextGame();
+				// TODO determine winner
+				players.nextStartPlayer();
 				startGame();
 			}
 		}
@@ -122,7 +117,7 @@ public class Table {
 		return players.activePlayersSize() == 1;
 	}
 
-	private boolean isRoundFinished() {
+	private boolean shouldNextRoundStart() {
 		return areAllBetsEven() && didAllPlayersPerformAnAction();
 	}
 

@@ -55,34 +55,34 @@ public class TablePlayersTest {
 	
 	@Test
 	public void nextGameShouldMoveStartPlayer() throws Exception {
-		players.nextGame();
+		players.nextStartPlayer();
 		assertThat(players.getCurrentPlayer(), is(BOB));
 	}
 	
 	@Test
 	public void nextGameWhenLastPlayer() throws Exception {
-		players.nextGame();
-		players.nextGame();
+		players.nextStartPlayer();
+		players.nextStartPlayer();
 		assertThat(players.getCurrentPlayer(), is(ALICE));
 	}
 	
 	@Test
 	public void nextGameWith3Players() throws Exception {
 		players.add(CHRIS);
-		players.nextGame();
-		players.nextGame();
-		players.nextGame();
+		players.nextStartPlayer();
+		players.nextStartPlayer();
+		players.nextStartPlayer();
 		assertThat(players.getCurrentPlayer(), is(ALICE));
 	}
 	
 	@Test
 	public void nextGameShouldAlsoResetCurrentPlayer() throws Exception {
 		players.nextPlayer();
-		players.nextGame();
+		players.nextStartPlayer();
 		assertThat(players.getCurrentPlayer(), is(BOB));
 		players.nextPlayer();
 		players.nextPlayer();
-		players.nextGame();
+		players.nextStartPlayer();
 		assertThat(players.getCurrentPlayer(), is(ALICE));
 	}
 	
