@@ -74,7 +74,7 @@ public class Table {
 			getCurrentPlayer().addCash(bets.getPot());
 			players.nextStartPlayer();
 			startGame();
-		} else if (shouldNextRoundStart()) {
+		} else if (shouldStartNextRound()) {
 			numOfPlayersThatPerformedAction = 0;
 			if (rounds.isEmpty()) {
 				// TODO determine winner
@@ -103,7 +103,7 @@ public class Table {
 		return players.activePlayersSize() == 1;
 	}
 
-	private boolean shouldNextRoundStart() {
+	private boolean shouldStartNextRound() {
 		return bets.areAllBetsEven() && didAllPlayersPerformAnAction();
 	}
 

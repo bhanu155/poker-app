@@ -39,6 +39,16 @@ public class Bets {
 		bet(delta);
 	}
 	
+	public boolean areAllBetsEven() {
+		Set<Integer> uniqueBets = new HashSet<>();
+		for (Player p : players) {
+			if (p.isActive()) {
+				uniqueBets.add(p.getBet());
+			}
+		}
+		return uniqueBets.size() == 1;
+	}
+	
 	private void bet(int amount) {
 		Player currentPlayer = players.getCurrentPlayer(); 
 		currentPlayer.bet(amount);
@@ -56,16 +66,6 @@ public class Bets {
 
 	public int getCurrentMaxBet() {
 		return currentMaxBet;
-	}
-	
-	public boolean areAllBetsEven() {
-		Set<Integer> uniqueBets = new HashSet<>();
-		for (Player p : players) {
-			if (p.isActive()) {
-				uniqueBets.add(p.getBet());
-			}
-		}
-		return uniqueBets.size() == 1;
 	}
 	
 	@SuppressWarnings("serial")
