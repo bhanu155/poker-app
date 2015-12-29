@@ -1,12 +1,15 @@
 package com.sap.ase.poker.model;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
 
 import com.sap.ase.poker.model.rounds.Flop;
 import com.sap.ase.poker.model.rounds.PreFlop;
 import com.sap.ase.poker.model.rounds.River;
+import com.sap.ase.poker.model.rounds.Round;
 import com.sap.ase.poker.model.rounds.Turn;
 
 public class Table {
@@ -16,14 +19,11 @@ public class Table {
 	private Deck deck = new Deck();
 	private static final int DEFAULT_START_CASH = 100;
 	private int pot = 0;
-	private int round;
 	private int currentMaxBet;
 	
-	private PreFlop preFlop;
-	private Flop flop;
-	private Turn turn;
-	private River river;
-
+	private Queue<Round> rounds = new ArrayDeque<>();
+	private Round currentRound;
+	
 	public Iterable<Player> getPlayers() {
 		return players;
 	}
@@ -33,15 +33,16 @@ public class Table {
 	}
 
 	public void startGame() {
-		preFlop = new PreFlop(players, deck);
-		flop = new Flop(deck, communityCards);
-		turn = new Turn(deck, communityCards);
-		river = new River(deck, communityCards);
+		rounds.clear();
+		rounds.add(new PreFlop(players, deck, communityCards));
+		rounds.add(new Flop(players, deck, communityCards));
+		rounds.add(new Turn(players, deck, communityCards));
+		rounds.add(new River(players, deck, communityCards));
 		
-		preFlop.start();
-		round = 0;
-		currentMaxBet = preFlop.currentMaxBet;
-		pot = preFlop.pot;
+		nextRound();
+		
+		currentMaxBet = currentRound.getCurrentMaxBet();
+		pot = currentRound.getPot();
 	}
 
 	public Player getCurrentPlayer() {
@@ -100,21 +101,19 @@ public class Table {
 			startGame();
 		} else if (shouldNextRoundStart()) {
 			numOfPlayersThatPerformedAction = 0;
-			if (round == 0) {
-				flop.start();
-				round++;
-			} else if (round == 1) {
-				turn.start();
-				round++;
-			} else if (round == 2) {
-				river.start();
-				round++;
-			} else if (round == 3) {
+			if (rounds.isEmpty()) {
 				// TODO determine winner
 				players.nextStartPlayer();
 				startGame();
+			} else {
+				nextRound();
 			}
 		}
+	}
+	
+	private void nextRound() {
+		currentRound = rounds.remove();
+		currentRound.start();
 	}
 
 	private boolean onlyOneActivePlayer() {

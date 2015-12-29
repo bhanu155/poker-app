@@ -4,24 +4,15 @@ import java.util.List;
 
 import com.sap.ase.poker.model.Card;
 import com.sap.ase.poker.model.Deck;
+import com.sap.ase.poker.model.TablePlayers;
 
-public class Turn {
+public class Turn extends Round {
 
-	private final Deck deck;
-	private final List<Card> communityCards;
-
-	public Turn(Deck deck, List<Card> communityCards) {
-		this.deck = deck;
-		this.communityCards = communityCards;
+	public Turn(TablePlayers players, Deck deck, List<Card> communityCards) {
+		super(players, deck, communityCards);
 	}
 
 	public void start() {
-		showCommunityCards(1);
-	}
-	
-	private void showCommunityCards(int count) {
-		for (int i = 0; i < count; i++) {
-			this.communityCards.add(deck.dealCard());
-		}
+		dealCommunityCards(1);
 	}
 }
