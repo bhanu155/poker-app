@@ -149,7 +149,6 @@ public class AcceptanceTest {
 
 		table.raiseTo(4);
 		table.fold();
-		assertThat(table.getCommunityCards().size(), is(4));
 
 		assertBetAndCash(ALICE, 0, 103);
 		assertBetAndCash(BOB, 1, 96);

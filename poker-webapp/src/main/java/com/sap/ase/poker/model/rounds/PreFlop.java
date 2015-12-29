@@ -20,9 +20,9 @@ public class PreFlop extends Round {
 
 	public void start() {
 		dealCardsToEachPlayer();
-		bets.bet(SMALL_BLIND);
+		bets.raiseTo(SMALL_BLIND);
 		players.nextPlayer();
-		bets.bet(BIG_BLIND);
+		bets.raiseTo(BIG_BLIND);
 		players.nextPlayer();
 	}
 }

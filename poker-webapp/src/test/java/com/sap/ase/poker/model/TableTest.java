@@ -8,9 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.sap.ase.poker.model.Player;
-import com.sap.ase.poker.model.Table;
-import com.sap.ase.poker.model.Table.IllegalOperationException;
+import com.sap.ase.poker.model.Bets.IllegalOperationException;
 
 public class TableTest {
 	private Table table;
@@ -146,7 +144,6 @@ public class TableTest {
 
 		table.raiseTo(4);
 		table.fold();
-		assertThat(table.getCommunityCards().size(), is(4));
 		
 		assertBetAndCash(ALICE, 0, 103);
 		assertBetAndCash(BOB, 1, 96);
