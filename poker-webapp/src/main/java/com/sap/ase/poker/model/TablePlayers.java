@@ -19,7 +19,7 @@ public class TablePlayers implements Iterable<Player> {
 		return players.size() == 0 ? new NullPlayer() : players.get(currentIndex);
 	}
 	
-	public int activePlayersCount(){
+	public int activePlayersSize(){
 		int count = 0;
 		for (Player p : players) {
 			if (p.isActive()) {
@@ -29,6 +29,10 @@ public class TablePlayers implements Iterable<Player> {
 		return count;
 	}
 
+	public int size() {
+		return players.size();
+	}
+	
 	public void nextPlayer() {
 		currentIndex = (currentIndex + 1) % players.size();
 		if (!players.get(currentIndex).isActive()) {

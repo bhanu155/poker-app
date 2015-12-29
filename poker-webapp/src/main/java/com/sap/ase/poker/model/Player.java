@@ -7,19 +7,19 @@ import java.util.List;
 public class Player {
 
 	private final String name;
-	private List<Card> cards = new ArrayList<Card>();
-	private int bet;
 	private int cash;
-	private boolean isActive;
-	
+
+	private List<Card> cards = new ArrayList<Card>();
+	private int bet = 0;
+	private boolean isActive = false;
+
 	public Player(String name, int cash) {
 		this.name = name;
 		this.cash = cash;
-		this.isActive = true;
 	}
-	
+
 	public String getName() {
-		return name;		
+		return name;
 	}
 
 	public Iterable<Card> getCards() {
@@ -38,25 +38,28 @@ public class Player {
 	public int getBet() {
 		return bet;
 	}
-	
-	public void clearBet(){
-		bet =0;
+
+	public void clearBet() {
+		bet = 0;
 	}
 
 	public int getCash() {
 		return cash;
 	}
-	
+
 	public void addCash(int amount) {
 		cash += amount;
 	}
-	
-	public void setIsActive(boolean active){
-		this.isActive = active; 
+
+	public void setActive() {
+		this.isActive = true;
+	}
+
+	public void setInactive() {
+		this.isActive = false;
 	}
 
 	public boolean isActive() {
 		return isActive;
 	}
-	
 }

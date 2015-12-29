@@ -1,18 +1,24 @@
-package com.sap.ase.poker.acceptance;
+package com.sap.ase.poker.model;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.Table;
+import com.sap.ase.poker.model.Table.IllegalOperationException;
 
-public class AcceptanceTest {
+public class TableTest {
 	private Table table;
 	private static final String ALICE = "alice";
 	private static final String BOB = "bob";
+	
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
 	@Before
 	public void setup() {
@@ -22,72 +28,63 @@ public class AcceptanceTest {
 		table.startGame();
 	}
 
-	@Test
-	public void gameNotStarted_shouldGetBasicInfo() throws Exception {
-		table = new Table();
-		Player currentPlayer = table.getCurrentPlayer();
-		currentPlayer.getBet();
-		currentPlayer.getCash();
-		currentPlayer.getName();
-		table.getCommunityCards();
-		table.getPlayers();
+	@Test(expected = IllegalOperationException.class)
+	public void illegalCheck() throws Exception {
+		table.check();
 	}
 
 	@Test
-	public void startGame() throws Exception {
-
-		assertThat(table.getCurrentPlayer().getName(), is(ALICE));
-
-		assertBetAndCash(ALICE, 1, 99);
-		assertBetAndCash(BOB, 2, 98);
-
-		assertThat(table.getCommunityCards().size(), is(0));
-
+	public void illegalCall() throws Exception {
 		table.call();
-		assertThat(table.getCommunityCards().size(), is(0));
-		assertThat(table.getCurrentPlayer().getName(), is(BOB));
-
-		table.check();
-		assertThat(table.getCommunityCards().size(), is(3));
-		assertThat(table.getCurrentPlayer().getName(), is(ALICE));
-	}
-
-	@Test
-	public void checkThroughTillEnd() throws Exception {
+		thrown.expect(IllegalOperationException.class);
 		table.call();
-		table.check();
-		assertThat(table.getCommunityCards().size(), is(3));
-		table.check();
-		table.check();
-		assertThat(table.getCommunityCards().size(), is(4));
-		table.check();
-		table.check();
-		assertThat(table.getCommunityCards().size(), is(5));
-		table.check();
-		table.check();
-
-		assertThat(table.getCurrentPlayer().getName(), is(BOB));
-		assertThat(findPlayer(BOB).getBet(), is(1));
-		assertThat(findPlayer(ALICE).getBet(), is(2));
 	}
 
 	@Test
-	public void raiseAndCallTillEnd() throws Exception {
+	public void call() throws Exception {
+		table.call();
+		assertBetAndCash(ALICE, 2, 98);
+	}
+
+	@Test
+	public void raise() throws Exception {
 		table.raiseTo(3);
-		table.call();
-		assertThat(table.getCommunityCards().size(), is(3));
+		assertBetAndCash(ALICE, 3, 97);
+	}
+
+	@Test(expected = IllegalOperationException.class)
+	public void illegalRaiseExceedsCash() throws Exception {
+		table.raiseTo(101);
+	}
+
+	@Test
+	public void legalRaiseMaximum() throws Exception {
+		table.raiseTo(100);
+	}
+
+	@Test(expected = IllegalOperationException.class)
+	public void illegalRaiseLessOrEqualMaxBet() throws Exception {
+		table.raiseTo(2);
+	}
+
+	@Test
+	public void legalRaiseMinimum() throws Exception {
+		table.raiseTo(3);
+	}
+
+	@Test
+	public void reRaising() throws Exception {
+		table.raiseTo(3);
 		table.raiseTo(4);
 		table.call();
-		assertThat(table.getCommunityCards().size(), is(4));
-		table.raiseTo(5);
-		table.call();
-		assertThat(table.getCommunityCards().size(), is(5));
-		table.raiseTo(6);
-		table.call();
+		assertThat(table.getCommunityCards().size(), is(3));
+	}
 
-		assertThat(table.getCurrentPlayer().getName(), is(BOB));
-		assertThat(findPlayer(BOB).getBet(), is(1));
-		assertThat(findPlayer(ALICE).getBet(), is(2));
+	@Test
+	public void fold() throws Exception {
+		table.fold();
+		assertBetAndCash(BOB, 1, 100);
+		assertBetAndCash(ALICE, 2, 97);
 	}
 
 	@Test
@@ -126,7 +123,7 @@ public class AcceptanceTest {
 		assertBetAndCash(BOB, 1, 97);
 		assertBetAndCash("chris", 2, 98);
 	}
-
+	
 	@Test
 	public void with3Players_chrisFoldsImmediately_bobFoldsLater() throws Exception {
 		table = new Table();
@@ -142,7 +139,7 @@ public class AcceptanceTest {
 		assertBetAndCash(BOB, 2, 98);
 		assertBetAndCash("chris", 0, 100);
 		assertThat(table.getCommunityCards().size(), is(3));
-
+		
 		table.raiseTo(3);
 		table.call();
 		assertThat(table.getCommunityCards().size(), is(4));
@@ -150,7 +147,7 @@ public class AcceptanceTest {
 		table.raiseTo(4);
 		table.fold();
 		assertThat(table.getCommunityCards().size(), is(4));
-
+		
 		assertBetAndCash(ALICE, 0, 103);
 		assertBetAndCash(BOB, 1, 96);
 		assertBetAndCash("chris", 2, 98);

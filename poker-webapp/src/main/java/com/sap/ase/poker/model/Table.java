@@ -33,7 +33,7 @@ public class Table {
 			cards.add(deck.dealCard());
 			p.setCards(cards);
 			p.clearBet();
-			p.setIsActive(true);
+			p.setActive();
 		}
 		round = 0;
 		forcedBet(SMALL_BLIND);
@@ -68,7 +68,7 @@ public class Table {
 	}
 
 	public void fold() {
-		getCurrentPlayer().setIsActive(false);
+		getCurrentPlayer().setInactive();
 		onPlayerPerformedAction();
 	}
 
@@ -119,7 +119,7 @@ public class Table {
 	}
 
 	private boolean onlyOneActivePlayer() {
-		return players.activePlayersCount() == 1;
+		return players.activePlayersSize() == 1;
 	}
 
 	private boolean isRoundFinished() {
@@ -137,7 +137,7 @@ public class Table {
 	}
 
 	private boolean didAllPlayersPerformAnAction() {
-		return numOfPlayersThatPerformedAction >= players.activePlayersCount();
+		return numOfPlayersThatPerformedAction >= players.activePlayersSize();
 	}
 
 	private void showCommunityCards(int count) {

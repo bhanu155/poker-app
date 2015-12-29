@@ -17,6 +17,10 @@ public class TablePlayersTest {
 
 	@Before
 	public void setup() {
+		ALICE.setActive();
+		BOB.setActive();
+		CHRIS.setActive();
+		
 		players = new TablePlayers();
 		players.add(ALICE);
 		players.add(BOB);
