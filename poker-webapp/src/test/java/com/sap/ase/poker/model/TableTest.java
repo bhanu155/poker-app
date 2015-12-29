@@ -8,8 +8,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.sap.ase.poker.model.Bets.IllegalOperationException;
-
 public class TableTest {
 	private Table table;
 	private static final String ALICE = "alice";
@@ -26,60 +24,15 @@ public class TableTest {
 		table.startGame();
 	}
 
-	@Test(expected = IllegalOperationException.class)
-	public void illegalCheck() throws Exception {
+	@Test
+	public void bobCalls_aliceChecks() throws Exception {
+		table.call();
 		table.check();
-	}
-
-	@Test
-	public void illegalCall() throws Exception {
-		table.call();
-		thrown.expect(IllegalOperationException.class);
-		table.call();
-	}
-
-	@Test
-	public void call() throws Exception {
-		table.call();
-		assertBetAndCash(ALICE, 2, 98);
-	}
-
-	@Test
-	public void raise() throws Exception {
-		table.raiseTo(3);
-		assertBetAndCash(ALICE, 3, 97);
-	}
-
-	@Test(expected = IllegalOperationException.class)
-	public void illegalRaiseExceedsCash() throws Exception {
-		table.raiseTo(101);
-	}
-
-	@Test
-	public void legalRaiseMaximum() throws Exception {
-		table.raiseTo(100);
-	}
-
-	@Test(expected = IllegalOperationException.class)
-	public void illegalRaiseLessOrEqualMaxBet() throws Exception {
-		table.raiseTo(2);
-	}
-
-	@Test
-	public void legalRaiseMinimum() throws Exception {
-		table.raiseTo(3);
-	}
-
-	@Test
-	public void reRaising() throws Exception {
-		table.raiseTo(3);
-		table.raiseTo(4);
-		table.call();
 		assertThat(table.getCommunityCards().size(), is(3));
 	}
 
 	@Test
-	public void fold() throws Exception {
+	public void bobFolds() throws Exception {
 		table.fold();
 		assertBetAndCash(BOB, 1, 100);
 		assertBetAndCash(ALICE, 2, 97);
