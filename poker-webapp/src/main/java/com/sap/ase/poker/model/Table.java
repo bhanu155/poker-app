@@ -13,6 +13,9 @@ public class Table {
 	private int pot = 0;
 	private int round;
 	private int currentMaxBet;
+	
+	private PreFlop preFlop;
+	private Flop flop;
 
 	public Iterable<Player> getPlayers() {
 		return players;
@@ -23,7 +26,9 @@ public class Table {
 	}
 
 	public void startGame() {
-		PreFlop preFlop = new PreFlop(players, deck);
+		preFlop = new PreFlop(players, deck);
+		flop = new Flop(deck, communityCards);
+		
 		preFlop.start();
 		round = 0;
 		currentMaxBet = preFlop.currentMaxBet;
@@ -87,7 +92,7 @@ public class Table {
 		} else if (shouldNextRoundStart()) {
 			numOfPlayersThatPerformedAction = 0;
 			if (round == 0) {
-				showCommunityCards(3);
+				flop.start();
 				round++;
 			} else if (round == 2 || round == 1) {
 				showCommunityCards(1);
