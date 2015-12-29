@@ -1,7 +1,6 @@
 package com.sap.ase.poker.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,12 +9,10 @@ public class Table {
 	private TablePlayers players = new TablePlayers();
 	private ArrayList<Card> communityCards = new ArrayList<>();
 	private Deck deck = new Deck();
-	private static final int SMALL_BLIND = 1;
-	private static final int BIG_BLIND = 2;
 	private static final int DEFAULT_START_CASH = 100;
 	private int pot = 0;
 	private int round;
-	private int currentMaxBet = BIG_BLIND;
+	private int currentMaxBet;
 
 	public Iterable<Player> getPlayers() {
 		return players;
@@ -26,16 +23,11 @@ public class Table {
 	}
 
 	public void startGame() {
-
-		for (Player p : players) {
-			p.setCards(Arrays.asList(deck.dealCard(), deck.dealCard()));
-			p.clearBet();
-			p.setActive();
-		}
+		PreFlop preFlop = new PreFlop(players, deck);
+		preFlop.start();
 		round = 0;
-		forcedBet(SMALL_BLIND);
-		forcedBet(BIG_BLIND);
-		currentMaxBet = BIG_BLIND;
+		currentMaxBet = preFlop.currentMaxBet;
+		pot = preFlop.pot;
 	}
 
 	public Player getCurrentPlayer() {
@@ -77,11 +69,6 @@ public class Table {
 		currentMaxBet = amount;
 		betDelta(delta);
 		onPlayerPerformedAction();
-	}
-
-	private void forcedBet(int amount) {
-		betDelta(amount);
-		players.nextPlayer();
 	}
 
 	private void betDelta(int delta) {
