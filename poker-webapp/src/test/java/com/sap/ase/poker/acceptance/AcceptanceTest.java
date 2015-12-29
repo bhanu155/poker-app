@@ -1,16 +1,16 @@
 package com.sap.ase.poker.acceptance;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.sap.ase.poker.Exceptions.IllegalOperationException;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.Table;
+import com.sap.ase.poker.model.Table.IllegalOperationException;
 
 public class AcceptanceTest {
 	private Table table;

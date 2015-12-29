@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.sap.ase.poker.Exceptions.IllegalOperationException;
-
 public class Table {
 	private int numOfPlayersThatPerformedAction = 0;
 	private TablePlayers players = new TablePlayers();
@@ -146,5 +144,9 @@ public class Table {
 		for (int i = 0; i < count; i++) {
 			this.communityCards.add(deck.dealCard());
 		}
+	}
+	
+	@SuppressWarnings("serial")
+	public class IllegalOperationException extends RuntimeException{
 	}
 }
