@@ -18,8 +18,7 @@ public class Table {
 	private ArrayList<Card> communityCards = new ArrayList<>();
 	private Deck deck = new Deck();
 	private static final int DEFAULT_START_CASH = 100;
-	private int pot = 0;
-	private int currentMaxBet;
+	private Bets bets;
 	
 	private Queue<Round> rounds = new ArrayDeque<>();
 	private Round currentRound;
@@ -33,10 +32,9 @@ public class Table {
 	}
 
 	public void startGame() {
+		bets = new Bets(players);
 		initTexasHoldemRounds();
 		startNextRound();
-		currentMaxBet = currentRound.getCurrentMaxBet();
-		pot = currentRound.getPot();
 	}
 
 	public Player getCurrentPlayer() {
@@ -49,17 +47,17 @@ public class Table {
 
 	public void call() {
 
-		final int delta = currentMaxBet - getCurrentPlayer().getBet();
+		final int delta = bets.getCurrentMaxBet() - getCurrentPlayer().getBet();
 		if (delta == 0) {
 			throw new IllegalOperationException();
 		}
-		betDelta(delta);
+		bets.bet(delta);
 
 		onPlayerPerformedAction();
 	}
 
 	public void check() {
-		if (getCurrentPlayer().getBet() != currentMaxBet) {
+		if (getCurrentPlayer().getBet() != bets.getCurrentMaxBet()) {
 			throw new IllegalOperationException();
 		}
 		onPlayerPerformedAction();
@@ -72,17 +70,11 @@ public class Table {
 
 	public void raiseTo(int amount) {
 		int delta = amount - getCurrentPlayer().getBet();
-		if (getCurrentPlayer().getCash() < delta || amount <= currentMaxBet) {
+		if (getCurrentPlayer().getCash() < delta || amount <= bets.getCurrentMaxBet()) {
 			throw new IllegalOperationException();
 		}
-		currentMaxBet = amount;
-		betDelta(delta);
+		bets.bet(delta);
 		onPlayerPerformedAction();
-	}
-
-	private void betDelta(int delta) {
-		getCurrentPlayer().bet(delta);
-		pot += delta;
 	}
 
 	private void onPlayerPerformedAction() {
@@ -90,7 +82,7 @@ public class Table {
 		players.nextPlayer();
 
 		if (onlyOneActivePlayer()) {
-			getCurrentPlayer().addCash(pot);
+			getCurrentPlayer().addCash(bets.getPot());
 			players.nextStartPlayer();
 			startGame();
 		} else if (shouldNextRoundStart()) {
@@ -107,7 +99,7 @@ public class Table {
 	
 	private void initTexasHoldemRounds() {
 		rounds.clear();
-		rounds.add(new PreFlop(players, deck, communityCards));
+		rounds.add(new PreFlop(players, deck, communityCards, bets));
 		rounds.add(new Flop(players, deck, communityCards));
 		rounds.add(new Turn(players, deck, communityCards));
 		rounds.add(new River(players, deck, communityCards));

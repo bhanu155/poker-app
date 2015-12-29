@@ -11,12 +11,9 @@ import com.sap.ase.poker.model.TablePlayers;
 public abstract class Round {
 
 	protected final TablePlayers players;
-	private final Deck deck;
-	private final List<Card> communityCards;
+	protected final Deck deck;
+	protected final List<Card> communityCards;
 	
-	public int pot = 0;
-	private int currentMaxBet = 0;
-
 	public Round(TablePlayers players, Deck deck, List<Card> communityCards) {
 		this.players = players;
 		this.deck = deck;
@@ -37,20 +34,5 @@ public abstract class Round {
 			p.clearBet();
 			p.setActive();
 		}
-	}
-	
-	public void bet(int amount) {
-		Player currentPlayer = players.getCurrentPlayer(); 
-		currentPlayer.bet(amount);
-		currentMaxBet = Math.max(currentMaxBet, currentPlayer.getBet());
-		pot += amount;
-	}
-	
-	public int getPot() {
-		return pot;
-	}
-	
-	public int getCurrentMaxBet() {
-		return currentMaxBet;
 	}
 }
