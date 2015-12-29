@@ -1,19 +1,22 @@
-package com.sap.ase.poker.model;
+package com.sap.ase.poker.model.rounds;
 
 import java.util.List;
 
-public class Flop {
+import com.sap.ase.poker.model.Card;
+import com.sap.ase.poker.model.Deck;
+
+public class Turn {
 
 	private final Deck deck;
 	private final List<Card> communityCards;
 
-	public Flop(Deck deck, List<Card> communityCards) {
+	public Turn(Deck deck, List<Card> communityCards) {
 		this.deck = deck;
 		this.communityCards = communityCards;
 	}
 
 	public void start() {
-		showCommunityCards(3);
+		showCommunityCards(1);
 	}
 	
 	private void showCommunityCards(int count) {

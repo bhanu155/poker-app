@@ -1,6 +1,10 @@
-package com.sap.ase.poker.model;
+package com.sap.ase.poker.model.rounds;
 
 import java.util.Arrays;
+
+import com.sap.ase.poker.model.Deck;
+import com.sap.ase.poker.model.Player;
+import com.sap.ase.poker.model.TablePlayers;
 
 public class PreFlop {
 
@@ -18,14 +22,18 @@ public class PreFlop {
 	}
 
 	public void start() {
+		dealCardsToEachPlayer();
+		forcedBet(SMALL_BLIND);
+		forcedBet(BIG_BLIND);
+		currentMaxBet  = BIG_BLIND;
+	}
+
+	public void dealCardsToEachPlayer() {
 		for (Player p : players) {
 			p.setCards(Arrays.asList(deck.dealCard(), deck.dealCard()));
 			p.clearBet();
 			p.setActive();
 		}
-		forcedBet(SMALL_BLIND);
-		forcedBet(BIG_BLIND);
-		currentMaxBet  = BIG_BLIND;
 	}
 	
 	private void forcedBet(int amount) {

@@ -1,6 +1,9 @@
-package com.sap.ase.poker.model;
+package com.sap.ase.poker.model.rounds;
 
 import java.util.List;
+
+import com.sap.ase.poker.model.Card;
+import com.sap.ase.poker.model.Deck;
 
 public class River {
 

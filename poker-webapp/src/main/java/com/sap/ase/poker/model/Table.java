@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.sap.ase.poker.model.rounds.Flop;
+import com.sap.ase.poker.model.rounds.PreFlop;
+import com.sap.ase.poker.model.rounds.River;
+import com.sap.ase.poker.model.rounds.Turn;
+
 public class Table {
 	private int numOfPlayersThatPerformedAction = 0;
 	private TablePlayers players = new TablePlayers();
@@ -24,7 +29,7 @@ public class Table {
 	}
 
 	public void addPlayer(String name) {
-		this.players.add(new Player(name, DEFAULT_START_CASH));
+		players.add(new Player(name, DEFAULT_START_CASH));
 	}
 
 	public void startGame() {
@@ -134,12 +139,6 @@ public class Table {
 		return numOfPlayersThatPerformedAction >= players.activePlayersSize();
 	}
 
-	private void showCommunityCards(int count) {
-		for (int i = 0; i < count; i++) {
-			this.communityCards.add(deck.dealCard());
-		}
-	}
-	
 	@SuppressWarnings("serial")
 	public class IllegalOperationException extends RuntimeException{
 	}
