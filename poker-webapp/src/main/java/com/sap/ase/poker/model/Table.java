@@ -16,6 +16,8 @@ public class Table {
 	
 	private PreFlop preFlop;
 	private Flop flop;
+	private Turn turn;
+	private River river;
 
 	public Iterable<Player> getPlayers() {
 		return players;
@@ -28,6 +30,8 @@ public class Table {
 	public void startGame() {
 		preFlop = new PreFlop(players, deck);
 		flop = new Flop(deck, communityCards);
+		turn = new Turn(deck, communityCards);
+		river = new River(deck, communityCards);
 		
 		preFlop.start();
 		round = 0;
@@ -94,8 +98,11 @@ public class Table {
 			if (round == 0) {
 				flop.start();
 				round++;
-			} else if (round == 2 || round == 1) {
-				showCommunityCards(1);
+			} else if (round == 1) {
+				turn.start();
+				round++;
+			} else if (round == 2) {
+				river.start();
 				round++;
 			} else if (round == 3) {
 				// TODO determine winner
