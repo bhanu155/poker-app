@@ -1,0 +1,58 @@
+package com.sap.ase.poker.winner;
+
+import com.sap.ase.poker.model.Card;
+
+public class TestCard {
+	static Card diamonds2 = new Card(Card.Kind.TWO, Card.Suit.DIAMONDS);
+	static Card diamonds3 = new Card(Card.Kind.THREE, Card.Suit.DIAMONDS);
+	static Card diamonds4 = new Card(Card.Kind.FOUR, Card.Suit.DIAMONDS);
+	static Card diamonds5 = new Card(Card.Kind.FIVE, Card.Suit.DIAMONDS);
+	static Card diamonds6 = new Card(Card.Kind.SIX, Card.Suit.DIAMONDS);
+	static Card diamonds7 = new Card(Card.Kind.SEVEN, Card.Suit.DIAMONDS);
+	static Card diamonds8 = new Card(Card.Kind.EIGHT, Card.Suit.DIAMONDS);
+	static Card diamonds9 = new Card(Card.Kind.NINE, Card.Suit.DIAMONDS);
+	static Card diamonds10 = new Card(Card.Kind.TEN, Card.Suit.DIAMONDS);
+	static Card diamondsJack = new Card(Card.Kind.JACK, Card.Suit.DIAMONDS);
+	static Card diamondsQueen = new Card(Card.Kind.QUEEN, Card.Suit.DIAMONDS);
+	static Card diamondsKing = new Card(Card.Kind.KING, Card.Suit.DIAMONDS);
+	static Card diamondsAce = new Card(Card.Kind.ACE, Card.Suit.DIAMONDS);
+	static Card hearts2 = new Card(Card.Kind.TWO, Card.Suit.HEARTS);
+	static Card hearts3 = new Card(Card.Kind.THREE, Card.Suit.HEARTS);
+	static Card hearts4 = new Card(Card.Kind.FOUR, Card.Suit.HEARTS);
+	static Card hearts5 = new Card(Card.Kind.FIVE, Card.Suit.HEARTS);
+	static Card hearts6 = new Card(Card.Kind.SIX, Card.Suit.HEARTS);
+	static Card hearts7 = new Card(Card.Kind.SEVEN, Card.Suit.HEARTS);
+	static Card hearts8 = new Card(Card.Kind.EIGHT, Card.Suit.HEARTS);
+	static Card hearts9 = new Card(Card.Kind.NINE, Card.Suit.HEARTS);
+	static Card hearts10 = new Card(Card.Kind.TEN, Card.Suit.HEARTS);
+	static Card heartsJack = new Card(Card.Kind.JACK, Card.Suit.HEARTS);
+	static Card heartsQueen = new Card(Card.Kind.QUEEN, Card.Suit.HEARTS);
+	static Card heartsKing = new Card(Card.Kind.KING, Card.Suit.HEARTS);
+	static Card heartsAce = new Card(Card.Kind.ACE, Card.Suit.HEARTS);
+	static Card spades2 = new Card(Card.Kind.TWO, Card.Suit.SPADES);
+	static Card spades3 = new Card(Card.Kind.THREE, Card.Suit.SPADES);
+	static Card spades4 = new Card(Card.Kind.FOUR, Card.Suit.SPADES);
+	static Card spades5 = new Card(Card.Kind.FIVE, Card.Suit.SPADES);
+	static Card spades6 = new Card(Card.Kind.SIX, Card.Suit.SPADES);
+	static Card spades7 = new Card(Card.Kind.SEVEN, Card.Suit.SPADES);
+	static Card spades8 = new Card(Card.Kind.EIGHT, Card.Suit.SPADES);
+	static Card spades9 = new Card(Card.Kind.NINE, Card.Suit.SPADES);
+	static Card spades10 = new Card(Card.Kind.TEN, Card.Suit.SPADES);
+	static Card spadesJack = new Card(Card.Kind.JACK, Card.Suit.SPADES);
+	static Card spadesQueen = new Card(Card.Kind.QUEEN, Card.Suit.SPADES);
+	static Card spadesKing = new Card(Card.Kind.KING, Card.Suit.SPADES);
+	static Card spadesAce = new Card(Card.Kind.ACE, Card.Suit.SPADES);
+	static Card clubs2 = new Card(Card.Kind.TWO, Card.Suit.CLUBS);
+	static Card clubs3 = new Card(Card.Kind.THREE, Card.Suit.CLUBS);
+	static Card clubs4 = new Card(Card.Kind.FOUR, Card.Suit.CLUBS);
+	static Card clubs5 = new Card(Card.Kind.FIVE, Card.Suit.CLUBS);
+	static Card clubs6 = new Card(Card.Kind.SIX, Card.Suit.CLUBS);
+	static Card clubs7 = new Card(Card.Kind.SEVEN, Card.Suit.CLUBS);
+	static Card clubs8 = new Card(Card.Kind.EIGHT, Card.Suit.CLUBS);
+	static Card clubs9 = new Card(Card.Kind.NINE, Card.Suit.CLUBS);
+	static Card clubs10 = new Card(Card.Kind.TEN, Card.Suit.CLUBS);
+	static Card clubsJack = new Card(Card.Kind.JACK, Card.Suit.CLUBS);
+	static Card clubsQueen = new Card(Card.Kind.QUEEN, Card.Suit.CLUBS);
+	static Card clubsKing = new Card(Card.Kind.KING, Card.Suit.CLUBS);
+	static Card clubsAce = new Card(Card.Kind.ACE, Card.Suit.CLUBS);
+}

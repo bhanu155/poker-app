@@ -10,24 +10,24 @@ import com.sap.ase.poker.model.Card.Suit;
 public class Deck {
 
 	private final ArrayList<Card> cards = new ArrayList<>();
-	
-	public Deck(){
+
+	public Deck() {
 		for (Suit suit : Suit.values()) {
 			for (Kind kind : Kind.values()) {
-				cards.add(new Card(suit, kind));							
+				cards.add(new Card(kind, suit));
 			}
 		}
 		shuffle(cards);
 	}
-	
+
 	public Card dealCard() {
- 		if (cards.isEmpty()) {
- 			throw new OutOfCardsException();
- 		} else {
- 			return cards.remove(0); 			
- 		}
+		if (cards.isEmpty()) {
+			throw new OutOfCardsException();
+		} else {
+			return cards.remove(0);
+		}
 	}
-	
+
 	@SuppressWarnings("serial")
 	public class OutOfCardsException extends RuntimeException {
 	}
