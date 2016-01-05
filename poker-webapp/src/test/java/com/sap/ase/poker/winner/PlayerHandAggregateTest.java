@@ -1,5 +1,12 @@
 package com.sap.ase.poker.winner;
 
+import static com.sap.ase.poker.winner.CardFixtures.CLUBS_10;
+import static com.sap.ase.poker.winner.CardFixtures.CLUBS_8;
+import static com.sap.ase.poker.winner.CardFixtures.CLUBS_9;
+import static com.sap.ase.poker.winner.CardFixtures.CLUBS_ACE;
+import static com.sap.ase.poker.winner.CardFixtures.CLUBS_JACK;
+import static com.sap.ase.poker.winner.CardFixtures.CLUBS_KING;
+import static com.sap.ase.poker.winner.CardFixtures.CLUBS_QUEEN;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -16,8 +23,8 @@ import com.sap.ase.poker.model.Card.Suit;
 public class PlayerHandAggregateTest {
 	@Test
 	public void shouldReturnAggregateForRoyalFlush() {
-		List<Card> royalFlush = Arrays.asList(TestCard.clubsAce, TestCard.clubsKing, TestCard.clubsQueen,
-				TestCard.clubsJack, TestCard.clubs10, TestCard.clubs9, TestCard.clubs8);
+		List<Card> royalFlush = Arrays.asList(CLUBS_ACE, CLUBS_KING, CLUBS_QUEEN, CLUBS_JACK, CLUBS_10, CLUBS_9,
+				CLUBS_8);
 		PlayerHandAggregate pHA = new PlayerHandAggregate(royalFlush);
 
 		assertThat(pHA.getKindAggregates().size(), is(7));

@@ -5,18 +5,17 @@ import java.util.List;
 import com.sap.ase.poker.model.Card;
 
 public class PokerHand {
-	private PokerHandDefinition pokerHandDefinition;
+	private Definition definition;
 	private List<Card> cardsUsedForPokerHand;
 	private List<Card> redundantCards;
 
-	public PokerHand(PokerHandDefinition pokerHandDefinition, List<Card> cardsUsedForPokerHand,
-			List<Card> redundantCards) {
+	public PokerHand(Definition definition, List<Card> cardsUsedForPokerHand, List<Card> redundantCards) {
 		this.cardsUsedForPokerHand = cardsUsedForPokerHand;
 		this.redundantCards = redundantCards;
-		this.pokerHandDefinition = pokerHandDefinition;
+		this.definition = definition;
 	}
 
-	public enum PokerHandDefinition {
+	public enum Definition {
 		ROYALFLUSH("Royal Flush", "Five cards: 10, Jack, Queen, King, Ace of the same kind", 1), STRAIGHTFLUSH(
 				"Straight Flush", "Five cards ranked sequentially in order in same suit",
 				2), FOUROFAKIND("Four of a kind", "Four cards of the same numerical rank", 3), FULLHOUSE("Full House",
@@ -33,15 +32,15 @@ public class PokerHand {
 		public final String description;
 		public final int rank;
 
-		private PokerHandDefinition(String name, String description, int rank) {
+		private Definition(String name, String description, int rank) {
 			this.name = name;
 			this.description = description;
 			this.rank = rank;
 		}
 	}
 
-	public PokerHandDefinition getPokerHandDefinition() {
-		return pokerHandDefinition;
+	public Definition getPokerHandDefinition() {
+		return definition;
 	}
 
 	public List<Card> getCardsUsedForPokerHand() {
@@ -52,8 +51,8 @@ public class PokerHand {
 		return redundantCards;
 	}
 
-	public void setPokerHandDefinition(PokerHandDefinition pokerHandDefinition) {
-		this.pokerHandDefinition = pokerHandDefinition;
+	public void setPokerHandDefinition(Definition pokerHandDefinition) {
+		this.definition = pokerHandDefinition;
 	}
 
 	public void setCardsUsedForPokerHand(List<Card> cardsUsedForPokerHand) {

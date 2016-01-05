@@ -7,7 +7,7 @@ import java.util.Map;
 import com.sap.ase.poker.model.Card;
 import com.sap.ase.poker.model.Card.Kind;
 import com.sap.ase.poker.model.Card.Suit;
-import com.sap.ase.poker.winner.PokerHand.PokerHandDefinition;
+import com.sap.ase.poker.winner.PokerHand.Definition;
 
 public class PlayerHand {
 
@@ -16,9 +16,9 @@ public class PlayerHand {
 		if (pHA.getLongestSequence() != null && pHA.getLongestSequence().getLength() >= 5) {
 			if (pHA.getLongestSequence().isSameSuit()) {
 				if (pHA.getLongestSequence().getHighestKindOfSequenceWithSameSuit() == Kind.ACE) {
-					return createPokerHandOutOfSuitAggregates(PokerHand.PokerHandDefinition.ROYALFLUSH, pHA);
+					return createPokerHandOutOfSuitAggregates(PokerHand.Definition.ROYALFLUSH, pHA);
 				} else {
-					return createPokerHandOutOfSuitAggregates(PokerHand.PokerHandDefinition.STRAIGHTFLUSH, pHA);
+					return createPokerHandOutOfSuitAggregates(PokerHand.Definition.STRAIGHTFLUSH, pHA);
 				}
 			} else {
 				List<Card> cardsUsedForPokerHand = new ArrayList<Card>();
@@ -43,7 +43,7 @@ public class PlayerHand {
 						redundantCards.addAll(createCardsOutOfKindAggregate(kA));
 					}
 				}
-				return new PokerHand(PokerHand.PokerHandDefinition.STRAIGHT, cardsUsedForPokerHand, redundantCards);
+				return new PokerHand(PokerHand.Definition.STRAIGHT, cardsUsedForPokerHand, redundantCards);
 			}
 		} else {
 			// FourOfAKind - 3
@@ -54,7 +54,7 @@ public class PlayerHand {
 			// Flush
 			Suit s = pHA.getSuitWhichCanBeFoundFiveTimesOrMoreInPlayerCards(pHA.getSuitAggregates());
 			if (s != null) {
-				return createPokerHandOutOfSuitAggregates(PokerHand.PokerHandDefinition.FLUSH, pHA);
+				return createPokerHandOutOfSuitAggregates(PokerHand.Definition.FLUSH, pHA);
 			}
 
 			int indexThreeOfAKind = -1;
@@ -62,7 +62,7 @@ public class PlayerHand {
 			int indexPairTwo = -1;
 			List<Card> cardsUsedForPokerHand = new ArrayList<Card>();
 			List<Card> redundantCards = new ArrayList<Card>();
-			PokerHandDefinition pHD = null;
+			Definition pHD = null;
 
 			boolean pokerHandFound = false;
 			for (int i = 0; i < pHA.getKindAggregates().size(); i++) {
@@ -71,12 +71,12 @@ public class PlayerHand {
 
 				if (!pokerHandFound) {
 					if (suitsCount == 4) {
-						pHD = PokerHandDefinition.FOUROFAKIND;
+						pHD = Definition.FOUROFAKIND;
 						cardsUsedForPokerHand.addAll(createCardsOutOfKindAggregate(kA));
 						pokerHandFound = true;
 					} else if ((suitsCount >= 2 && indexThreeOfAKind != -1)
 							|| (suitsCount == 3 && indexPairOne != -1)) {
-						pHD = PokerHandDefinition.FULLHOUSE;
+						pHD = Definition.FULLHOUSE;
 						cardsUsedForPokerHand
 								.addAll(createCardsOutOfKindAggregate(pHA.getKindAggregates().get(indexThreeOfAKind)));
 						List<Card> dummy = createCardsOutOfKindAggregate(kA);
@@ -107,13 +107,13 @@ public class PlayerHand {
 			if (pokerHandFound) {
 				return new PokerHand(pHD, cardsUsedForPokerHand, redundantCards);
 			} else if (indexThreeOfAKind != -1) {
-				pHD = PokerHandDefinition.THREEOFAKIND;
+				pHD = Definition.THREEOFAKIND;
 			} else if (indexPairOne != -1 && indexPairTwo != -1) {
-				pHD = PokerHandDefinition.TWOPAIR;
+				pHD = Definition.TWOPAIR;
 			} else if (indexPairOne != -1) {
-				pHD = PokerHandDefinition.PAIR;
+				pHD = Definition.PAIR;
 			} else {
-				return new PokerHand(PokerHandDefinition.NONE, cardsUsedForPokerHand, redundantCards);
+				return new PokerHand(Definition.NONE, cardsUsedForPokerHand, redundantCards);
 			}
 
 			for (int i = 0; i < pHA.getKindAggregates().size(); i++) {
@@ -136,7 +136,7 @@ public class PlayerHand {
 		return cards;
 	}
 
-	private PokerHand createPokerHandOutOfSuitAggregates(PokerHand.PokerHandDefinition pHD, PlayerHandAggregate pHA) {
+	private PokerHand createPokerHandOutOfSuitAggregates(PokerHand.Definition pHD, PlayerHandAggregate pHA) {
 		List<Card> cardsUsedForPokerHand = new ArrayList<Card>();
 		List<Card> redundantCards = new ArrayList<Card>();
 		Suit suitReference;

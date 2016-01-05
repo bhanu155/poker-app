@@ -1,0 +1,58 @@
+package com.sap.ase.poker.winner;
+
+import com.sap.ase.poker.model.Card;
+
+public class CardFixtures {
+	public static final Card DIAMONDS_2 = new Card(Card.Kind.TWO, Card.Suit.DIAMONDS);
+	public static final Card DIAMONDS_3 = new Card(Card.Kind.THREE, Card.Suit.DIAMONDS);
+	public static final Card DIAMONDS_4 = new Card(Card.Kind.FOUR, Card.Suit.DIAMONDS);
+	public static final Card DIAMONDS_5 = new Card(Card.Kind.FIVE, Card.Suit.DIAMONDS);
+	public static final Card DIAMONDS_6 = new Card(Card.Kind.SIX, Card.Suit.DIAMONDS);
+	public static final Card DIAMONDS_7 = new Card(Card.Kind.SEVEN, Card.Suit.DIAMONDS);
+	public static final Card DIAMONDS_8 = new Card(Card.Kind.EIGHT, Card.Suit.DIAMONDS);
+	public static final Card DIAMONDS_9 = new Card(Card.Kind.NINE, Card.Suit.DIAMONDS);
+	public static final Card DIAMONDS_10 = new Card(Card.Kind.TEN, Card.Suit.DIAMONDS);
+	public static final Card DIAMONDS_JACK = new Card(Card.Kind.JACK, Card.Suit.DIAMONDS);
+	public static final Card DIAMONDS_QUEEN = new Card(Card.Kind.QUEEN, Card.Suit.DIAMONDS);
+	public static final Card DIAMONDS_KING = new Card(Card.Kind.KING, Card.Suit.DIAMONDS);
+	public static final Card DIAMONDS_ACE = new Card(Card.Kind.ACE, Card.Suit.DIAMONDS);
+	public static final Card HEARTS_2 = new Card(Card.Kind.TWO, Card.Suit.HEARTS);
+	public static final Card HEARTS_3 = new Card(Card.Kind.THREE, Card.Suit.HEARTS);
+	public static final Card HEARTS_4 = new Card(Card.Kind.FOUR, Card.Suit.HEARTS);
+	public static final Card HEARTS_5 = new Card(Card.Kind.FIVE, Card.Suit.HEARTS);
+	public static final Card HEARTS_6 = new Card(Card.Kind.SIX, Card.Suit.HEARTS);
+	public static final Card HEARTS_7 = new Card(Card.Kind.SEVEN, Card.Suit.HEARTS);
+	public static final Card HEARTS_8 = new Card(Card.Kind.EIGHT, Card.Suit.HEARTS);
+	public static final Card HEARTS_9 = new Card(Card.Kind.NINE, Card.Suit.HEARTS);
+	public static final Card HEARTS_10 = new Card(Card.Kind.TEN, Card.Suit.HEARTS);
+	public static final Card HEARTS_JACK = new Card(Card.Kind.JACK, Card.Suit.HEARTS);
+	public static final Card HEARTS_QUEEN = new Card(Card.Kind.QUEEN, Card.Suit.HEARTS);
+	public static final Card HEARTS_KING = new Card(Card.Kind.KING, Card.Suit.HEARTS);
+	public static final Card HEARTS_ACE = new Card(Card.Kind.ACE, Card.Suit.HEARTS);
+	public static final Card SPADES_2 = new Card(Card.Kind.TWO, Card.Suit.SPADES);
+	public static final Card SPADES_3 = new Card(Card.Kind.THREE, Card.Suit.SPADES);
+	public static final Card SPADES_4 = new Card(Card.Kind.FOUR, Card.Suit.SPADES);
+	public static final Card SPADES_5 = new Card(Card.Kind.FIVE, Card.Suit.SPADES);
+	public static final Card SPADES_6 = new Card(Card.Kind.SIX, Card.Suit.SPADES);
+	public static final Card SPADES_7 = new Card(Card.Kind.SEVEN, Card.Suit.SPADES);
+	public static final Card SPADES_8 = new Card(Card.Kind.EIGHT, Card.Suit.SPADES);
+	public static final Card SPADES_9 = new Card(Card.Kind.NINE, Card.Suit.SPADES);
+	public static final Card SPADES_10 = new Card(Card.Kind.TEN, Card.Suit.SPADES);
+	public static final Card SPADES_JACK = new Card(Card.Kind.JACK, Card.Suit.SPADES);
+	public static final Card SPADES_QUEEN = new Card(Card.Kind.QUEEN, Card.Suit.SPADES);
+	public static final Card SPADES_KING = new Card(Card.Kind.KING, Card.Suit.SPADES);
+	public static final Card SPADES_ACE = new Card(Card.Kind.ACE, Card.Suit.SPADES);
+	public static final Card CLUBS_2 = new Card(Card.Kind.TWO, Card.Suit.CLUBS);
+	public static final Card CLUBS_3 = new Card(Card.Kind.THREE, Card.Suit.CLUBS);
+	public static final Card CLUBS_4 = new Card(Card.Kind.FOUR, Card.Suit.CLUBS);
+	public static final Card CLUBS_5 = new Card(Card.Kind.FIVE, Card.Suit.CLUBS);
+	public static final Card CLUBS_6 = new Card(Card.Kind.SIX, Card.Suit.CLUBS);
+	public static final Card CLUBS_7 = new Card(Card.Kind.SEVEN, Card.Suit.CLUBS);
+	public static final Card CLUBS_8 = new Card(Card.Kind.EIGHT, Card.Suit.CLUBS);
+	public static final Card CLUBS_9 = new Card(Card.Kind.NINE, Card.Suit.CLUBS);
+	public static final Card CLUBS_10 = new Card(Card.Kind.TEN, Card.Suit.CLUBS);
+	public static final Card CLUBS_JACK = new Card(Card.Kind.JACK, Card.Suit.CLUBS);
+	public static final Card CLUBS_QUEEN = new Card(Card.Kind.QUEEN, Card.Suit.CLUBS);
+	public static final Card CLUBS_KING = new Card(Card.Kind.KING, Card.Suit.CLUBS);
+	public static final Card CLUBS_ACE = new Card(Card.Kind.ACE, Card.Suit.CLUBS);
+}
