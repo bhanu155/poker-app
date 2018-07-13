@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.sap.ase.poker.model.Bets.IllegalOperationException;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.Table;
 
@@ -15,7 +16,7 @@ public class AcceptanceTest {
 	private static final String BOB = "bob";
 
 	@Before
-	public void setup() {
+	public void setup() throws IllegalOperationException {
 		table = new Table();
 		table.addPlayer(ALICE);
 		table.addPlayer(BOB);

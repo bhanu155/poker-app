@@ -3,6 +3,7 @@ package com.sap.ase.poker.model.rounds;
 import java.util.Arrays;
 import java.util.List;
 
+import com.sap.ase.poker.model.Bets.IllegalOperationException;
 import com.sap.ase.poker.model.Card;
 import com.sap.ase.poker.model.Deck;
 import com.sap.ase.poker.model.Player;
@@ -20,7 +21,7 @@ public abstract class Round {
 		this.communityCards = communityCards;
 	}
 
-	public abstract void start();
+	public abstract void start() throws IllegalOperationException;
 		
 	protected void dealCommunityCards(int count) {
 		for (int i = 0; i < count; i++) {

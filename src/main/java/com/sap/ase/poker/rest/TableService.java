@@ -1,5 +1,6 @@
 package com.sap.ase.poker.rest;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -8,12 +9,13 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.sap.ase.poker.model.Bets.IllegalOperationException;
 import com.sap.ase.poker.model.Table;
 
 @Path("table")
 @Produces(MediaType.APPLICATION_JSON)
 public class TableService {
-	
+
 	private static final String PLAYERNAME = "Player";
 	private Table table = new Table();
 
@@ -26,7 +28,12 @@ public class TableService {
 	@POST
 	@Path("{tableId}/startGame")
 	public void startGame(@PathParam("tableId") int tableId) {
-		table.startGame();
+		try {
+			table.startGame();
+		} catch (IllegalOperationException e) {
+			e.printStackTrace();
+			throw new BadRequestException(e.getMessage());
+		}
 	}
 
 	@POST
@@ -44,19 +51,24 @@ public class TableService {
 	@POST
 	@Path("{tableId}/bets")
 	public void placeBet(BetRequest betRequest, @PathParam("tableId") int tableId) {
-		switch (betRequest.getAction()){
-		case "call":
-			table.call();
-			break;
-		case "check":
-			table.check();
-			break;
-		case "fold":
-			table.fold();
-			break;
-		case "raiseTo":
-			table.raiseTo(betRequest.getAmount());
-			break;
+		try {
+			switch (betRequest.getAction()) {
+			case "call":
+				table.call();
+				break;
+			case "check":
+				table.check();
+				break;
+			case "fold":
+				table.fold();
+				break;
+			case "raiseTo":
+				table.raiseTo(betRequest.getAmount());
+				break;
+			}
+		} catch (IllegalOperationException e) {
+			e.printStackTrace();
+			throw new BadRequestException(e.getMessage());
 		}
 	}
 }

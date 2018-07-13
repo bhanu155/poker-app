@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
 
+import com.sap.ase.poker.model.Bets.IllegalOperationException;
 import com.sap.ase.poker.model.rounds.Flop;
 import com.sap.ase.poker.model.rounds.PreFlop;
 import com.sap.ase.poker.model.rounds.River;
@@ -30,7 +31,7 @@ public class Table {
 		players.add(new Player(name, DEFAULT_START_CASH));
 	}
 
-	public void startGame() {
+	public void startGame() throws IllegalOperationException {
 		deck = new Deck();
 		communityCards = new ArrayList<>();
 		bets = new Bets(players);
@@ -46,27 +47,27 @@ public class Table {
 		return communityCards;
 	}
 
-	public void call() {
+	public void call() throws IllegalOperationException {
 		bets.call();
 		onPlayerPerformedAction();
 	}
 
-	public void check() {
+	public void check() throws IllegalOperationException {
 		bets.check();
 		onPlayerPerformedAction();
 	}
 
-	public void fold() {
+	public void fold() throws IllegalOperationException {
 		bets.fold();
 		onPlayerPerformedAction();
 	}
 
-	public void raiseTo(int amount) {
+	public void raiseTo(int amount) throws IllegalOperationException {
 		bets.raiseTo(amount);
 		onPlayerPerformedAction();
 	}
 
-	private void onPlayerPerformedAction() {
+	private void onPlayerPerformedAction() throws IllegalOperationException {
 		numOfPlayersThatPerformedAction++;
 		players.nextPlayer();
 
@@ -94,7 +95,7 @@ public class Table {
 		rounds.add(new River(players, deck, communityCards));
 	}
 	
-	private void startNextRound() {
+	private void startNextRound() throws IllegalOperationException {
 		currentRound = rounds.remove();
 		currentRound.start();
 	}

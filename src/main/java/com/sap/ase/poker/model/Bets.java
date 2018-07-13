@@ -12,18 +12,18 @@ public class Bets {
 	public Bets(TablePlayers players) {
 		this.players = players;
 	}
-	
-	public void call() {
+
+	public void call() throws IllegalOperationException {
 		int delta = currentMaxBet - getCurrentPlayerBet();
 		if (delta == 0) {
-			throw new IllegalOperationException();
+			throw new IllegalOperationException("Calling is not possible - player has max bet already - can only check or fold");
 		}
 		bet(delta);
 	}
 
-	public void check() {
+	public void check() throws IllegalOperationException {
 		if (getCurrentPlayerBet() != currentMaxBet) {
-			throw new IllegalOperationException();
+			throw new IllegalOperationException("Checking not possible - player needs to bet at least " + currentMaxBet);
 		}
 	}
 
@@ -31,14 +31,14 @@ public class Bets {
 		players.getCurrentPlayer().setInactive();
 	}
 
-	public void raiseTo(int amount) {
+	public void raiseTo(int amount) throws IllegalOperationException {
 		int delta = amount - getCurrentPlayerBet();
 		if (players.getCurrentPlayer().getCash() < delta || amount <= currentMaxBet) {
-			throw new IllegalOperationException();
+			throw new IllegalOperationException("Betting " + amount + " is insufficient or player doesn't have enough cash");
 		}
 		bet(delta);
 	}
-	
+
 	public boolean areAllBetsEven() {
 		Set<Integer> uniqueBets = new HashSet<>();
 		for (Player p : players) {
@@ -48,9 +48,9 @@ public class Bets {
 		}
 		return uniqueBets.size() == 1;
 	}
-	
+
 	private void bet(int amount) {
-		Player currentPlayer = players.getCurrentPlayer(); 
+		Player currentPlayer = players.getCurrentPlayer();
 		currentPlayer.bet(amount);
 		currentMaxBet = Math.max(currentMaxBet, currentPlayer.getBet());
 		pot += amount;
@@ -59,7 +59,7 @@ public class Bets {
 	public int getPot() {
 		return pot;
 	}
-	
+
 	private int getCurrentPlayerBet() {
 		return players.getCurrentPlayer().getBet();
 	}
@@ -67,8 +67,11 @@ public class Bets {
 	public int getCurrentMaxBet() {
 		return currentMaxBet;
 	}
-	
+
 	@SuppressWarnings("serial")
-	public class IllegalOperationException extends RuntimeException{
+	public class IllegalOperationException extends Exception {
+		public IllegalOperationException(String message) {
+			super(message);
+		}
 	}
 }

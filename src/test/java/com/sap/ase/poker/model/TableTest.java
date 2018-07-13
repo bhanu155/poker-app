@@ -8,6 +8,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.sap.ase.poker.model.Bets.IllegalOperationException;
+
 public class TableTest {
 	private Table table;
 	private static final String ALICE = "alice";
@@ -17,7 +19,7 @@ public class TableTest {
 	public ExpectedException thrown = ExpectedException.none();
 
 	@Before
-	public void setup() {
+	public void setup() throws IllegalOperationException {
 		table = new Table();
 		table.addPlayer(ALICE);
 		table.addPlayer(BOB);
