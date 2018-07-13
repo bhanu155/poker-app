@@ -11,14 +11,14 @@
 	</parent>
 
 	<groupId>com.sap.ase</groupId>
-	<artifactId>poker-webapp</artifactId>
+	<artifactId>poker</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>${project.artifactId}</name>
-	<description>SAPUI5 Web Application - poker-webapp</description>
+	<description>Poker application</description>
 
 	<properties>
-		<web.context.name>poker-webapp</web.context.name>
+		<web.context.name>poker</web.context.name>
 		<cxf.version>3.1.2</cxf.version>
 		<spring.version>4.1.6.RELEASE</spring.version>
 		<jackson.version>2.6.2</jackson.version>
