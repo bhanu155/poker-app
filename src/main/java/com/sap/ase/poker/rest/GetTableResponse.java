@@ -14,17 +14,11 @@ public class GetTableResponse {
 	private List<Card> communityCards = new ArrayList<>();
 
 	public GetTableResponse(com.sap.ase.poker.model.Table table, String uiPlayerName) {
-		com.sap.ase.poker.model.Player uiPlayer = null;
 		for (com.sap.ase.poker.model.Player player : table.getPlayers()) {
 			players.add(new Player(player));
-			
-			if (player.getName().equals(uiPlayerName)) {
-				uiPlayer = player;
-			}
 		}
 
 		for (com.sap.ase.poker.model.Card card : table.getCurrentPlayer().getCards()) {
-//		for (com.sap.ase.poker.model.Card card : uiPlayer.getCards()) {
 			playerCards.add(new Card(card));
 		}
 
