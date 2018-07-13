@@ -9,8 +9,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.sap.ase.poker.model.Bets.IllegalOperationException;
 import com.sap.ase.poker.model.Table;
+import com.sap.ase.poker.model.Table.IllegalOperationException;
 
 @Path("table")
 @Produces(MediaType.APPLICATION_JSON)

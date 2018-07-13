@@ -3,6 +3,8 @@ package com.sap.ase.poker.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.sap.ase.poker.model.Table.IllegalOperationException;
+
 public class Bets {
 
 	private final TablePlayers players;
@@ -66,12 +68,5 @@ public class Bets {
 
 	public int getCurrentMaxBet() {
 		return currentMaxBet;
-	}
-
-	@SuppressWarnings("serial")
-	public class IllegalOperationException extends Exception {
-		public IllegalOperationException(String message) {
-			super(message);
-		}
 	}
 }

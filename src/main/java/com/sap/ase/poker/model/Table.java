@@ -4,7 +4,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
 
-import com.sap.ase.poker.model.Bets.IllegalOperationException;
 import com.sap.ase.poker.model.rounds.Flop;
 import com.sap.ase.poker.model.rounds.PreFlop;
 import com.sap.ase.poker.model.rounds.River;
@@ -110,5 +109,18 @@ public class Table {
 
 	private boolean didAllPlayersPerformAnAction() {
 		return numOfPlayersThatPerformedAction >= players.activePlayersSize();
+	}
+	
+
+	/*
+	 * This class is internally used to identify illegal operations. Example:
+	 * raising when the player doesn't have sufficient cash. This is an illegal
+	 * usage from the client, not a server error.
+	 */
+	@SuppressWarnings("serial")
+	public static class IllegalOperationException extends Exception {
+		public IllegalOperationException(String message) {
+			super(message);
+		}
 	}
 }
