@@ -1,12 +1,12 @@
 package com.sap.ase.poker.winner;
 
-import static com.sap.ase.poker.winner.CardFixtures.CLUBS_10;
-import static com.sap.ase.poker.winner.CardFixtures.CLUBS_8;
-import static com.sap.ase.poker.winner.CardFixtures.CLUBS_9;
-import static com.sap.ase.poker.winner.CardFixtures.CLUBS_ACE;
-import static com.sap.ase.poker.winner.CardFixtures.CLUBS_JACK;
-import static com.sap.ase.poker.winner.CardFixtures.CLUBS_KING;
-import static com.sap.ase.poker.winner.CardFixtures.CLUBS_QUEEN;
+import static com.sap.ase.poker.model.CardFixtures.CLUBS_10;
+import static com.sap.ase.poker.model.CardFixtures.CLUBS_8;
+import static com.sap.ase.poker.model.CardFixtures.CLUBS_9;
+import static com.sap.ase.poker.model.CardFixtures.CLUBS_ACE;
+import static com.sap.ase.poker.model.CardFixtures.CLUBS_JACK;
+import static com.sap.ase.poker.model.CardFixtures.CLUBS_KING;
+import static com.sap.ase.poker.model.CardFixtures.CLUBS_QUEEN;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 

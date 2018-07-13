@@ -1,4 +1,4 @@
-package com.sap.ase.poker.winner;
+package com.sap.ase.poker.model;
 
 import com.sap.ase.poker.model.Card;
 
