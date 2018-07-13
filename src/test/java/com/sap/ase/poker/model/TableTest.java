@@ -8,7 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.sap.ase.poker.model.Bets.IllegalOperationException;
+import com.sap.ase.poker.model.Table.IllegalOperationException;
 
 public class TableTest {
 	private Table table;

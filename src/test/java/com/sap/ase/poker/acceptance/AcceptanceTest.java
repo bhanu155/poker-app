@@ -6,9 +6,9 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.sap.ase.poker.model.Bets.IllegalOperationException;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.Table;
+import com.sap.ase.poker.model.Table.IllegalOperationException;
 
 public class AcceptanceTest {
 	private Table table;
