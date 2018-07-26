@@ -17,13 +17,11 @@ import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_8;
 import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_9;
 import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_ACE;
 import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_JACK;
-import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_KING;
 import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_QUEEN;
 import static com.sap.ase.poker.model.CardFixtures.HEARTS_10;
 import static com.sap.ase.poker.model.CardFixtures.HEARTS_3;
 import static com.sap.ase.poker.model.CardFixtures.HEARTS_ACE;
 import static com.sap.ase.poker.model.CardFixtures.HEARTS_JACK;
-import static com.sap.ase.poker.model.CardFixtures.HEARTS_KING;
 import static com.sap.ase.poker.model.CardFixtures.SPADES_10;
 import static com.sap.ase.poker.model.CardFixtures.SPADES_6;
 import static com.sap.ase.poker.model.CardFixtures.SPADES_7;
@@ -43,7 +41,7 @@ import com.sap.ase.poker.model.Card;
 public class PlayerHandTest {
 
 	@Test
-	public void shouldReturnRoyalFlush() {
+	public void royalFlush() {
 		List<Card> royalFlush = Arrays.asList(CLUBS_ACE, CLUBS_KING, CLUBS_QUEEN, CLUBS_JACK, CLUBS_10, CLUBS_9,
 				CLUBS_8);
 		PlayerHand pHA = new PlayerHand();
@@ -54,9 +52,9 @@ public class PlayerHandTest {
 	}
 
 	@Test
-	public void shouldReturnRoyalFlushAlsoWhenThereAreTwoPairs() {
+	public void royalFlushWithPair() {
 		List<Card> royalFlush = Arrays.asList(CLUBS_ACE, CLUBS_KING, CLUBS_QUEEN, CLUBS_JACK, CLUBS_10, DIAMONDS_ACE,
-				DIAMONDS_KING);
+				SPADES_8);
 		PlayerHand pHA = new PlayerHand();
 		PokerHand pokerHand = pHA.determineBestHandForCards(royalFlush);
 		assertThat(pokerHand.getPokerHandDefinition(), is(PokerHand.Definition.ROYALFLUSH));
@@ -65,29 +63,7 @@ public class PlayerHandTest {
 	}
 
 	@Test
-	public void shouldReturnRoyalFlushAlsoWhenThereAreThreeOfAKind() {
-		List<Card> royalFlush = Arrays.asList(CLUBS_ACE, CLUBS_KING, CLUBS_QUEEN, CLUBS_JACK, CLUBS_10, DIAMONDS_ACE,
-				HEARTS_ACE);
-		PlayerHand pHA = new PlayerHand();
-		PokerHand pokerHand = pHA.determineBestHandForCards(royalFlush);
-		assertThat(pokerHand.getPokerHandDefinition(), is(PokerHand.Definition.ROYALFLUSH));
-		assertThat(pokerHand.getCardsUsedForPokerHand().size(), is(5));
-		assertThat(pokerHand.getRedundantCards().size(), is(2));
-	}
-
-	@Test
-	public void shouldReturnRoyalFlushAlsoWhenThereAreThreeKINGs() {
-		List<Card> royalFlush = Arrays.asList(CLUBS_ACE, CLUBS_KING, CLUBS_QUEEN, CLUBS_JACK, CLUBS_10, DIAMONDS_KING,
-				HEARTS_KING);
-		PlayerHand pHA = new PlayerHand();
-		PokerHand pokerHand = pHA.determineBestHandForCards(royalFlush);
-		assertThat(pokerHand.getPokerHandDefinition(), is(PokerHand.Definition.ROYALFLUSH));
-		assertThat(pokerHand.getCardsUsedForPokerHand().size(), is(5));
-		assertThat(pokerHand.getRedundantCards().size(), is(2));
-	}
-
-	@Test
-	public void shouldReturnStraightFlush() {
+	public void straightFlush() {
 		List<Card> straightFlush = Arrays.asList(CLUBS_ACE, CLUBS_KING, DIAMONDS_QUEEN, DIAMONDS_JACK, DIAMONDS_10,
 				DIAMONDS_9, DIAMONDS_8);
 		PlayerHand pHA = new PlayerHand();
@@ -98,7 +74,7 @@ public class PlayerHandTest {
 	}
 
 	@Test
-	public void shouldReturnFourOfAKind() {
+	public void fourOfAKind() {
 		List<Card> fourOfAKind = Arrays.asList(CLUBS_ACE, DIAMONDS_ACE, HEARTS_ACE, SPADES_ACE, DIAMONDS_10, HEARTS_10,
 				SPADES_10);
 		PlayerHand pHA = new PlayerHand();
@@ -109,7 +85,7 @@ public class PlayerHandTest {
 	}
 
 	@Test
-	public void shouldReturnFullHouse() {
+	public void fullHouse() {
 		List<Card> fullHouse = Arrays.asList(CLUBS_ACE, DIAMONDS_ACE, HEARTS_ACE, SPADES_8, DIAMONDS_10, HEARTS_10,
 				SPADES_10);
 		PlayerHand pHA = new PlayerHand();
@@ -118,7 +94,7 @@ public class PlayerHandTest {
 	}
 
 	@Test
-	public void shouldReturnFlush() {
+	public void flush() {
 		List<Card> flush = Arrays.asList(CLUBS_ACE, DIAMONDS_ACE, DIAMONDS_9, DIAMONDS_2, DIAMONDS_5, HEARTS_JACK,
 				DIAMONDS_7);
 		PlayerHand pHA = new PlayerHand();
@@ -126,7 +102,7 @@ public class PlayerHandTest {
 	}
 
 	@Test
-	public void shouldReturnStraight() {
+	public void straight() {
 		List<Card> straight = Arrays.asList(CLUBS_ACE, DIAMONDS_2, SPADES_KING, DIAMONDS_QUEEN, DIAMONDS_JACK,
 				HEARTS_10, DIAMONDS_7);
 		PlayerHand pHA = new PlayerHand();
@@ -141,7 +117,7 @@ public class PlayerHandTest {
 	}
 
 	@Test
-	public void shouldReturnStraightAlsoWithLowestCards() {
+	public void straightWithLowestCards() {
 		List<Card> straight = Arrays.asList(CLUBS_ACE, DIAMONDS_ACE, SPADES_6, DIAMONDS_5, DIAMONDS_4, HEARTS_3,
 				DIAMONDS_2);
 		PlayerHand pHA = new PlayerHand();
@@ -152,7 +128,7 @@ public class PlayerHandTest {
 	}
 
 	@Test
-	public void shouldReturnThreeOfAKind() {
+	public void threeOfAKind() {
 		List<Card> threeOfAKind = Arrays.asList(CLUBS_ACE, DIAMONDS_ACE, SPADES_ACE, DIAMONDS_QUEEN, DIAMONDS_JACK,
 				HEARTS_10, DIAMONDS_7);
 		PlayerHand pHA = new PlayerHand();
@@ -161,7 +137,7 @@ public class PlayerHandTest {
 	}
 
 	@Test
-	public void shouldReturnTwoPair() {
+	public void twoPairs() {
 		List<Card> twoPair = Arrays.asList(CLUBS_ACE, DIAMONDS_ACE, SPADES_7, DIAMONDS_QUEEN, DIAMONDS_JACK, HEARTS_10,
 				DIAMONDS_7);
 		PlayerHand pHA = new PlayerHand();
@@ -169,7 +145,7 @@ public class PlayerHandTest {
 	}
 
 	@Test
-	public void shouldReturnPair() {
+	public void pair() {
 		List<Card> pair = Arrays.asList(CLUBS_ACE, DIAMONDS_9, SPADES_7, DIAMONDS_QUEEN, DIAMONDS_JACK, HEARTS_10,
 				DIAMONDS_7);
 		PlayerHand pHA = new PlayerHand();
@@ -177,14 +153,12 @@ public class PlayerHandTest {
 	}
 
 	@Test
-	public void shouldReturnNone() {
+	public void highestCard() {
 		List<Card> none = Arrays.asList(CLUBS_ACE, DIAMONDS_9, SPADES_7, DIAMONDS_QUEEN, DIAMONDS_JACK, HEARTS_10,
 				DIAMONDS_3);
 		PlayerHand pHA = new PlayerHand();
 		PokerHand pokerHand = pHA.determineBestHandForCards(none);
 		assertThat(pokerHand.getPokerHandDefinition(), is(PokerHand.Definition.NONE));
 		assertThat(pokerHand.getCardsUsedForPokerHand().size(), is(0));
-		// assertThat(pokerHand.getRedundantCards().size(), is(0));
 	}
-
 }
