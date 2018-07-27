@@ -6,9 +6,9 @@ import static com.sap.ase.poker.winner.DetermineBestHand.HandType.FOUR_OF_A_KIND
 import static com.sap.ase.poker.winner.DetermineBestHand.HandType.FULL_HOUSE;
 import static com.sap.ase.poker.winner.DetermineBestHand.HandType.HIGH_CARD;
 import static com.sap.ase.poker.winner.DetermineBestHand.HandType.PAIR;
+import static com.sap.ase.poker.winner.DetermineBestHand.HandType.ROYAL_FLUSH;
 import static com.sap.ase.poker.winner.DetermineBestHand.HandType.STRAIGHT;
 import static com.sap.ase.poker.winner.DetermineBestHand.HandType.STRAIGHT_FLUSH;
-import static com.sap.ase.poker.winner.DetermineBestHand.HandType.ROYAL_FLUSH;
 import static com.sap.ase.poker.winner.DetermineBestHand.HandType.THREE_OF_A_KIND;
 import static com.sap.ase.poker.winner.DetermineBestHand.HandType.TWO_PAIRS;
 import static java.util.Collections.frequency;
@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,43 +39,26 @@ public class DetermineBestHand {
 
 		Collections.sort(sortedCards, reverseOrder());
 
-		// TODO can we avoid or improve that copying between kindMap and byKind?
-		Map<Kind, List<Card>> kindMap = new HashMap<>();
+		Map<Kind, KindGroup> kindMap = new HashMap<>();
 		Map<Suit, List<Card>> suitMap = new HashMap<>();
 		for (Card card : sortedCards) {
 			Kind kind = card.getKind();
 			Suit suit = card.getSuit();
 
-			List<Card> cardsByKind = kindMap.containsKey(kind) ? kindMap.get(kind) : new ArrayList<>();
-			cardsByKind.add(card);
-			kindMap.put(kind, cardsByKind);
+			KindGroup kindGroup = kindMap.containsKey(kind) ? kindMap.get(kind) : new KindGroup(kind, new ArrayList<>());
+			kindGroup.cards.add(card);
+			kindMap.put(kind, kindGroup);
 
 			List<Card> cardsBySuit = suitMap.containsKey(suit) ? suitMap.get(suit) : new ArrayList<>();
 			cardsBySuit.add(card);
 			suitMap.put(suit, cardsBySuit);
 		}
-		List<KindGroup> byKind = new ArrayList<>();
-		for (Entry<Kind, List<Card>> entry : kindMap.entrySet()) {
-			byKind.add(new KindGroup(entry.getKey(), entry.getValue()));
-		}
+		List<KindGroup> byKind = new ArrayList<KindGroup>(kindMap.values());
 		Collections.sort(byKind, reverseOrder());
 
-		List<KindGroup> singleCards = new ArrayList<>();
-		List<KindGroup> pairs = new ArrayList<>();
-		List<KindGroup> threeOfAKinds = new ArrayList<>();
-		List<KindGroup> fourOfAKinds = new ArrayList<>();
-		for (KindGroup kindGroup : byKind) {
-			List<Card> cardsByKind = kindGroup.cards;
-			if (cardsByKind.size() == 1) {
-				singleCards.add(kindGroup);
-			} else if (cardsByKind.size() == 2) {
-				pairs.add(kindGroup);
-			} else if (cardsByKind.size() == 3) {
-				threeOfAKinds.add(kindGroup);
-			} else if (cardsByKind.size() == 4) {
-				fourOfAKinds.add(kindGroup);
-			}
-		}
+		List<KindGroup> fourOfAKinds = byKind.stream().filter(kindGroup -> kindGroup.cards.size() == 4).collect(Collectors.toList());
+		List<KindGroup> threeOfAKinds = byKind.stream().filter(kindGroup -> kindGroup.cards.size() == 3).collect(Collectors.toList());
+		List<KindGroup> pairs = byKind.stream().filter(kindGroup -> kindGroup.cards.size() == 2).collect(Collectors.toList());
 
 		List<Card> handOfFive = new ArrayList<>();
 		List<Card> remainingCards = new ArrayList<>(sortedCards);
@@ -109,9 +91,9 @@ public class DetermineBestHand {
 			}
 		}
 
-		// Flatten the list of KindGroup, if there are multiple cards of the same kind,
-		// lets say we have a diamond 10 and a spades 10, we can just pick the first,
-		// (=kindGroup.cards.get(0)), this is good enough for a straight
+		// Flatten the list of by-kind collections. If there are multiple cards of the
+		// same kind, lets say we have a diamond 10 and a spades 10, we can just pick
+		// the first, (=kindGroup.cards.get(0)), this is good enough for a straight
 		List<Card> byKindFlat = byKind.stream().map(kindGroup -> kindGroup.cards.get(0)).collect(Collectors.toList());
 		List<Card> straight = straight(byKindFlat);
 		if (straight != null) {
@@ -145,17 +127,11 @@ public class DetermineBestHand {
 			// if first card is ace, add to end of list (a straight can also start from 1)
 			cards.add(cards.get(0));
 		}
-		int consecutiveCount = 1;
-		for (int i = 1; i < cards.size(); i++) {
+		for (int i = 4; i < cards.size(); i++) {
 			Kind kind = cards.get(i).getKind();
-			Kind previousKind = cards.get(i - 1).getKind();
+			Kind previousKind = cards.get(i - 4).getKind();
 			// modulo 13 to consider ace (rank 13) as "1" (rank 0) in a small straight
-			if (kind.rank % 13 == previousKind.rank - 1) {
-				consecutiveCount++;
-			} else {
-				consecutiveCount = 1;
-			}
-			if (consecutiveCount == 5) {
+			if (kind.rank % 13 == previousKind.rank - 4) {
 				return cards.subList(i - 4, i + 1);
 			}
 		}
@@ -180,6 +156,45 @@ public class DetermineBestHand {
 		}
 	}
 
+	public abstract class Hand implements Comparable<Hand> {
+		protected final int rank;
+		public Hand(int rank) {
+			this.rank = rank;
+		}
+		public abstract Card[] getCards();
+	}
+
+	public class HighCard extends Hand {
+		
+		private final Card[] cards;
+
+		//TODO could we use a sorted set here?
+		public HighCard(int rank, List<Card> cards) {
+			super(rank);
+			this.cards = cards.toArray(new Card[0]);
+		}
+
+		@Override
+		public int compareTo(Hand otherHand) {
+			if (rank == otherHand.rank) {
+				HighCard otherHighCardHand = (HighCard)otherHand; 
+				for (int i = 0; i < 5; i++) {
+					if (cards[i].getKind() != otherHighCardHand.cards[i].getKind()) {
+						return cards[i].compareTo(otherHighCardHand.cards[i]);
+					}
+				}
+				return 0;
+			} else {
+				return rank - otherHand.rank;
+			}
+		}
+
+		@Override
+		public Card[] getCards() {
+			return cards;
+		}
+	}
+	
 	public class Result {
 		public final HandType handType;
 		public final Card[] handOfFive;
@@ -200,8 +215,8 @@ public class DetermineBestHand {
 		}
 
 		@Override
-		public int compareTo(KindGroup kindAggregate) {
-			return this.kind.compareTo(kindAggregate.kind);
+		public int compareTo(KindGroup otherKindGroup) {
+			return this.kind.compareTo(otherKindGroup.kind);
 		}
 	}
 
