@@ -10,7 +10,7 @@ public class Hand implements Comparable<Hand> {
 	protected final Type type;
 	public final Card[] allCards;
 
-	//TODO can we use a sorted set here?
+	// TODO can we use a sorted set here?
 	public Hand(Type type, List<Card> allCards) {
 		this.type = type;
 		this.allCards = allCards.toArray(new Card[0]);
@@ -18,6 +18,10 @@ public class Hand implements Comparable<Hand> {
 
 	@Override
 	public final int compareTo(Hand otherHand) {
+		return (type == otherHand.type) ? compareSameType(otherHand) : type.compareTo(otherHand.type);
+	}
+
+	private int compareSameType(Hand otherHand) {
 		for (int i = 0; i < 5; i++) {
 			if (allCards[i].getKind() != otherHand.allCards[i].getKind()) {
 				return allCards[i].compareTo(otherHand.allCards[i]);

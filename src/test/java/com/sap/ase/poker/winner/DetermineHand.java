@@ -1,16 +1,7 @@
 package com.sap.ase.poker.winner;
 
 import static com.sap.ase.poker.model.Card.Kind.ACE;
-import static com.sap.ase.poker.winner.Hand.Type.FLUSH;
-import static com.sap.ase.poker.winner.Hand.Type.FOUR_OF_A_KIND;
-import static com.sap.ase.poker.winner.Hand.Type.FULL_HOUSE;
-import static com.sap.ase.poker.winner.Hand.Type.HIGH_CARD;
-import static com.sap.ase.poker.winner.Hand.Type.PAIR;
-import static com.sap.ase.poker.winner.Hand.Type.ROYAL_FLUSH;
-import static com.sap.ase.poker.winner.Hand.Type.STRAIGHT;
-import static com.sap.ase.poker.winner.Hand.Type.STRAIGHT_FLUSH;
-import static com.sap.ase.poker.winner.Hand.Type.THREE_OF_A_KIND;
-import static com.sap.ase.poker.winner.Hand.Type.TWO_PAIRS;
+import static com.sap.ase.poker.winner.Hand.Type.*;
 import static com.sap.ase.poker.winner.IllegalHand.assert7Cards;
 import static com.sap.ase.poker.winner.IllegalHand.assertNoDuplicates;
 import static java.util.Arrays.asList;

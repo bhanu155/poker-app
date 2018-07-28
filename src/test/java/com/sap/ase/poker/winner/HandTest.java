@@ -45,8 +45,8 @@ public class HandTest {
 
 	@Test
 	public void highCard_pair() throws Exception {
-		Hand hand1 = createHighCardHand(SPADES_6, CLUBS_2);
-		Hand hand2 = new Hand(PAIR, asList(DIAMONDS_KING, SPADES_KING, DIAMONDS_6));
+		Hand hand1 = createHighCardHand(DIAMONDS_KING, CLUBS_2);
+		Hand hand2 = new Hand(PAIR, asList(DIAMONDS_QUEEN, SPADES_QUEEN, DIAMONDS_6));
 
 		Hand[] hands = new Hand[] { hand1, hand2 };
 		sort(hands, reverseOrder());
