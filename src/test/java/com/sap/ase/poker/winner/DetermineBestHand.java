@@ -45,7 +45,8 @@ public class DetermineBestHand {
 			Kind kind = card.getKind();
 			Suit suit = card.getSuit();
 
-			KindGroup kindGroup = kindMap.containsKey(kind) ? kindMap.get(kind) : new KindGroup(kind, new ArrayList<>());
+			KindGroup kindGroup = kindMap.containsKey(kind) ? kindMap.get(kind)
+					: new KindGroup(kind, new ArrayList<>());
 			kindGroup.cards.add(card);
 			kindMap.put(kind, kindGroup);
 
@@ -56,9 +57,12 @@ public class DetermineBestHand {
 		List<KindGroup> byKind = new ArrayList<KindGroup>(kindMap.values());
 		Collections.sort(byKind, reverseOrder());
 
-		List<KindGroup> fourOfAKinds = byKind.stream().filter(kindGroup -> kindGroup.cards.size() == 4).collect(Collectors.toList());
-		List<KindGroup> threeOfAKinds = byKind.stream().filter(kindGroup -> kindGroup.cards.size() == 3).collect(Collectors.toList());
-		List<KindGroup> pairs = byKind.stream().filter(kindGroup -> kindGroup.cards.size() == 2).collect(Collectors.toList());
+		List<KindGroup> fourOfAKinds = byKind.stream().filter(kindGroup -> kindGroup.cards.size() == 4)
+				.collect(Collectors.toList());
+		List<KindGroup> threeOfAKinds = byKind.stream().filter(kindGroup -> kindGroup.cards.size() == 3)
+				.collect(Collectors.toList());
+		List<KindGroup> pairs = byKind.stream().filter(kindGroup -> kindGroup.cards.size() == 2)
+				.collect(Collectors.toList());
 
 		List<Card> handOfFive = new ArrayList<>();
 		List<Card> remainingCards = new ArrayList<>(sortedCards);
@@ -122,11 +126,20 @@ public class DetermineBestHand {
 		return new Result(HIGH_CARD, sortedCards.subList(0, 5).toArray(new Card[0]));
 	}
 
+	/*
+	 * strategy: compare rank of current card with rank of card 4 indices before; if
+	 * the difference in rank is also 4, then we have found 5 consecutive cards.
+	 * 
+	 * example: diamonds 7 at index 2 and clubs 3 at index 6
+	 * 
+	 * precondition: each rank must be unique, e.g. clubs 7 and spades 7 is wrong
+	 */
 	private List<Card> straight(List<Card> cards) {
+		// if first card is ace, add to end of list (a straight can also start from 1)
 		if (cards.get(0).getKind() == ACE) {
-			// if first card is ace, add to end of list (a straight can also start from 1)
 			cards.add(cards.get(0));
 		}
+
 		for (int i = 4; i < cards.size(); i++) {
 			Kind kind = cards.get(i).getKind();
 			Kind previousKind = cards.get(i - 4).getKind();
@@ -156,45 +169,6 @@ public class DetermineBestHand {
 		}
 	}
 
-	public abstract class Hand implements Comparable<Hand> {
-		protected final int rank;
-		public Hand(int rank) {
-			this.rank = rank;
-		}
-		public abstract Card[] getCards();
-	}
-
-	public class HighCard extends Hand {
-		
-		private final Card[] cards;
-
-		//TODO could we use a sorted set here?
-		public HighCard(int rank, List<Card> cards) {
-			super(rank);
-			this.cards = cards.toArray(new Card[0]);
-		}
-
-		@Override
-		public int compareTo(Hand otherHand) {
-			if (rank == otherHand.rank) {
-				HighCard otherHighCardHand = (HighCard)otherHand; 
-				for (int i = 0; i < 5; i++) {
-					if (cards[i].getKind() != otherHighCardHand.cards[i].getKind()) {
-						return cards[i].compareTo(otherHighCardHand.cards[i]);
-					}
-				}
-				return 0;
-			} else {
-				return rank - otherHand.rank;
-			}
-		}
-
-		@Override
-		public Card[] getCards() {
-			return cards;
-		}
-	}
-	
 	public class Result {
 		public final HandType handType;
 		public final Card[] handOfFive;
@@ -202,21 +176,6 @@ public class DetermineBestHand {
 		public Result(HandType handType, Card... handOfFive) {
 			this.handType = handType;
 			this.handOfFive = handOfFive;
-		}
-	}
-
-	private class KindGroup implements Comparable<KindGroup> {
-		private final Kind kind;
-		private final List<Card> cards;
-
-		public KindGroup(Kind kind, List<Card> cards) {
-			this.kind = kind;
-			this.cards = cards;
-		}
-
-		@Override
-		public int compareTo(KindGroup otherKindGroup) {
-			return this.kind.compareTo(otherKindGroup.kind);
 		}
 	}
 
