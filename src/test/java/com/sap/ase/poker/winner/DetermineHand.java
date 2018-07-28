@@ -1,23 +1,14 @@
 package com.sap.ase.poker.winner;
 
 import static com.sap.ase.poker.model.Card.Kind.ACE;
-import static com.sap.ase.poker.winner.DetermineBestHand.HandType.FLUSH;
-import static com.sap.ase.poker.winner.DetermineBestHand.HandType.FOUR_OF_A_KIND;
-import static com.sap.ase.poker.winner.DetermineBestHand.HandType.FULL_HOUSE;
-import static com.sap.ase.poker.winner.DetermineBestHand.HandType.HIGH_CARD;
-import static com.sap.ase.poker.winner.DetermineBestHand.HandType.PAIR;
-import static com.sap.ase.poker.winner.DetermineBestHand.HandType.ROYAL_FLUSH;
-import static com.sap.ase.poker.winner.DetermineBestHand.HandType.STRAIGHT;
-import static com.sap.ase.poker.winner.DetermineBestHand.HandType.STRAIGHT_FLUSH;
-import static com.sap.ase.poker.winner.DetermineBestHand.HandType.THREE_OF_A_KIND;
-import static com.sap.ase.poker.winner.DetermineBestHand.HandType.TWO_PAIRS;
 import static java.util.Collections.frequency;
 import static java.util.Collections.reverseOrder;
+import static java.util.Collections.sort;
+import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,17 +18,28 @@ import java.util.stream.Collectors;
 import com.sap.ase.poker.model.Card;
 import com.sap.ase.poker.model.Card.Kind;
 import com.sap.ase.poker.model.Card.Suit;
+import com.sap.ase.poker.winner.Hand.Flush;
+import com.sap.ase.poker.winner.Hand.FourOfAKind;
+import com.sap.ase.poker.winner.Hand.FullHouse;
+import com.sap.ase.poker.winner.Hand.HighCard;
+import com.sap.ase.poker.winner.Hand.Pair;
+import com.sap.ase.poker.winner.Hand.RoyalFlush;
+import com.sap.ase.poker.winner.Hand.Straight;
+import com.sap.ase.poker.winner.Hand.StraightFlush;
+import com.sap.ase.poker.winner.Hand.ThreeOfAKind;
+import com.sap.ase.poker.winner.Hand.TwoPairs;
+import com.sap.ase.poker.winner.Hand.Type;
 import com.sap.ase.poker.winner.IllegalHand.DuplicateCards;
 import com.sap.ase.poker.winner.IllegalHand.IllegalNumberOfCards;
 
-public class DetermineBestHand {
+public class DetermineHand {
 
 	public Result execute(Card... sevenCards) throws IllegalHand {
 		List<Card> sortedCards = Arrays.asList(sevenCards);
 		assert7Cards(sortedCards);
 		assertNoDuplicates(sortedCards);
 
-		Collections.sort(sortedCards, reverseOrder());
+		sort(sortedCards, reverseOrder());
 
 		Map<Kind, KindGroup> kindMap = new HashMap<>();
 		Map<Suit, List<Card>> suitMap = new HashMap<>();
@@ -45,8 +47,7 @@ public class DetermineBestHand {
 			Kind kind = card.getKind();
 			Suit suit = card.getSuit();
 
-			KindGroup kindGroup = kindMap.containsKey(kind) ? kindMap.get(kind)
-					: new KindGroup(kind, new ArrayList<>());
+			KindGroup kindGroup = kindMap.containsKey(kind) ? kindMap.get(kind) : new KindGroup(kind);
 			kindGroup.cards.add(card);
 			kindMap.put(kind, kindGroup);
 
@@ -55,42 +56,26 @@ public class DetermineBestHand {
 			suitMap.put(suit, cardsBySuit);
 		}
 		List<KindGroup> byKind = new ArrayList<KindGroup>(kindMap.values());
-		Collections.sort(byKind, reverseOrder());
+		sort(byKind, reverseOrder());
 
-		List<KindGroup> fourOfAKinds = byKind.stream().filter(kindGroup -> kindGroup.cards.size() == 4)
-				.collect(Collectors.toList());
-		List<KindGroup> threeOfAKinds = byKind.stream().filter(kindGroup -> kindGroup.cards.size() == 3)
-				.collect(Collectors.toList());
-		List<KindGroup> pairs = byKind.stream().filter(kindGroup -> kindGroup.cards.size() == 2)
-				.collect(Collectors.toList());
+		List<KindGroup> fourOfAKinds = byKind.stream().filter(kindGrp -> kindGrp.cards.size() == 4).collect(toList());
+		List<KindGroup> threeOfAKinds = byKind.stream().filter(kindGrp -> kindGrp.cards.size() == 3).collect(toList());
+		List<KindGroup> pairs = byKind.stream().filter(kindGrp -> kindGrp.cards.size() == 2).collect(toList());
 
 		List<Card> handOfFive = new ArrayList<>();
 		List<Card> remainingCards = new ArrayList<>(sortedCards);
-
-		if (fourOfAKinds.size() == 1) {
-			moveCards(fourOfAKinds.get(0).cards, remainingCards, handOfFive);
-			handOfFive.addAll(remainingCards.subList(0, 1));
-			return new Result(FOUR_OF_A_KIND, handOfFive.toArray(new Card[0]));
-		}
-
-		if ((threeOfAKinds.size() >= 1) && (pairs.size() >= 1)) {
-			moveCards(threeOfAKinds.get(0).cards, remainingCards, handOfFive);
-			moveCards(pairs.get(0).cards, remainingCards, handOfFive);
-			return new Result(FULL_HOUSE, handOfFive.toArray(new Card[0]));
-		}
 
 		for (List<Card> cardsOfSameSuit : suitMap.values()) {
 			if (cardsOfSameSuit.size() >= 5) {
 				List<Card> straightFlush = straight(cardsOfSameSuit);
 				if (straightFlush != null) {
 					if (straightFlush.get(0).getKind() == ACE) {
-						return new Result(ROYAL_FLUSH, straightFlush.toArray(new Card[0]));
+						return new Result(new RoyalFlush(straightFlush));
 					} else {
-						return new Result(STRAIGHT_FLUSH, straightFlush.toArray(new Card[0]));
+						return new Result(new StraightFlush(straightFlush));
 					}
 				} else {
-					moveCards(cardsOfSameSuit.subList(0, 5), remainingCards, handOfFive);
-					return new Result(FLUSH, handOfFive.toArray(new Card[0]));
+					return new Result(new Flush(cardsOfSameSuit.subList(0, 5)));
 				}
 			}
 		}
@@ -101,29 +86,31 @@ public class DetermineBestHand {
 		List<Card> byKindFlat = byKind.stream().map(kindGroup -> kindGroup.cards.get(0)).collect(Collectors.toList());
 		List<Card> straight = straight(byKindFlat);
 		if (straight != null) {
-			return new Result(STRAIGHT, straight.toArray(new Card[0]));
+			return new Result(new Straight(straight));
 		}
 
-		if (threeOfAKinds.size() >= 1) {
+		if (fourOfAKinds.size() == 1) {
+			moveCards(fourOfAKinds.get(0).cards, remainingCards, handOfFive);
+			handOfFive.addAll(remainingCards.subList(0, 1)); // TODO can delegate this to class?
+			return new Result(new FourOfAKind(fourOfAKinds.get(0).cards, remainingCards.subList(0, 1)));
+		} else if ((threeOfAKinds.size() >= 1) && (pairs.size() >= 1)) {
 			moveCards(threeOfAKinds.get(0).cards, remainingCards, handOfFive);
-			handOfFive.addAll(remainingCards.subList(0, 2));
-			return new Result(THREE_OF_A_KIND, handOfFive.toArray(new Card[0]));
-		}
-
-		if (pairs.size() >= 2) {
+			moveCards(pairs.get(0).cards, remainingCards, handOfFive);  // TODO can delegate this to class?
+			return new Result(new FullHouse(threeOfAKinds.get(0).cards, pairs.get(0).cards));
+		} else if (threeOfAKinds.size() >= 1) {
+			moveCards(threeOfAKinds.get(0).cards, remainingCards, handOfFive); // TODO can delegate this to class?
+			return new Result(new ThreeOfAKind(threeOfAKinds.get(0).cards, remainingCards.subList(0, 2)));
+		} else if (pairs.size() >= 2) {
 			moveCards(pairs.get(0).cards, remainingCards, handOfFive);
-			moveCards(pairs.get(1).cards, remainingCards, handOfFive);
-			handOfFive.addAll(remainingCards.subList(0, 1));
-			return new Result(TWO_PAIRS, handOfFive.toArray(new Card[0]));
+			moveCards(pairs.get(1).cards, remainingCards, handOfFive); // TODO can delegate this to class?
+			return new Result(new TwoPairs(pairs.get(0).cards, pairs.get(1).cards, remainingCards.subList(0, 1)));
+		} else if (pairs.size() >= 1) {
+			moveCards(pairs.get(0).cards, remainingCards, handOfFive); // TODO can delegate this to class?
+			return new Result(new Pair(pairs.get(0).cards, remainingCards.subList(0, 3)),
+					handOfFive.toArray(new Card[0]));
+		} else {
+			return new Result(new HighCard(sortedCards.subList(0, 5)), sortedCards.subList(0, 5).toArray(new Card[0]));
 		}
-
-		if (pairs.size() >= 1) {
-			moveCards(pairs.get(0).cards, remainingCards, handOfFive);
-			handOfFive.addAll(remainingCards.subList(0, 3));
-			return new Result(PAIR, handOfFive.toArray(new Card[0]));
-		}
-
-		return new Result(HIGH_CARD, sortedCards.subList(0, 5).toArray(new Card[0]));
 	}
 
 	/*
@@ -170,16 +157,17 @@ public class DetermineBestHand {
 	}
 
 	public class Result {
-		public final HandType handType;
+		public final Type handType;
 		public final Card[] handOfFive;
 
-		public Result(HandType handType, Card... handOfFive) {
+		public Result(Type handType, Card... handOfFive) {
 			this.handType = handType;
 			this.handOfFive = handOfFive;
 		}
-	}
 
-	public enum HandType {
-		HIGH_CARD, PAIR, TWO_PAIRS, THREE_OF_A_KIND, FLUSH, FULL_HOUSE, FOUR_OF_A_KIND, STRAIGHT, STRAIGHT_FLUSH, ROYAL_FLUSH
+		public Result(Hand hand, Card... handOfFive) {
+			this.handType = hand.type;
+			this.handOfFive = hand.getCards();
+		}
 	}
 }

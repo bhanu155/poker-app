@@ -1,5 +1,6 @@
 package com.sap.ase.poker.winner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.sap.ase.poker.model.Card;
@@ -9,9 +10,9 @@ public class KindGroup implements Comparable<KindGroup> {
 	public final Kind kind;
 	public final List<Card> cards;
 
-	public KindGroup(Kind kind, List<Card> cards) {
+	public KindGroup(Kind kind) {
 		this.kind = kind;
-		this.cards = cards;
+		this.cards = new ArrayList<>();
 	}
 
 	@Override
