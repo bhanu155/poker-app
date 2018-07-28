@@ -1,5 +1,7 @@
 package com.sap.ase.poker.winner;
 
+import static java.util.Collections.reverseOrder;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -109,7 +111,7 @@ public class PlayerHandAggregate {
 		ArrayList<KindAggregate> kAs = new ArrayList<KindAggregate>();
 		ArrayList<Suit> suits = new ArrayList<Suit>();
 		ArrayList<LongestSequence> sequences = new ArrayList<LongestSequence>();
-		Collections.sort(cards);
+		Collections.sort(cards, reverseOrder());
 		Kind lastKind = null;
 		Kind highestKindOfSeqRank = cards.get(0).getKind();
 		int sequentialRankedcardsCounter = 1;
