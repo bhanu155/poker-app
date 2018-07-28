@@ -28,13 +28,12 @@ import com.sap.ase.poker.winner.Hand.Straight;
 import com.sap.ase.poker.winner.Hand.StraightFlush;
 import com.sap.ase.poker.winner.Hand.ThreeOfAKind;
 import com.sap.ase.poker.winner.Hand.TwoPairs;
-import com.sap.ase.poker.winner.Hand.Type;
 import com.sap.ase.poker.winner.IllegalHand.DuplicateCards;
 import com.sap.ase.poker.winner.IllegalHand.IllegalNumberOfCards;
 
 public class DetermineHand {
 
-	public Result execute(Card... sevenCards) throws IllegalHand {
+	public Hand execute(Card... sevenCards) throws IllegalHand {
 		List<Card> sortedCards = Arrays.asList(sevenCards);
 		assert7Cards(sortedCards);
 		assertNoDuplicates(sortedCards);
@@ -70,12 +69,12 @@ public class DetermineHand {
 				List<Card> straightFlush = straight(cardsOfSameSuit);
 				if (straightFlush != null) {
 					if (straightFlush.get(0).getKind() == ACE) {
-						return new Result(new RoyalFlush(straightFlush));
+						return new RoyalFlush(straightFlush);
 					} else {
-						return new Result(new StraightFlush(straightFlush));
+						return new StraightFlush(straightFlush);
 					}
 				} else {
-					return new Result(new Flush(cardsOfSameSuit.subList(0, 5)));
+					return new Flush(cardsOfSameSuit.subList(0, 5));
 				}
 			}
 		}
@@ -86,30 +85,29 @@ public class DetermineHand {
 		List<Card> byKindFlat = byKind.stream().map(kindGroup -> kindGroup.cards.get(0)).collect(Collectors.toList());
 		List<Card> straight = straight(byKindFlat);
 		if (straight != null) {
-			return new Result(new Straight(straight));
+			return new Straight(straight);
 		}
 
 		if (fourOfAKinds.size() == 1) {
 			moveCards(fourOfAKinds.get(0).cards, remainingCards, handOfFive);
 			handOfFive.addAll(remainingCards.subList(0, 1)); // TODO can delegate this to class?
-			return new Result(new FourOfAKind(fourOfAKinds.get(0).cards, remainingCards.subList(0, 1)));
+			return new FourOfAKind(fourOfAKinds.get(0).cards, remainingCards.subList(0, 1));
 		} else if ((threeOfAKinds.size() >= 1) && (pairs.size() >= 1)) {
 			moveCards(threeOfAKinds.get(0).cards, remainingCards, handOfFive);
 			moveCards(pairs.get(0).cards, remainingCards, handOfFive);  // TODO can delegate this to class?
-			return new Result(new FullHouse(threeOfAKinds.get(0).cards, pairs.get(0).cards));
+			return new FullHouse(threeOfAKinds.get(0).cards, pairs.get(0).cards);
 		} else if (threeOfAKinds.size() >= 1) {
 			moveCards(threeOfAKinds.get(0).cards, remainingCards, handOfFive); // TODO can delegate this to class?
-			return new Result(new ThreeOfAKind(threeOfAKinds.get(0).cards, remainingCards.subList(0, 2)));
+			return new ThreeOfAKind(threeOfAKinds.get(0).cards, remainingCards.subList(0, 2));
 		} else if (pairs.size() >= 2) {
 			moveCards(pairs.get(0).cards, remainingCards, handOfFive);
 			moveCards(pairs.get(1).cards, remainingCards, handOfFive); // TODO can delegate this to class?
-			return new Result(new TwoPairs(pairs.get(0).cards, pairs.get(1).cards, remainingCards.subList(0, 1)));
+			return new TwoPairs(pairs.get(0).cards, pairs.get(1).cards, remainingCards.subList(0, 1));
 		} else if (pairs.size() >= 1) {
 			moveCards(pairs.get(0).cards, remainingCards, handOfFive); // TODO can delegate this to class?
-			return new Result(new Pair(pairs.get(0).cards, remainingCards.subList(0, 3)),
-					handOfFive.toArray(new Card[0]));
+			return new Pair(pairs.get(0).cards, remainingCards.subList(0, 3));
 		} else {
-			return new Result(new HighCard(sortedCards.subList(0, 5)), sortedCards.subList(0, 5).toArray(new Card[0]));
+			return new HighCard(sortedCards.subList(0, 5));
 		}
 	}
 
@@ -153,21 +151,6 @@ public class DetermineHand {
 		Optional<Card> firstDuplicate = cards.stream().filter(i -> frequency(cards, i) > 1).findFirst();
 		if (firstDuplicate.isPresent()) {
 			throw new DuplicateCards(firstDuplicate.get());
-		}
-	}
-
-	public class Result {
-		public final Type handType;
-		public final Card[] handOfFive;
-
-		public Result(Type handType, Card... handOfFive) {
-			this.handType = handType;
-			this.handOfFive = handOfFive;
-		}
-
-		public Result(Hand hand, Card... handOfFive) {
-			this.handType = hand.type;
-			this.handOfFive = hand.getCards();
 		}
 	}
 }

@@ -40,7 +40,6 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import com.sap.ase.poker.model.Card;
-import com.sap.ase.poker.winner.DetermineHand.Result;
 import com.sap.ase.poker.winner.IllegalHand.DuplicateCards;
 import com.sap.ase.poker.winner.IllegalHand.IllegalNumberOfCards;
 
@@ -96,170 +95,170 @@ public class DetermineHandTest {
 
 	@Test
 	public void highCard() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_KING, DIAMONDS_10, DIAMONDS_8,
+		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_KING, DIAMONDS_10, DIAMONDS_8,
 				DIAMONDS_9, SPADES_JACK);
-		assertEquals(HIGH_CARD, result.handType);
+		assertEquals(HIGH_CARD, result.type);
 		assertHandCards(SPADES_KING, SPADES_JACK, DIAMONDS_10, DIAMONDS_9, DIAMONDS_8, result);
 	}
 
 	@Test
 	public void pair() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_10, SPADES_4,
+		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_10, SPADES_4,
 				DIAMONDS_9, SPADES_JACK);
-		assertEquals(PAIR, result.handType);
+		assertEquals(PAIR, result.type);
 		assertHandCards(CLUBS_4, SPADES_4, SPADES_QUEEN, SPADES_JACK, DIAMONDS_10, result);
 	}
 
 	@Test
 	public void twoPairs() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_10, SPADES_4,
+		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_10, SPADES_4,
 				DIAMONDS_QUEEN, SPADES_JACK);
-		assertEquals(TWO_PAIRS, result.handType);
+		assertEquals(TWO_PAIRS, result.type);
 		assertHandCards(SPADES_QUEEN, DIAMONDS_QUEEN, CLUBS_4, SPADES_4, SPADES_JACK, result);
 	}
 
 	@Test
 	public void twoPairs_outOfThree() throws Exception {
-		Result result = new DetermineHand().execute(SPADES_4, CLUBS_4, SPADES_QUEEN, DIAMONDS_10, SPADES_10,
+		Hand result = new DetermineHand().execute(SPADES_4, CLUBS_4, SPADES_QUEEN, DIAMONDS_10, SPADES_10,
 				DIAMONDS_QUEEN, SPADES_JACK);
-		assertEquals(TWO_PAIRS, result.handType);
+		assertEquals(TWO_PAIRS, result.type);
 		assertHandCards(SPADES_QUEEN, DIAMONDS_QUEEN, DIAMONDS_10, SPADES_10, SPADES_JACK, result);
 	}
 
 	@Test
 	public void threeOfAKind() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_10, SPADES_4, HEARTS_4,
+		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_10, SPADES_4, HEARTS_4,
 				SPADES_JACK);
-		assertEquals(THREE_OF_A_KIND, result.handType);
+		assertEquals(THREE_OF_A_KIND, result.type);
 		assertHandCards(CLUBS_4, SPADES_4, HEARTS_4, SPADES_QUEEN, SPADES_JACK, result);
 	}
 
 	@Test
 	public void threeOfAKind_outOfTwo() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_QUEEN, SPADES_4,
+		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_QUEEN, SPADES_4,
 				HEARTS_4, CLUBS_QUEEN);
-		assertEquals(THREE_OF_A_KIND, result.handType);
+		assertEquals(THREE_OF_A_KIND, result.type);
 		assertHandCards(SPADES_QUEEN, DIAMONDS_QUEEN, CLUBS_QUEEN, CLUBS_4, SPADES_4, result);
 	}
 
 	@Test
 	public void fourOfAKind() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_2, CLUBS_4, DIAMONDS_4, DIAMONDS_10, SPADES_4, HEARTS_4,
+		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, DIAMONDS_4, DIAMONDS_10, SPADES_4, HEARTS_4,
 				SPADES_JACK);
-		assertEquals(FOUR_OF_A_KIND, result.handType);
+		assertEquals(FOUR_OF_A_KIND, result.type);
 		assertHandCards(CLUBS_4, DIAMONDS_4, SPADES_4, HEARTS_4, SPADES_JACK, result);
 	}
 
 	@Test
 	public void fullHouse() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_2, CLUBS_4, DIAMONDS_4, DIAMONDS_QUEEN, SPADES_4,
+		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, DIAMONDS_4, DIAMONDS_QUEEN, SPADES_4,
 				SPADES_QUEEN, SPADES_JACK);
-		assertEquals(FULL_HOUSE, result.handType);
+		assertEquals(FULL_HOUSE, result.type);
 		assertHandCards(CLUBS_4, DIAMONDS_4, SPADES_4, DIAMONDS_QUEEN, SPADES_QUEEN, result);
 	}
 
 	@Test
 	public void straight() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_4, DIAMONDS_10, DIAMONDS_8, DIAMONDS_9, SPADES_JACK,
+		Hand result = new DetermineHand().execute(CLUBS_4, DIAMONDS_10, DIAMONDS_8, DIAMONDS_9, SPADES_JACK,
 				SPADES_QUEEN, DIAMONDS_ACE);
-		assertEquals(STRAIGHT, result.handType);
+		assertEquals(STRAIGHT, result.type);
 		assertHandCards(SPADES_QUEEN, SPADES_JACK, DIAMONDS_10, DIAMONDS_9, DIAMONDS_8, result);
 	}
 	
 	@Test
 	public void straightWithSixCards() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_4, DIAMONDS_10, DIAMONDS_8, DIAMONDS_9, SPADES_JACK,
+		Hand result = new DetermineHand().execute(CLUBS_4, DIAMONDS_10, DIAMONDS_8, DIAMONDS_9, SPADES_JACK,
 				SPADES_QUEEN, DIAMONDS_KING);
-		assertEquals(STRAIGHT, result.handType);
+		assertEquals(STRAIGHT, result.type);
 		assertHandCards(DIAMONDS_KING, SPADES_QUEEN, SPADES_JACK, DIAMONDS_10, DIAMONDS_9, result);
 	}
 	
 	@Test
 	public void straightWithPair() throws Exception {
-		Result result = new DetermineHand().execute(SPADES_KING, DIAMONDS_10, DIAMONDS_8, DIAMONDS_9, SPADES_JACK,
+		Hand result = new DetermineHand().execute(SPADES_KING, DIAMONDS_10, DIAMONDS_8, DIAMONDS_9, SPADES_JACK,
 				SPADES_QUEEN, DIAMONDS_KING);
-		assertEquals(STRAIGHT, result.handType);
+		assertEquals(STRAIGHT, result.type);
 		assertHandCards(SPADES_KING, SPADES_QUEEN, SPADES_JACK, DIAMONDS_10, DIAMONDS_9, result);
 	}
 	
 	@Test
 	public void falseStraight() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_4, CLUBS_2, DIAMONDS_8, DIAMONDS_ACE, SPADES_JACK,
+		Hand result = new DetermineHand().execute(CLUBS_4, CLUBS_2, DIAMONDS_8, DIAMONDS_ACE, SPADES_JACK,
 				SPADES_QUEEN, DIAMONDS_KING);
-		assertEquals(HIGH_CARD, result.handType);
+		assertEquals(HIGH_CARD, result.type);
 		assertHandCards(DIAMONDS_ACE, DIAMONDS_KING, SPADES_QUEEN, SPADES_JACK, DIAMONDS_8, result);
 	}
 	
 	@Test
 	public void smallStraight() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_3, CLUBS_2, DIAMONDS_4, DIAMONDS_ACE, SPADES_5,
+		Hand result = new DetermineHand().execute(CLUBS_3, CLUBS_2, DIAMONDS_4, DIAMONDS_ACE, SPADES_5,
 				SPADES_QUEEN, DIAMONDS_KING);
-		assertEquals(STRAIGHT, result.handType);
+		assertEquals(STRAIGHT, result.type);
 		assertHandCards(SPADES_5, DIAMONDS_4, CLUBS_3, CLUBS_2, DIAMONDS_ACE, result);
 	}
 	
 	@Test
 	public void flush() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_4, DIAMONDS_9, DIAMONDS_4, DIAMONDS_8, DIAMONDS_10,
+		Hand result = new DetermineHand().execute(CLUBS_4, DIAMONDS_9, DIAMONDS_4, DIAMONDS_8, DIAMONDS_10,
 				DIAMONDS_QUEEN, SPADES_KING);
-		assertEquals(FLUSH, result.handType);
+		assertEquals(FLUSH, result.type);
 		assertHandCards(DIAMONDS_QUEEN, DIAMONDS_10, DIAMONDS_9, DIAMONDS_8, DIAMONDS_4, result);
 	}
 
 	@Test
 	public void flushWithSixCards() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_4, DIAMONDS_9, DIAMONDS_4, DIAMONDS_8, DIAMONDS_10,
+		Hand result = new DetermineHand().execute(CLUBS_4, DIAMONDS_9, DIAMONDS_4, DIAMONDS_8, DIAMONDS_10,
 				DIAMONDS_QUEEN, DIAMONDS_KING);
-		assertEquals(FLUSH, result.handType);
+		assertEquals(FLUSH, result.type);
 		assertHandCards(DIAMONDS_KING, DIAMONDS_QUEEN, DIAMONDS_10, DIAMONDS_9, DIAMONDS_8, result);
 	}
 	
 	@Test
 	public void straightFlush() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_4, DIAMONDS_9, DIAMONDS_4, DIAMONDS_8, DIAMONDS_10,
+		Hand result = new DetermineHand().execute(CLUBS_4, DIAMONDS_9, DIAMONDS_4, DIAMONDS_8, DIAMONDS_10,
 				DIAMONDS_QUEEN, DIAMONDS_JACK);
-		assertEquals(STRAIGHT_FLUSH, result.handType);
+		assertEquals(STRAIGHT_FLUSH, result.type);
 		assertHandCards(DIAMONDS_QUEEN, DIAMONDS_JACK, DIAMONDS_10, DIAMONDS_9, DIAMONDS_8, result);
 	}
 
 	@Test
 	public void smallStraightFlush() throws Exception {
-		Result result = new DetermineHand().execute(DIAMONDS_2, DIAMONDS_ACE, DIAMONDS_4, DIAMONDS_3, DIAMONDS_5,
+		Hand result = new DetermineHand().execute(DIAMONDS_2, DIAMONDS_ACE, DIAMONDS_4, DIAMONDS_3, DIAMONDS_5,
 				DIAMONDS_QUEEN, DIAMONDS_JACK);
-		assertEquals(STRAIGHT_FLUSH, result.handType);
+		assertEquals(STRAIGHT_FLUSH, result.type);
 		assertHandCards(DIAMONDS_5, DIAMONDS_4, DIAMONDS_3, DIAMONDS_2, DIAMONDS_ACE, result);
 	}
 
 	@Test
 	public void straightFlushWithSixCards() throws Exception {
-		Result result = new DetermineHand().execute(DIAMONDS_2, DIAMONDS_ACE, DIAMONDS_4, DIAMONDS_3, DIAMONDS_5,
+		Hand result = new DetermineHand().execute(DIAMONDS_2, DIAMONDS_ACE, DIAMONDS_4, DIAMONDS_3, DIAMONDS_5,
 				DIAMONDS_QUEEN, DIAMONDS_6);
-		assertEquals(STRAIGHT_FLUSH, result.handType);
+		assertEquals(STRAIGHT_FLUSH, result.type);
 		assertHandCards(DIAMONDS_6, DIAMONDS_5, DIAMONDS_4, DIAMONDS_3, DIAMONDS_2, result);
 	}
 
 	@Test
 	public void straightFlushWithHigherNonFlushStraight() throws Exception {
-		Result result = new DetermineHand().execute(DIAMONDS_2, DIAMONDS_ACE, DIAMONDS_4, DIAMONDS_3, DIAMONDS_5,
+		Hand result = new DetermineHand().execute(DIAMONDS_2, DIAMONDS_ACE, DIAMONDS_4, DIAMONDS_3, DIAMONDS_5,
 				DIAMONDS_QUEEN, SPADES_6);
-		assertEquals(STRAIGHT_FLUSH, result.handType);
+		assertEquals(STRAIGHT_FLUSH, result.type);
 		assertHandCards(DIAMONDS_5, DIAMONDS_4, DIAMONDS_3, DIAMONDS_2, DIAMONDS_ACE, result);
 	}
 
 	@Test
 	public void royalFlush() throws Exception {
-		Result result = new DetermineHand().execute(CLUBS_4, DIAMONDS_9, DIAMONDS_ACE, DIAMONDS_KING, DIAMONDS_10,
+		Hand result = new DetermineHand().execute(CLUBS_4, DIAMONDS_9, DIAMONDS_ACE, DIAMONDS_KING, DIAMONDS_10,
 				DIAMONDS_QUEEN, DIAMONDS_JACK);
-		assertEquals(ROYAL_FLUSH, result.handType);
+		assertEquals(ROYAL_FLUSH, result.type);
 		assertHandCards(DIAMONDS_ACE, DIAMONDS_KING, DIAMONDS_QUEEN, DIAMONDS_JACK, DIAMONDS_10, result);
 	}
 
-	private void assertHandCards(Card card1, Card card2, Card card3, Card card4, Card card5, Result result) {
-		assertEquals(5, result.handOfFive.length);
-		assertEquals(card1, result.handOfFive[0]);
-		assertEquals(card2, result.handOfFive[1]);
-		assertEquals(card3, result.handOfFive[2]);
-		assertEquals(card4, result.handOfFive[3]);
-		assertEquals(card5, result.handOfFive[4]);
+	private void assertHandCards(Card card1, Card card2, Card card3, Card card4, Card card5, Hand result) {
+		assertEquals(5, result.allCards.length);
+		assertEquals(card1, result.allCards[0]);
+		assertEquals(card2, result.allCards[1]);
+		assertEquals(card3, result.allCards[2]);
+		assertEquals(card4, result.allCards[3]);
+		assertEquals(card5, result.allCards[4]);
 	}
 }

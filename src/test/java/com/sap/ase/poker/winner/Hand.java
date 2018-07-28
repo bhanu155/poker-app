@@ -10,7 +10,7 @@ import com.sap.ase.poker.model.Card;
 // TODO can the card comparison be made easier using streams, and would this improve the array<->list back and forth conversion?
 public abstract class Hand implements Comparable<Hand> {
 	protected final Type type;
-	protected final Card[] allCards;
+	public final Card[] allCards;
 
 	public Hand(Type type, Card[] allCards) {
 		this.type = type;
@@ -25,10 +25,6 @@ public abstract class Hand implements Comparable<Hand> {
 			}
 		}
 		return 0;
-	}
-
-	public final Card[] getCards() {
-		return allCards;
 	}
 
 	public static class HighCard extends Hand {
