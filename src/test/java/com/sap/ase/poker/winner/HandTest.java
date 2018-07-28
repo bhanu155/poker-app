@@ -19,14 +19,13 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.sap.ase.poker.model.Card;
-
+//TODO some of this stuff probably wants to be production code, e.g. the sorting...
 public class HandTest {
 
 	@Test
 	public void highCard_firstCardHigher() throws Exception {
-		Hand hand1 = createHighCardHand(SPADES_6);
-		Hand hand2 = createHighCardHand(SPADES_7);
+		Hand hand1 = new Hand(HIGH_CARD, asList(SPADES_6));
+		Hand hand2 = new Hand(HIGH_CARD, asList(SPADES_7));
 
 		Hand[] hands = new Hand[] { hand1, hand2 };
 		sort(hands, reverseOrder());
@@ -35,8 +34,8 @@ public class HandTest {
 
 	@Test
 	public void highCard_secondCardHigher() throws Exception {
-		Hand hand1 = createHighCardHand(SPADES_6, CLUBS_2);
-		Hand hand2 = createHighCardHand(DIAMONDS_6, SPADES_7);
+		Hand hand1 = new Hand(HIGH_CARD, asList(SPADES_6, CLUBS_2));
+		Hand hand2 = new Hand(HIGH_CARD, asList(DIAMONDS_6, SPADES_7));
 
 		Hand[] hands = new Hand[] { hand1, hand2 };
 		sort(hands, reverseOrder());
@@ -45,7 +44,7 @@ public class HandTest {
 
 	@Test
 	public void highCard_pair() throws Exception {
-		Hand hand1 = createHighCardHand(DIAMONDS_KING, CLUBS_2);
+		Hand hand1 = new Hand(HIGH_CARD, asList(DIAMONDS_KING, CLUBS_2));
 		Hand hand2 = new Hand(PAIR, asList(DIAMONDS_QUEEN, SPADES_QUEEN, DIAMONDS_6));
 
 		Hand[] hands = new Hand[] { hand1, hand2 };
@@ -71,9 +70,5 @@ public class HandTest {
 		Hand[] hands = new Hand[] { hand1, hand2 };
 		sort(hands, reverseOrder());
 		assertEquals(hand2, hands[0]);
-	}
-
-	private Hand createHighCardHand(Card... cards) {
-		return new Hand(HIGH_CARD, asList(cards));
 	}
 }
