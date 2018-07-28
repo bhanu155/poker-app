@@ -1,7 +1,16 @@
 package com.sap.ase.poker.winner;
 
 import static com.sap.ase.poker.model.Card.Kind.ACE;
-import static com.sap.ase.poker.winner.Hand.Type.*;
+import static com.sap.ase.poker.winner.Hand.Type.FLUSH;
+import static com.sap.ase.poker.winner.Hand.Type.FOUR_OF_A_KIND;
+import static com.sap.ase.poker.winner.Hand.Type.FULL_HOUSE;
+import static com.sap.ase.poker.winner.Hand.Type.HIGH_CARD;
+import static com.sap.ase.poker.winner.Hand.Type.PAIR;
+import static com.sap.ase.poker.winner.Hand.Type.ROYAL_FLUSH;
+import static com.sap.ase.poker.winner.Hand.Type.STRAIGHT;
+import static com.sap.ase.poker.winner.Hand.Type.STRAIGHT_FLUSH;
+import static com.sap.ase.poker.winner.Hand.Type.THREE_OF_A_KIND;
+import static com.sap.ase.poker.winner.Hand.Type.TWO_PAIRS;
 import static com.sap.ase.poker.winner.IllegalHand.assert7Cards;
 import static com.sap.ase.poker.winner.IllegalHand.assertNoDuplicates;
 import static java.util.Arrays.asList;
@@ -73,7 +82,7 @@ public class DetermineHand {
 		if (straight != null) {
 			return new Hand(STRAIGHT, straight);
 		}
-
+		
 		if (fourOfAKinds.size() == 1) {
 			return new Hand(FOUR_OF_A_KIND, reduceToFiveCards(fourOfAKinds.get(0).cards, sortedCards));
 		} else if ((threeOfAKinds.size() >= 1) && (pairs.size() >= 1)) {
@@ -100,9 +109,9 @@ public class DetermineHand {
 	 * strategy: compare rank of current card with rank of card 4 indices before; if
 	 * the difference in rank is also 4, then we have found 5 consecutive cards.
 	 * 
-	 * example: diamonds 7 at index 2 and clubs 3 at index 6
-	 * 
-	 * precondition: each rank must be unique, e.g. clubs 7 and spades 7 is wrong
+	 * precondition: sorted + each rank unique, e.g. clubs 7 and spades 7 is wrong
+	 *
+	 * example: diamonds 7 at index 2 and clubs 3 at index 6 is a straight
 	 */
 	private List<Card> straight(List<Card> cards) {
 		// if first card is ace, add to end of list (a straight can also start from 1)
@@ -111,13 +120,28 @@ public class DetermineHand {
 		}
 
 		for (int i = 4; i < cards.size(); i++) {
-			Kind kind = cards.get(i).getKind();
-			Kind previousKind = cards.get(i - 4).getKind();
-			// modulo 13 to consider ace (rank 13) as "1" (rank 0) in a small straight
-			if (kind.rank % 13 == previousKind.rank - 4) {
+			int rank = cards.get(i).getKind().rank;
+			int previousRank = cards.get(i - 4).getKind().rank;
+			// modulo to consider ace as "1" in a small straight
+			if (rank % ACE.rank == previousRank - 4) {
 				return cards.subList(i - 4, i + 1);
 			}
 		}
 		return null;
+	}
+
+	private class KindGroup implements Comparable<KindGroup> {
+		public final Kind kind;
+		public final List<Card> cards;
+
+		public KindGroup(Kind kind) {
+			this.kind = kind;
+			this.cards = new ArrayList<>();
+		}
+
+		@Override
+		public int compareTo(KindGroup otherKindGroup) {
+			return this.kind.compareTo(otherKindGroup.kind);
+		}
 	}
 }

@@ -7,12 +7,11 @@ import com.sap.ase.poker.model.Card;
 // TODO can the card comparison be made easier using streams, and would this improve the array<->list back and forth conversion?
 public class Hand implements Comparable<Hand> {
 	protected final Type type;
-	public final Card[] allCards;
-
-	// TODO can we use a sorted set here?
-	public Hand(Type type, List<Card> allCards) {
+	public final Card[] cards;
+	
+	public Hand(Type type, List<Card> fiveCards) {
 		this.type = type;
-		this.allCards = allCards.toArray(new Card[0]);
+		cards = fiveCards.toArray(new Card[0]);
 	}
 
 	@Override
@@ -22,8 +21,8 @@ public class Hand implements Comparable<Hand> {
 
 	private int compareSameType(Hand otherHand) {
 		for (int i = 0; i < 5; i++) {
-			if (allCards[i].getKind() != otherHand.allCards[i].getKind()) {
-				return allCards[i].compareTo(otherHand.allCards[i]);
+			if (cards[i].getKind() != otherHand.cards[i].getKind()) {
+				return cards[i].compareTo(otherHand.cards[i]);
 			}
 		}
 		return 0;
