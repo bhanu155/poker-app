@@ -1,40 +1,38 @@
 package com.sap.ase.poker.winner;
 
 import static com.sap.ase.poker.model.Card.Kind.ACE;
-import static java.util.Collections.frequency;
+import static com.sap.ase.poker.winner.Hand.Type.FLUSH;
+import static com.sap.ase.poker.winner.Hand.Type.FOUR_OF_A_KIND;
+import static com.sap.ase.poker.winner.Hand.Type.FULL_HOUSE;
+import static com.sap.ase.poker.winner.Hand.Type.HIGH_CARD;
+import static com.sap.ase.poker.winner.Hand.Type.PAIR;
+import static com.sap.ase.poker.winner.Hand.Type.ROYAL_FLUSH;
+import static com.sap.ase.poker.winner.Hand.Type.STRAIGHT;
+import static com.sap.ase.poker.winner.Hand.Type.STRAIGHT_FLUSH;
+import static com.sap.ase.poker.winner.Hand.Type.THREE_OF_A_KIND;
+import static com.sap.ase.poker.winner.Hand.Type.TWO_PAIRS;
+import static com.sap.ase.poker.winner.IllegalHand.assert7Cards;
+import static com.sap.ase.poker.winner.IllegalHand.assertNoDuplicates;
+import static java.util.Arrays.asList;
 import static java.util.Collections.reverseOrder;
 import static java.util.Collections.sort;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.sap.ase.poker.model.Card;
 import com.sap.ase.poker.model.Card.Kind;
 import com.sap.ase.poker.model.Card.Suit;
-import com.sap.ase.poker.winner.Hand.Flush;
-import com.sap.ase.poker.winner.Hand.FourOfAKind;
-import com.sap.ase.poker.winner.Hand.FullHouse;
-import com.sap.ase.poker.winner.Hand.HighCard;
-import com.sap.ase.poker.winner.Hand.Pair;
-import com.sap.ase.poker.winner.Hand.RoyalFlush;
-import com.sap.ase.poker.winner.Hand.Straight;
-import com.sap.ase.poker.winner.Hand.StraightFlush;
-import com.sap.ase.poker.winner.Hand.ThreeOfAKind;
-import com.sap.ase.poker.winner.Hand.TwoPairs;
-import com.sap.ase.poker.winner.IllegalHand.DuplicateCards;
-import com.sap.ase.poker.winner.IllegalHand.IllegalNumberOfCards;
 
 public class DetermineHand {
 
 	public Hand execute(Card... sevenCards) throws IllegalHand {
-		List<Card> sortedCards = Arrays.asList(sevenCards);
+		List<Card> sortedCards = asList(sevenCards);
 		assert7Cards(sortedCards);
 		assertNoDuplicates(sortedCards);
 
@@ -61,20 +59,17 @@ public class DetermineHand {
 		List<KindGroup> threeOfAKinds = byKind.stream().filter(kindGrp -> kindGrp.cards.size() == 3).collect(toList());
 		List<KindGroup> pairs = byKind.stream().filter(kindGrp -> kindGrp.cards.size() == 2).collect(toList());
 
-		List<Card> handOfFive = new ArrayList<>();
-		List<Card> remainingCards = new ArrayList<>(sortedCards);
-
 		for (List<Card> cardsOfSameSuit : suitMap.values()) {
 			if (cardsOfSameSuit.size() >= 5) {
 				List<Card> straightFlush = straight(cardsOfSameSuit);
 				if (straightFlush != null) {
 					if (straightFlush.get(0).getKind() == ACE) {
-						return new RoyalFlush(straightFlush);
+						return new Hand(ROYAL_FLUSH, straightFlush);
 					} else {
-						return new StraightFlush(straightFlush);
+						return new Hand(STRAIGHT_FLUSH, straightFlush);
 					}
 				} else {
-					return new Flush(cardsOfSameSuit.subList(0, 5));
+					return new Hand(FLUSH, cardsOfSameSuit.subList(0, 5));
 				}
 			}
 		}
@@ -82,33 +77,32 @@ public class DetermineHand {
 		// Flatten the list of by-kind collections. If there are multiple cards of the
 		// same kind, lets say we have a diamond 10 and a spades 10, we can just pick
 		// the first, (=kindGroup.cards.get(0)), this is good enough for a straight
-		List<Card> byKindFlat = byKind.stream().map(kindGroup -> kindGroup.cards.get(0)).collect(Collectors.toList());
+		List<Card> byKindFlat = byKind.stream().map(kindGroup -> kindGroup.cards.get(0)).collect(toList());
 		List<Card> straight = straight(byKindFlat);
 		if (straight != null) {
-			return new Straight(straight);
+			return new Hand(STRAIGHT, straight);
 		}
 
 		if (fourOfAKinds.size() == 1) {
-			moveCards(fourOfAKinds.get(0).cards, remainingCards, handOfFive);
-			handOfFive.addAll(remainingCards.subList(0, 1)); // TODO can delegate this to class?
-			return new FourOfAKind(fourOfAKinds.get(0).cards, remainingCards.subList(0, 1));
+			return new Hand(FOUR_OF_A_KIND, reduceToFiveCards(fourOfAKinds.get(0).cards, sortedCards));
 		} else if ((threeOfAKinds.size() >= 1) && (pairs.size() >= 1)) {
-			moveCards(threeOfAKinds.get(0).cards, remainingCards, handOfFive);
-			moveCards(pairs.get(0).cards, remainingCards, handOfFive);  // TODO can delegate this to class?
-			return new FullHouse(threeOfAKinds.get(0).cards, pairs.get(0).cards);
+			return new Hand(FULL_HOUSE,
+					concat(threeOfAKinds.get(0).cards.stream(), pairs.get(0).cards.stream()).collect(toList()));
 		} else if (threeOfAKinds.size() >= 1) {
-			moveCards(threeOfAKinds.get(0).cards, remainingCards, handOfFive); // TODO can delegate this to class?
-			return new ThreeOfAKind(threeOfAKinds.get(0).cards, remainingCards.subList(0, 2));
+			return new Hand(THREE_OF_A_KIND, reduceToFiveCards(threeOfAKinds.get(0).cards, sortedCards));
 		} else if (pairs.size() >= 2) {
-			moveCards(pairs.get(0).cards, remainingCards, handOfFive);
-			moveCards(pairs.get(1).cards, remainingCards, handOfFive); // TODO can delegate this to class?
-			return new TwoPairs(pairs.get(0).cards, pairs.get(1).cards, remainingCards.subList(0, 1));
+			return new Hand(TWO_PAIRS, reduceToFiveCards(
+					concat(pairs.get(0).cards.stream(), pairs.get(1).cards.stream()).collect(toList()), sortedCards));
 		} else if (pairs.size() >= 1) {
-			moveCards(pairs.get(0).cards, remainingCards, handOfFive); // TODO can delegate this to class?
-			return new Pair(pairs.get(0).cards, remainingCards.subList(0, 3));
+			return new Hand(PAIR, reduceToFiveCards(pairs.get(0).cards, sortedCards));
 		} else {
-			return new HighCard(sortedCards.subList(0, 5));
+			return new Hand(HIGH_CARD, sortedCards.subList(0, 5));
 		}
+	}
+
+	private List<Card> reduceToFiveCards(List<Card> leadingCards, List<Card> sevenCards) {
+		Stream<Card> filteredCards = sevenCards.stream().filter(card -> !leadingCards.contains(card));
+		return concat(leadingCards.stream(), filteredCards).limit(5).collect(toList());
 	}
 
 	/*
@@ -134,23 +128,5 @@ public class DetermineHand {
 			}
 		}
 		return null;
-	}
-
-	private void moveCards(List<Card> cardsToMove, List<Card> fromRemainingCards, List<Card> toHandOfFive) {
-		toHandOfFive.addAll(cardsToMove);
-		fromRemainingCards.removeAll(cardsToMove);
-	}
-
-	private void assert7Cards(Collection<Card> cards) throws IllegalNumberOfCards {
-		if (cards.size() != 7) {
-			throw new IllegalNumberOfCards(cards.size());
-		}
-	}
-
-	private void assertNoDuplicates(Collection<Card> cards) throws DuplicateCards {
-		Optional<Card> firstDuplicate = cards.stream().filter(i -> frequency(cards, i) > 1).findFirst();
-		if (firstDuplicate.isPresent()) {
-			throw new DuplicateCards(firstDuplicate.get());
-		}
 	}
 }
