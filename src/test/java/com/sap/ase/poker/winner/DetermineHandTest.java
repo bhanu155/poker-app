@@ -262,11 +262,11 @@ public class DetermineHandTest {
 	}
 
 	private void assertHandCards(Card card1, Card card2, Card card3, Card card4, Card card5, Hand result) {
-		assertEquals(5, result.cards.length);
-		assertEquals(card1, result.cards[0]);
-		assertEquals(card2, result.cards[1]);
-		assertEquals(card3, result.cards[2]);
-		assertEquals(card4, result.cards[3]);
-		assertEquals(card5, result.cards[4]);
+		assertEquals(5, result.cards.size());
+		assertEquals(card1, result.cards.get(0));
+		assertEquals(card2, result.cards.get(1));
+		assertEquals(card3, result.cards.get(2));
+		assertEquals(card4, result.cards.get(3));
+		assertEquals(card5, result.cards.get(4));
 	}
 }

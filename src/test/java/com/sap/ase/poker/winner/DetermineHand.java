@@ -1,29 +1,17 @@
 package com.sap.ase.poker.winner;
 
 import static com.sap.ase.poker.model.Card.Kind.ACE;
-import static com.sap.ase.poker.winner.Hand.Type.FLUSH;
-import static com.sap.ase.poker.winner.Hand.Type.FOUR_OF_A_KIND;
-import static com.sap.ase.poker.winner.Hand.Type.FULL_HOUSE;
-import static com.sap.ase.poker.winner.Hand.Type.HIGH_CARD;
-import static com.sap.ase.poker.winner.Hand.Type.PAIR;
-import static com.sap.ase.poker.winner.Hand.Type.ROYAL_FLUSH;
-import static com.sap.ase.poker.winner.Hand.Type.STRAIGHT;
-import static com.sap.ase.poker.winner.Hand.Type.STRAIGHT_FLUSH;
-import static com.sap.ase.poker.winner.Hand.Type.THREE_OF_A_KIND;
-import static com.sap.ase.poker.winner.Hand.Type.TWO_PAIRS;
+import com.sap.ase.poker.winner.Hand.Type;
 import static com.sap.ase.poker.winner.IllegalHand.assert7Cards;
 import static com.sap.ase.poker.winner.IllegalHand.assertNoDuplicates;
 import static java.util.Arrays.asList;
 import static java.util.Collections.reverseOrder;
 import static java.util.Collections.sort;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.concat;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
+import java.util.TreeMap;
 
 import com.sap.ase.poker.model.Card;
 import com.sap.ase.poker.model.Card.Kind;
@@ -32,79 +20,71 @@ import com.sap.ase.poker.model.Card.Suit;
 public class DetermineHand {
 
 	public Hand execute(Card... sevenCards) throws IllegalHand {
-		List<Card> sortedCards = asList(sevenCards);
-		assert7Cards(sortedCards);
-		assertNoDuplicates(sortedCards);
+		List<Card> cards = asList(sevenCards);
+		assert7Cards(cards);
+		assertNoDuplicates(cards);
+		sort(cards, reverseOrder());
 
-		sort(sortedCards, reverseOrder());
-
-		Map<Kind, KindGroup> kindMap = new HashMap<>();
-		Map<Suit, List<Card>> suitMap = new HashMap<>();
-		for (Card card : sortedCards) {
+		TreeMap<Kind, List<Card>> kindMap = new TreeMap<>(reverseOrder());
+		TreeMap<Suit, List<Card>> suitMap = new TreeMap<>(reverseOrder());
+		for (Card card : cards) {
 			Kind kind = card.getKind();
 			Suit suit = card.getSuit();
 
-			KindGroup kindGroup = kindMap.containsKey(kind) ? kindMap.get(kind) : new KindGroup(kind);
-			kindGroup.cards.add(card);
-			kindMap.put(kind, kindGroup);
+			List<Card> cardsByKind = kindMap.containsKey(kind) ? kindMap.get(kind) : new ArrayList<>();
+			cardsByKind.add(card);
+			kindMap.put(kind, cardsByKind);
 
 			List<Card> cardsBySuit = suitMap.containsKey(suit) ? suitMap.get(suit) : new ArrayList<>();
 			cardsBySuit.add(card);
 			suitMap.put(suit, cardsBySuit);
 		}
-		List<KindGroup> byKind = new ArrayList<KindGroup>(kindMap.values());
-		sort(byKind, reverseOrder());
+		List<List<Card>> fourOfAKinds = kindMap.values().stream().filter(list -> list.size() == 4).collect(toList());
+		List<List<Card>> threeOfAKinds = kindMap.values().stream().filter(list -> list.size() == 3).collect(toList());
+		List<List<Card>> pairs = kindMap.values().stream().filter(list -> list.size() == 2).collect(toList());
 
-		List<KindGroup> fourOfAKinds = byKind.stream().filter(kindGrp -> kindGrp.cards.size() == 4).collect(toList());
-		List<KindGroup> threeOfAKinds = byKind.stream().filter(kindGrp -> kindGrp.cards.size() == 3).collect(toList());
-		List<KindGroup> pairs = byKind.stream().filter(kindGrp -> kindGrp.cards.size() == 2).collect(toList());
-
-		for (List<Card> cardsOfSameSuit : suitMap.values()) {
-			if (cardsOfSameSuit.size() >= 5) {
-				List<Card> straightFlush = straight(cardsOfSameSuit);
-				if (straightFlush != null) {
-					if (straightFlush.get(0).getKind() == ACE) {
-						return new Hand(ROYAL_FLUSH, straightFlush);
-					} else {
-						return new Hand(STRAIGHT_FLUSH, straightFlush);
-					}
+		List<Card> flush = suitMap.values().stream().filter(list -> list.size() >= 5).findFirst().orElse(null);
+		if (flush != null) {
+			List<Card> straightFlush = straight(flush);
+			if (straightFlush != null) {
+				if (straightFlush.get(0).getKind() == ACE) {
+					return new Hand(Type.ROYAL_FLUSH, straightFlush);
 				} else {
-					return new Hand(FLUSH, cardsOfSameSuit.subList(0, 5));
+					return new Hand(Type.STRAIGHT_FLUSH, straightFlush);
 				}
+			} else {
+				return new Hand(Type.FLUSH, flush.subList(0, 5));
 			}
 		}
 
 		// Flatten the list of by-kind collections. If there are multiple cards of the
 		// same kind, lets say we have a diamond 10 and a spades 10, we can just pick
 		// the first, (=kindGroup.cards.get(0)), this is good enough for a straight
-		List<Card> byKindFlat = byKind.stream().map(kindGroup -> kindGroup.cards.get(0)).collect(toList());
+		List<Card> byKindFlat = kindMap.values().stream().map(list -> list.get(0)).collect(toList());
 		List<Card> straight = straight(byKindFlat);
 		if (straight != null) {
-			return new Hand(STRAIGHT, straight);
+			return new Hand(Type.STRAIGHT, straight);
 		}
 
 		if (fourOfAKinds.size() == 1) {
-			return new Hand(FOUR_OF_A_KIND, reduceToFiveCards(fourOfAKinds.get(0).cards, sortedCards));
+			return new Hand(Type.FOUR_OF_A_KIND, firstFiveUniqueCards(asList(fourOfAKinds.get(0), cards)));
 		} else if ((threeOfAKinds.size() >= 1) && (pairs.size() >= 1)) {
-			return new Hand(FULL_HOUSE,
-					concat(threeOfAKinds.get(0).cards.stream(), pairs.get(0).cards.stream()).collect(toList()));
+			return new Hand(Type.FULL_HOUSE, firstFiveUniqueCards(asList(threeOfAKinds.get(0), pairs.get(0))));
 		} else if (threeOfAKinds.size() == 2) {
-			return new Hand(FULL_HOUSE, reduceToFiveCards(threeOfAKinds.get(0).cards, threeOfAKinds.get(1).cards));
+			return new Hand(Type.FULL_HOUSE, firstFiveUniqueCards(asList(threeOfAKinds.get(0), threeOfAKinds.get(1))));
 		} else if (threeOfAKinds.size() == 1) {
-			return new Hand(THREE_OF_A_KIND, reduceToFiveCards(threeOfAKinds.get(0).cards, sortedCards));
+			return new Hand(Type.THREE_OF_A_KIND, firstFiveUniqueCards(asList(threeOfAKinds.get(0), cards)));
 		} else if (pairs.size() >= 2) {
-			return new Hand(TWO_PAIRS, reduceToFiveCards(
-					concat(pairs.get(0).cards.stream(), pairs.get(1).cards.stream()).collect(toList()), sortedCards));
+			return new Hand(Type.TWO_PAIRS, firstFiveUniqueCards(asList(pairs.get(0), pairs.get(1), cards)));
 		} else if (pairs.size() >= 1) {
-			return new Hand(PAIR, reduceToFiveCards(pairs.get(0).cards, sortedCards));
+			return new Hand(Type.PAIR, firstFiveUniqueCards(asList(pairs.get(0), cards)));
 		} else {
-			return new Hand(HIGH_CARD, sortedCards.subList(0, 5));
+			return new Hand(Type.HIGH_CARD, cards.subList(0, 5));
 		}
 	}
 
-	private List<Card> reduceToFiveCards(List<Card> leadingCards, List<Card> sevenCards) {
-		Stream<Card> filteredCards = sevenCards.stream().filter(card -> !leadingCards.contains(card));
-		return concat(leadingCards.stream(), filteredCards).limit(5).collect(toList());
+	private List<Card> firstFiveUniqueCards(List<List<Card>> cards) {
+		return cards.stream().flatMap(List::stream).distinct().limit(5).collect(toList());
 	}
 
 	/*
@@ -130,20 +110,5 @@ public class DetermineHand {
 			}
 		}
 		return null;
-	}
-
-	private class KindGroup implements Comparable<KindGroup> {
-		public final Kind kind;
-		public final List<Card> cards;
-
-		public KindGroup(Kind kind) {
-			this.kind = kind;
-			this.cards = new ArrayList<>();
-		}
-
-		@Override
-		public int compareTo(KindGroup otherKindGroup) {
-			return this.kind.compareTo(otherKindGroup.kind);
-		}
 	}
 }
