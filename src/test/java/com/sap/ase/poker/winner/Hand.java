@@ -1,17 +1,28 @@
 package com.sap.ase.poker.winner;
 
+import static java.util.Collections.unmodifiableList;
+
 import java.util.List;
 
 import com.sap.ase.poker.model.Card;
 
-// TODO can the card comparison be made easier using streams, and would this improve the array<->list back and forth conversion?
 public class Hand implements Comparable<Hand> {
-	protected final Type type;
-	public final Card[] cards;
-	
+	public final Type type;
+	public final List<Card> cards;
+
+	/*
+	 * Important: cards must be grouped _and_ sorted so that hands are comparable.
+	 * Grouped means that three-of-a-kind and pairs (in that order) come first.
+	 * 
+	 * Example 1 (high card): [hearts 8, hearts 7, spades 5, spades 4, hearts 3]
+	 * 
+	 * Example 2 (pair): [hearts 4, spades 4, spades 9, spades 7, hearts 6]
+	 * 
+	 * Example 3 (full house): [hearts 4, spades 4, diamonds 4, hearts 6, spades 6]
+	 */
 	public Hand(Type type, List<Card> fiveCards) {
 		this.type = type;
-		cards = fiveCards.toArray(new Card[0]);
+		cards = unmodifiableList(fiveCards);
 	}
 
 	@Override
@@ -21,8 +32,8 @@ public class Hand implements Comparable<Hand> {
 
 	private int compareSameType(Hand otherHand) {
 		for (int i = 0; i < 5; i++) {
-			if (cards[i].getKind() != otherHand.cards[i].getKind()) {
-				return cards[i].compareTo(otherHand.cards[i]);
+			if (cards.get(i).getKind() != otherHand.cards.get(i).getKind()) {
+				return cards.get(i).compareTo(otherHand.cards.get(i));
 			}
 		}
 		return 0;

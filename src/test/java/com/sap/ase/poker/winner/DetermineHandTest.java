@@ -1,39 +1,9 @@
 package com.sap.ase.poker.winner;
 
-import static com.sap.ase.poker.model.CardFixtures.CLUBS_2;
-import static com.sap.ase.poker.model.CardFixtures.CLUBS_3;
-import static com.sap.ase.poker.model.CardFixtures.CLUBS_4;
-import static com.sap.ase.poker.model.CardFixtures.CLUBS_QUEEN;
-import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_10;
-import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_2;
-import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_3;
-import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_4;
-import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_5;
-import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_6;
-import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_8;
-import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_9;
-import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_ACE;
-import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_JACK;
-import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_KING;
-import static com.sap.ase.poker.model.CardFixtures.DIAMONDS_QUEEN;
-import static com.sap.ase.poker.model.CardFixtures.HEARTS_4;
-import static com.sap.ase.poker.model.CardFixtures.SPADES_10;
-import static com.sap.ase.poker.model.CardFixtures.SPADES_4;
-import static com.sap.ase.poker.model.CardFixtures.SPADES_5;
-import static com.sap.ase.poker.model.CardFixtures.SPADES_6;
-import static com.sap.ase.poker.model.CardFixtures.SPADES_JACK;
-import static com.sap.ase.poker.model.CardFixtures.SPADES_KING;
-import static com.sap.ase.poker.model.CardFixtures.SPADES_QUEEN;
-import static com.sap.ase.poker.winner.Hand.Type.FLUSH;
-import static com.sap.ase.poker.winner.Hand.Type.FOUR_OF_A_KIND;
-import static com.sap.ase.poker.winner.Hand.Type.FULL_HOUSE;
-import static com.sap.ase.poker.winner.Hand.Type.HIGH_CARD;
-import static com.sap.ase.poker.winner.Hand.Type.PAIR;
-import static com.sap.ase.poker.winner.Hand.Type.ROYAL_FLUSH;
-import static com.sap.ase.poker.winner.Hand.Type.STRAIGHT;
-import static com.sap.ase.poker.winner.Hand.Type.STRAIGHT_FLUSH;
-import static com.sap.ase.poker.winner.Hand.Type.THREE_OF_A_KIND;
-import static com.sap.ase.poker.winner.Hand.Type.TWO_PAIRS;
+import static com.sap.ase.poker.model.Card.Kind.TWO;
+import static com.sap.ase.poker.model.Card.Suit.CLUBS;
+import static com.sap.ase.poker.model.CardFixtures.*;
+import static com.sap.ase.poker.winner.Hand.Type.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -49,20 +19,19 @@ public class DetermineHandTest {
 	public void illegalNumberOfCards() throws Exception {
 		try {
 			new DetermineHand().execute();
-			fail("6 cards should be illegal for hand evaluation");
+			fail("0 cards should be illegal for hand evaluation");
 		} catch (IllegalNumberOfCards e) {
 			assertEquals(0, e.numberOfCards);
 		}
 		try {
-			new DetermineHand().execute(CLUBS_2, CLUBS_4, DIAMONDS_10, DIAMONDS_8, DIAMONDS_9, SPADES_JACK);
+			new DetermineHand().execute(CLUBS_2, CLUBS_3, CLUBS_4, CLUBS_5, CLUBS_6, CLUBS_7);
 			fail("6 cards should be illegal for hand evaluation");
 		} catch (IllegalNumberOfCards e) {
 			assertEquals(6, e.numberOfCards);
 		}
 		try {
-			new DetermineHand().execute(CLUBS_2, CLUBS_4, DIAMONDS_10, DIAMONDS_8, DIAMONDS_9, SPADES_JACK,
-					SPADES_QUEEN, SPADES_KING);
-			fail("8 cards are not evaluate for hand evaluation");
+			new DetermineHand().execute(CLUBS_2, CLUBS_3, CLUBS_4, CLUBS_5, CLUBS_6, CLUBS_7, CLUBS_8, CLUBS_9);
+			fail("8 cards should be illegal for hand evaluation");
 		} catch (IllegalNumberOfCards e) {
 			assertEquals(8, e.numberOfCards);
 		}
@@ -71,48 +40,45 @@ public class DetermineHandTest {
 	@Test
 	public void duplicateCards() throws Exception {
 		try {
-			new DetermineHand().execute(CLUBS_2, CLUBS_2, DIAMONDS_10, DIAMONDS_8, DIAMONDS_9, SPADES_JACK,
-					SPADES_QUEEN);
+			new DetermineHand().execute(CLUBS_2, new Card(TWO, CLUBS), CLUBS_3, CLUBS_4, CLUBS_5, CLUBS_6, CLUBS_7);
 			fail("duplicate cards should be illegal for hand evaluation");
 		} catch (DuplicateCards e) {
 			assertEquals(CLUBS_2, e.duplicateCard);
 		}
 		try {
-			new DetermineHand().execute(CLUBS_2, CLUBS_4, DIAMONDS_10, CLUBS_4, DIAMONDS_9, SPADES_JACK,
-					SPADES_QUEEN);
-			fail("duplicate cards are not evaluate for hand evaluation");
+			new DetermineHand().execute(CLUBS_2, CLUBS_3, CLUBS_2, CLUBS_4, CLUBS_5, CLUBS_6, CLUBS_7);
+			fail("duplicate cards should be illegal for hand evaluation");
 		} catch (DuplicateCards e) {
-			assertEquals(CLUBS_4, e.duplicateCard);
+			assertEquals(CLUBS_2, e.duplicateCard);
 		}
 		try {
-			new DetermineHand().execute(CLUBS_2, CLUBS_4, DIAMONDS_10, DIAMONDS_8, DIAMONDS_9, SPADES_JACK,
-					CLUBS_4);
-			fail("duplicate cards are not evaluate for hand evaluation");
+			new DetermineHand().execute(CLUBS_2, CLUBS_7, CLUBS_3, CLUBS_4, CLUBS_5, CLUBS_6, CLUBS_7);
+			fail("duplicate cards should be illegal for hand evaluation");
 		} catch (DuplicateCards e) {
-			assertEquals(CLUBS_4, e.duplicateCard);
+			assertEquals(CLUBS_7, e.duplicateCard);
 		}
 	}
 
 	@Test
 	public void highCard() throws Exception {
-		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_KING, DIAMONDS_10, DIAMONDS_8,
-				DIAMONDS_9, SPADES_JACK);
+		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_KING, DIAMONDS_10, DIAMONDS_8, DIAMONDS_9,
+				SPADES_JACK);
 		assertEquals(HIGH_CARD, result.type);
 		assertHandCards(SPADES_KING, SPADES_JACK, DIAMONDS_10, DIAMONDS_9, DIAMONDS_8, result);
 	}
 
 	@Test
 	public void pair() throws Exception {
-		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_10, SPADES_4,
-				DIAMONDS_9, SPADES_JACK);
+		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_10, SPADES_4, DIAMONDS_9,
+				SPADES_JACK);
 		assertEquals(PAIR, result.type);
 		assertHandCards(CLUBS_4, SPADES_4, SPADES_QUEEN, SPADES_JACK, DIAMONDS_10, result);
 	}
 
 	@Test
 	public void twoPairs() throws Exception {
-		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_10, SPADES_4,
-				DIAMONDS_QUEEN, SPADES_JACK);
+		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_10, SPADES_4, DIAMONDS_QUEEN,
+				SPADES_JACK);
 		assertEquals(TWO_PAIRS, result.type);
 		assertHandCards(SPADES_QUEEN, DIAMONDS_QUEEN, CLUBS_4, SPADES_4, SPADES_JACK, result);
 	}
@@ -143,16 +109,16 @@ public class DetermineHandTest {
 
 	@Test
 	public void fullHouse() throws Exception {
-		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, DIAMONDS_4, DIAMONDS_QUEEN, SPADES_4,
-				SPADES_QUEEN, SPADES_JACK);
+		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, DIAMONDS_4, DIAMONDS_QUEEN, SPADES_4, SPADES_QUEEN,
+				SPADES_JACK);
 		assertEquals(FULL_HOUSE, result.type);
 		assertHandCards(CLUBS_4, DIAMONDS_4, SPADES_4, DIAMONDS_QUEEN, SPADES_QUEEN, result);
 	}
 
 	@Test
 	public void fullHouse_twoThreeOfAKind() throws Exception {
-		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_QUEEN, SPADES_4,
-				HEARTS_4, CLUBS_QUEEN);
+		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_QUEEN, SPADES_4, HEARTS_4,
+				CLUBS_QUEEN);
 		assertEquals(FULL_HOUSE, result.type);
 		assertHandCards(SPADES_QUEEN, DIAMONDS_QUEEN, CLUBS_QUEEN, CLUBS_4, SPADES_4, result);
 	}
@@ -164,7 +130,7 @@ public class DetermineHandTest {
 		assertEquals(STRAIGHT, result.type);
 		assertHandCards(SPADES_QUEEN, SPADES_JACK, DIAMONDS_10, DIAMONDS_9, DIAMONDS_8, result);
 	}
-	
+
 	@Test
 	public void straightWithSixCards() throws Exception {
 		Hand result = new DetermineHand().execute(CLUBS_4, DIAMONDS_10, DIAMONDS_8, DIAMONDS_9, SPADES_JACK,
@@ -172,7 +138,7 @@ public class DetermineHandTest {
 		assertEquals(STRAIGHT, result.type);
 		assertHandCards(DIAMONDS_KING, SPADES_QUEEN, SPADES_JACK, DIAMONDS_10, DIAMONDS_9, result);
 	}
-	
+
 	@Test
 	public void straightWithPair() throws Exception {
 		Hand result = new DetermineHand().execute(SPADES_KING, DIAMONDS_10, DIAMONDS_8, DIAMONDS_9, SPADES_JACK,
@@ -180,23 +146,23 @@ public class DetermineHandTest {
 		assertEquals(STRAIGHT, result.type);
 		assertHandCards(SPADES_KING, SPADES_QUEEN, SPADES_JACK, DIAMONDS_10, DIAMONDS_9, result);
 	}
-	
+
 	@Test
 	public void falseStraight() throws Exception {
-		Hand result = new DetermineHand().execute(CLUBS_4, CLUBS_2, DIAMONDS_8, DIAMONDS_ACE, SPADES_JACK,
-				SPADES_QUEEN, DIAMONDS_KING);
+		Hand result = new DetermineHand().execute(CLUBS_4, CLUBS_2, DIAMONDS_8, DIAMONDS_ACE, SPADES_JACK, SPADES_QUEEN,
+				DIAMONDS_KING);
 		assertEquals(HIGH_CARD, result.type);
 		assertHandCards(DIAMONDS_ACE, DIAMONDS_KING, SPADES_QUEEN, SPADES_JACK, DIAMONDS_8, result);
 	}
-	
+
 	@Test
 	public void smallStraight() throws Exception {
-		Hand result = new DetermineHand().execute(CLUBS_3, CLUBS_2, DIAMONDS_4, DIAMONDS_ACE, SPADES_5,
-				SPADES_QUEEN, DIAMONDS_KING);
+		Hand result = new DetermineHand().execute(CLUBS_3, CLUBS_2, DIAMONDS_4, DIAMONDS_ACE, SPADES_5, SPADES_QUEEN,
+				DIAMONDS_KING);
 		assertEquals(STRAIGHT, result.type);
 		assertHandCards(SPADES_5, DIAMONDS_4, CLUBS_3, CLUBS_2, DIAMONDS_ACE, result);
 	}
-	
+
 	@Test
 	public void flush() throws Exception {
 		Hand result = new DetermineHand().execute(CLUBS_4, DIAMONDS_9, DIAMONDS_4, DIAMONDS_8, DIAMONDS_10,
@@ -212,7 +178,7 @@ public class DetermineHandTest {
 		assertEquals(FLUSH, result.type);
 		assertHandCards(DIAMONDS_KING, DIAMONDS_QUEEN, DIAMONDS_10, DIAMONDS_9, DIAMONDS_8, result);
 	}
-	
+
 	@Test
 	public void straightFlush() throws Exception {
 		Hand result = new DetermineHand().execute(CLUBS_4, DIAMONDS_9, DIAMONDS_4, DIAMONDS_8, DIAMONDS_10,

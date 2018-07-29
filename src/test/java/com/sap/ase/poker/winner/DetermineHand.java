@@ -89,9 +89,9 @@ public class DetermineHand {
 
 	/*
 	 * strategy: compare rank of current card with rank of card 4 indices before; if
-	 * the difference in rank is also 4, then we have found 5 consecutive cards.
+	 * the difference in rank is 4, then we have found 5 consecutive cards.
 	 * 
-	 * precondition: sorted + each rank unique, e.g. clubs 7 and spades 7 is wrong
+	 * precondition: sorted + no duplicate kinds, e.g. clubs 7 and spades 7 is wrong
 	 *
 	 * example: diamonds 7 at index 2 and clubs 3 at index 6 is a straight
 	 */
