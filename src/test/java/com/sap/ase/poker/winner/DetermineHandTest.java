@@ -134,14 +134,6 @@ public class DetermineHandTest {
 	}
 
 	@Test
-	public void threeOfAKind_outOfTwo() throws Exception {
-		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_QUEEN, SPADES_4,
-				HEARTS_4, CLUBS_QUEEN);
-		assertEquals(THREE_OF_A_KIND, result.type);
-		assertHandCards(SPADES_QUEEN, DIAMONDS_QUEEN, CLUBS_QUEEN, CLUBS_4, SPADES_4, result);
-	}
-
-	@Test
 	public void fourOfAKind() throws Exception {
 		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, DIAMONDS_4, DIAMONDS_10, SPADES_4, HEARTS_4,
 				SPADES_JACK);
@@ -155,6 +147,14 @@ public class DetermineHandTest {
 				SPADES_QUEEN, SPADES_JACK);
 		assertEquals(FULL_HOUSE, result.type);
 		assertHandCards(CLUBS_4, DIAMONDS_4, SPADES_4, DIAMONDS_QUEEN, SPADES_QUEEN, result);
+	}
+
+	@Test
+	public void fullHouse_twoThreeOfAKind() throws Exception {
+		Hand result = new DetermineHand().execute(CLUBS_2, CLUBS_4, SPADES_QUEEN, DIAMONDS_QUEEN, SPADES_4,
+				HEARTS_4, CLUBS_QUEEN);
+		assertEquals(FULL_HOUSE, result.type);
+		assertHandCards(SPADES_QUEEN, DIAMONDS_QUEEN, CLUBS_QUEEN, CLUBS_4, SPADES_4, result);
 	}
 
 	@Test
@@ -241,6 +241,14 @@ public class DetermineHandTest {
 	public void straightFlushWithHigherNonFlushStraight() throws Exception {
 		Hand result = new DetermineHand().execute(DIAMONDS_2, DIAMONDS_ACE, DIAMONDS_4, DIAMONDS_3, DIAMONDS_5,
 				DIAMONDS_QUEEN, SPADES_6);
+		assertEquals(STRAIGHT_FLUSH, result.type);
+		assertHandCards(DIAMONDS_5, DIAMONDS_4, DIAMONDS_3, DIAMONDS_2, DIAMONDS_ACE, result);
+	}
+
+	@Test
+	public void straightFlushWithHigherNonStraightFlush() throws Exception {
+		Hand result = new DetermineHand().execute(DIAMONDS_2, DIAMONDS_ACE, DIAMONDS_4, DIAMONDS_3, DIAMONDS_5,
+				DIAMONDS_QUEEN, DIAMONDS_8);
 		assertEquals(STRAIGHT_FLUSH, result.type);
 		assertHandCards(DIAMONDS_5, DIAMONDS_4, DIAMONDS_3, DIAMONDS_2, DIAMONDS_ACE, result);
 	}

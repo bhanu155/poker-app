@@ -82,13 +82,15 @@ public class DetermineHand {
 		if (straight != null) {
 			return new Hand(STRAIGHT, straight);
 		}
-		
+
 		if (fourOfAKinds.size() == 1) {
 			return new Hand(FOUR_OF_A_KIND, reduceToFiveCards(fourOfAKinds.get(0).cards, sortedCards));
 		} else if ((threeOfAKinds.size() >= 1) && (pairs.size() >= 1)) {
 			return new Hand(FULL_HOUSE,
 					concat(threeOfAKinds.get(0).cards.stream(), pairs.get(0).cards.stream()).collect(toList()));
-		} else if (threeOfAKinds.size() >= 1) {
+		} else if (threeOfAKinds.size() == 2) {
+			return new Hand(FULL_HOUSE, reduceToFiveCards(threeOfAKinds.get(0).cards, threeOfAKinds.get(1).cards));
+		} else if (threeOfAKinds.size() == 1) {
 			return new Hand(THREE_OF_A_KIND, reduceToFiveCards(threeOfAKinds.get(0).cards, sortedCards));
 		} else if (pairs.size() >= 2) {
 			return new Hand(TWO_PAIRS, reduceToFiveCards(
