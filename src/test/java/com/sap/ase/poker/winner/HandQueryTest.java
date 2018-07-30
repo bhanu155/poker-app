@@ -8,21 +8,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 import com.sap.ase.poker.model.Card;
 import com.sap.ase.poker.winner.IllegalHand.DuplicateCards;
 import com.sap.ase.poker.winner.IllegalHand.IllegalNumberOfCards;
 
-@RunWith(Parameterized.class)
 public class HandQueryTest {
 
-	@Parameterized.Parameters
-    public static Object[][] data() {
-        return new Object[1000][0];
-    }
-	
 	@Test
 	public void illegalNumberOfCards() throws Exception {
 		try {
