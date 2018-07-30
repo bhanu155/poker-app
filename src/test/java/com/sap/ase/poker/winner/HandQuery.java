@@ -24,10 +24,34 @@ public class HandQuery {
 	private TreeMap<Suit, List<Card>> bySuit;
 
 	public Hand findBestHand(Card... sevenCards) throws IllegalHand {
-
 		prepareCards(sevenCards);
-		fillBasicMaps();
+		fillLookupStructures();
+		return findBestHand();
+	}
 
+	private void prepareCards(Card... sevenCards) throws IllegalHand {
+		sortedCards = asList(sevenCards);
+		assert7Cards(sortedCards);
+		assertNoDuplicates(sortedCards);
+		sort(sortedCards, reverseOrder());
+	}
+
+	private void fillLookupStructures() {
+		byKind = new TreeMap<>(reverseOrder());
+		bySuit = new TreeMap<>(reverseOrder());
+
+		for (Card card : sortedCards) {
+			List<Card> cardsByKind = byKind.containsKey(card.kind) ? byKind.get(card.kind) : new ArrayList<>();
+			cardsByKind.add(card);
+			byKind.put(card.kind, cardsByKind);
+
+			List<Card> cardsBySuit = bySuit.containsKey(card.suit) ? bySuit.get(card.suit) : new ArrayList<>();
+			cardsBySuit.add(card);
+			bySuit.put(card.suit, cardsBySuit);
+		}
+	}
+
+	private Hand findBestHand() {
 		List<Card> flush = bySuit.values().stream().filter(list -> list.size() >= 5).findFirst().orElse(null);
 		if (flush != null) {
 			List<Card> strFlush = straight(flush);
@@ -67,29 +91,7 @@ public class HandQuery {
 			return new Hand(HIGH_CARD, sortedCards.subList(0, 5));
 		}
 	}
-
-	private void prepareCards(Card... sevenCards) throws IllegalHand {
-		sortedCards = asList(sevenCards);
-		assert7Cards(sortedCards);
-		assertNoDuplicates(sortedCards);
-		sort(sortedCards, reverseOrder());
-	}
-
-	private void fillBasicMaps() {
-		byKind = new TreeMap<>(reverseOrder());
-		bySuit = new TreeMap<>(reverseOrder());
-
-		for (Card card : sortedCards) {
-			List<Card> cardsByKind = byKind.containsKey(card.kind) ? byKind.get(card.kind) : new ArrayList<>();
-			cardsByKind.add(card);
-			byKind.put(card.kind, cardsByKind);
-
-			List<Card> cardsBySuit = bySuit.containsKey(card.suit) ? bySuit.get(card.suit) : new ArrayList<>();
-			cardsBySuit.add(card);
-			bySuit.put(card.suit, cardsBySuit);
-		}
-	}
-
+	
 	private List<Card> firstFiveUniqueCards(List<List<Card>> cards) {
 		return cards.stream().flatMap(List::stream).distinct().limit(5).collect(toList());
 	}
