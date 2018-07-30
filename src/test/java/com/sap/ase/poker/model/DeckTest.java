@@ -22,8 +22,8 @@ public class DeckTest {
 	public void shouldReturnCardWithSuitAndKind() throws Exception {
 		Deck texDeck = new Deck();
 		Card c = texDeck.dealCard();
-		assertNotNull(c.getKind());
-		assertNotNull(c.getSuit());
+		assertNotNull(c.kind);
+		assertNotNull(c.suit);
 	}
 
 	@Test
@@ -33,7 +33,7 @@ public class DeckTest {
 
 		for (int i = 0; i < 52; i++) {
 			Card c = texDeck.dealCard();
-			uniqueCards.add(c.getSuit() + "_" + c.getKind());
+			uniqueCards.add(c.suit + "_" + c.kind);
 		}
 		
 		assertThat(uniqueCards.size(), is(52));

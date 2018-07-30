@@ -32,7 +32,7 @@ public class Hand implements Comparable<Hand> {
 
 	private int compareSameType(Hand otherHand) {
 		for (int i = 0; i < 5; i++) {
-			if (cards.get(i).getKind() != otherHand.cards.get(i).getKind()) {
+			if (cards.get(i).kind != otherHand.cards.get(i).kind) {
 				return cards.get(i).compareTo(otherHand.cards.get(i));
 			}
 		}

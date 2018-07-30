@@ -76,8 +76,8 @@ public class GetTableResponse {
 		private String kind;
 
 		public Card(com.sap.ase.poker.model.Card card) {
-			suit = suitToString(card.getSuit());
-			kind = kindToString(card.getKind());
+			suit = suitToString(card.suit);
+			kind = kindToString(card.kind);
 		}
 
 		private String suitToString(Suit suit) {

@@ -25,25 +25,17 @@ public class Card implements Comparable<Card> {
 		}
 	}
 
-	private Card.Kind kind;
-	private Card.Suit suit;
+	public final Card.Kind kind;
+	public final Card.Suit suit;
 
 	public Card(Kind kind, Suit suit) {
 		this.kind = kind;
 		this.suit = suit;
 	}
 
-	public Kind getKind() {
-		return kind;
-	}
-
-	public Suit getSuit() {
-		return suit;
-	}
-
 	@Override
 	public int compareTo(Card c) {
-		return this.kind.rank - c.getKind().rank;
+		return this.kind.rank - c.kind.rank;
 	}
 
 	@Override
