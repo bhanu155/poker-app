@@ -8,8 +8,7 @@ import com.sap.ase.poker.model.Card;
 
 public class Hand implements Comparable<Hand> {
 	public final Type type;
-//	public final List<Card> cards;
-	public final Card[] cards;
+	public final List<Card> cards;
 
 	/*
 	 * Important: cards must be grouped _and_ sorted so that hands are comparable.
@@ -21,38 +20,24 @@ public class Hand implements Comparable<Hand> {
 	 * 
 	 * Example 3 (full house): [hearts 4, spades 4, diamonds 4, hearts 6, spades 6]
 	 */
-//	public Hand(Type type, List<Card> fiveCards) {
-//		this.type = type;
-//		cards = unmodifiableList(fiveCards);
-//	}
-
-	public Hand(Type type, Card ... fiveCards) {
+	public Hand(Type type, List<Card> fiveCards) {
 		this.type = type;
-		cards = fiveCards;
+		cards = unmodifiableList(fiveCards);
 	}
 	
 	@Override
 	public final int compareTo(Hand otherHand) {
 		return (type == otherHand.type) ? compareSameType(otherHand) : type.compareTo(otherHand.type);
 	}
-
+	
 	private int compareSameType(Hand otherHand) {
 		for (int i = 0; i < 5; i++) {
-			if (cards[i].kind != otherHand.cards[i].kind) {
-				return cards[i].compareTo(otherHand.cards[i]);
+			if (cards.get(i).kind != otherHand.cards.get(i).kind) {
+				return cards.get(i).compareTo(otherHand.cards.get(i));
 			}
 		}
 		return 0;
 	}
-	
-//	private int compareSameType(Hand otherHand) {
-//		for (int i = 0; i < 5; i++) {
-//			if (cards.get(i).kind != otherHand.cards.get(i).kind) {
-//				return cards.get(i).compareTo(otherHand.cards.get(i));
-//			}
-//		}
-//		return 0;
-//	}
 
 	public static enum Type {
 		// keep the order - enums compare by ordinal, so the order defines the "value"
