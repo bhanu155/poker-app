@@ -8,13 +8,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import com.sap.ase.poker.model.Card;
 import com.sap.ase.poker.winner.IllegalHand.DuplicateCards;
 import com.sap.ase.poker.winner.IllegalHand.IllegalNumberOfCards;
 
+@RunWith(Parameterized.class)
 public class HandQueryTest {
 
+	@Parameterized.Parameters
+    public static Object[][] data() {
+        return new Object[1000][0];
+    }
+	
 	@Test
 	public void illegalNumberOfCards() throws Exception {
 		try {
@@ -207,15 +215,24 @@ public class HandQueryTest {
 	}
 
 	private Hand findBestHand(Card... cards) throws IllegalHand {
-		return new HandQuery().findBestHand(cards);
+		return new HandQuery2().findBestHand(cards);
 	}
 
 	private void assertHandCards(Card card1, Card card2, Card card3, Card card4, Card card5, Hand hand) {
-		assertEquals(5, hand.cards.size());
-		assertEquals(card1, hand.cards.get(0));
-		assertEquals(card2, hand.cards.get(1));
-		assertEquals(card3, hand.cards.get(2));
-		assertEquals(card4, hand.cards.get(3));
-		assertEquals(card5, hand.cards.get(4));
+		assertEquals(5, hand.cards.length);
+		assertEquals(card1, hand.cards[0]);
+		assertEquals(card2, hand.cards[1]);
+		assertEquals(card3, hand.cards[2]);
+		assertEquals(card4, hand.cards[3]);
+		assertEquals(card5, hand.cards[4]);
 	}
+
+//	private void assertHandCards(Card card1, Card card2, Card card3, Card card4, Card card5, Hand hand) {
+//		assertEquals(5, hand.cards.size());
+//		assertEquals(card1, hand.cards.get(0));
+//		assertEquals(card2, hand.cards.get(1));
+//		assertEquals(card3, hand.cards.get(2));
+//		assertEquals(card4, hand.cards.get(3));
+//		assertEquals(card5, hand.cards.get(4));
+//	}
 }
