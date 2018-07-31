@@ -7,10 +7,9 @@ import java.util.Optional;
 
 import com.sap.ase.poker.model.Card;
 
-//TODO naming is confusing - here, a hand has 7 cards, in hand class it has 5...
 @SuppressWarnings("serial")
-public class IllegalHand extends Exception {
-	public IllegalHand(String message) {
+public class IllegalCards extends RuntimeException {
+	public IllegalCards(String message) {
 		super(message);
 	}
 
@@ -27,7 +26,7 @@ public class IllegalHand extends Exception {
 		}
 	}
 
-	public static class IllegalNumberOfCards extends IllegalHand {
+	public static class IllegalNumberOfCards extends IllegalCards {
 		public final int numberOfCards;
 
 		public IllegalNumberOfCards(int numberOfCards) {
@@ -36,7 +35,7 @@ public class IllegalHand extends Exception {
 		}
 	}
 
-	public static class DuplicateCards extends IllegalHand {
+	public static class DuplicateCards extends IllegalCards {
 		public final Card duplicateCard;
 
 		public DuplicateCards(Card duplicateCard) {

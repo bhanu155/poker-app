@@ -1,7 +1,7 @@
 package com.sap.ase.poker.model;
 
 public class Card implements Comparable<Card> {
-
+	
 	public enum Suit {
 		DIAMONDS("diamonds"), HEARTS("hearts"), SPADES("spades"), CLUBS("clubs");
 
@@ -42,6 +42,8 @@ public class Card implements Comparable<Card> {
 	public String toString() {
 		return suit + " " + kind;
 	}
+
+	//XXX flyweight pattern probably nicer and better performance than implementing equals and hashCode?
 
 	@Override
 	public int hashCode() {

@@ -2,8 +2,8 @@ package com.sap.ase.poker.winner;
 
 import static com.sap.ase.poker.model.Card.Kind.ACE;
 import static com.sap.ase.poker.winner.Hand.Type.*;
-import static com.sap.ase.poker.winner.IllegalHand.assert7Cards;
-import static com.sap.ase.poker.winner.IllegalHand.assertNoDuplicates;
+import static com.sap.ase.poker.winner.IllegalCards.assert7Cards;
+import static com.sap.ase.poker.winner.IllegalCards.assertNoDuplicates;
 import static java.util.Arrays.asList;
 import static java.util.Collections.reverseOrder;
 import static java.util.Collections.sort;
@@ -17,20 +17,20 @@ import com.sap.ase.poker.model.Card;
 import com.sap.ase.poker.model.Card.Kind;
 import com.sap.ase.poker.model.Card.Suit;
 
-public class HandQuery {
+public class FindBestHand {
 
 	private List<Card> sortedCards;
 	private TreeMap<Kind, List<Card>> byKind;
 	private TreeMap<Suit, List<Card>> bySuit;
 
-	public Hand findBestHand(Card... sevenCards) throws IllegalHand {
+	public Hand apply(List<Card> sevenCards) throws IllegalCards {
 		prepareCards(sevenCards);
 		fillLookupStructures();
 		return findBestHand();
 	}
 
-	private void prepareCards(Card... sevenCards) throws IllegalHand {
-		sortedCards = asList(sevenCards);
+	private void prepareCards(List<Card> sevenCards) throws IllegalCards {
+		sortedCards = new ArrayList<>(sevenCards);
 		assert7Cards(sortedCards);
 		assertNoDuplicates(sortedCards);
 		sort(sortedCards, reverseOrder());
@@ -91,7 +91,7 @@ public class HandQuery {
 			return new Hand(HIGH_CARD, sortedCards.subList(0, 5));
 		}
 	}
-	
+
 	private List<Card> firstFiveUniqueCards(List<List<Card>> cards) {
 		return cards.stream().flatMap(List::stream).distinct().limit(5).collect(toList());
 	}

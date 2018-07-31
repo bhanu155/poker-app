@@ -1,5 +1,7 @@
 package com.sap.ase.poker.model;
 
+import static java.util.Collections.unmodifiableList;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,8 +24,8 @@ public class Player {
 		return name;
 	}
 
-	public Iterable<Card> getCards() {
-		return cards;
+	public List<Card> getCards() {
+		return unmodifiableList(cards);
 	}
 
 	public void setCards(Collection<Card> cards) {

@@ -4,16 +4,17 @@ import static com.sap.ase.poker.model.Card.Kind.TWO;
 import static com.sap.ase.poker.model.Card.Suit.CLUBS;
 import static com.sap.ase.poker.model.CardFixtures.*;
 import static com.sap.ase.poker.winner.Hand.Type.*;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
 import com.sap.ase.poker.model.Card;
-import com.sap.ase.poker.winner.IllegalHand.DuplicateCards;
-import com.sap.ase.poker.winner.IllegalHand.IllegalNumberOfCards;
+import com.sap.ase.poker.winner.IllegalCards.DuplicateCards;
+import com.sap.ase.poker.winner.IllegalCards.IllegalNumberOfCards;
 
-public class HandQueryTest {
+public class FindBestHandTest {
 
 	@Test
 	public void illegalNumberOfCards() throws Exception {
@@ -206,8 +207,8 @@ public class HandQueryTest {
 		assertHandCards(CLUBS_ACE, CLUBS_KING, CLUBS_QUEEN, CLUBS_JACK, CLUBS_10, hand);
 	}
 
-	private Hand findBestHand(Card... cards) throws IllegalHand {
-		return new HandQuery().findBestHand(cards);
+	private Hand findBestHand(Card... cards) throws IllegalCards {
+		return new FindBestHand().apply(asList(cards));
 	}
 
 	private void assertHandCards(Card card1, Card card2, Card card3, Card card4, Card card5, Hand hand) {
