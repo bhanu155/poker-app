@@ -9,8 +9,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.sap.ase.poker.model.Bets.IllegalAmount;
 import com.sap.ase.poker.model.Table;
-import com.sap.ase.poker.model.Table.IllegalOperationException;
 
 @Path("table")
 @Produces(MediaType.APPLICATION_JSON)
@@ -30,7 +30,7 @@ public class TableService {
 	public void startGame(@PathParam("tableId") int tableId) {
 		try {
 			table.startGame();
-		} catch (IllegalOperationException e) {
+		} catch (IllegalAmount e) {
 			e.printStackTrace();
 			throw new BadRequestException(e.getMessage());
 		}
@@ -66,7 +66,7 @@ public class TableService {
 				table.raiseTo(betRequest.getAmount());
 				break;
 			}
-		} catch (IllegalOperationException e) {
+		} catch (IllegalAmount e) {
 			e.printStackTrace();
 			throw new BadRequestException(e.getMessage());
 		}

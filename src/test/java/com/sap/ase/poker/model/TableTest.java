@@ -4,22 +4,17 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
-import com.sap.ase.poker.model.Table.IllegalOperationException;
+import com.sap.ase.poker.model.Bets.IllegalAmount;
 
 public class TableTest {
 	private Table table;
 	private static final String ALICE = "alice";
 	private static final String BOB = "bob";
 	
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
 	@Before
-	public void setup() throws IllegalOperationException {
+	public void setup() throws IllegalAmount {
 		table = new Table();
 		table.addPlayer(ALICE);
 		table.addPlayer(BOB);

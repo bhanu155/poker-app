@@ -3,9 +3,9 @@ package com.sap.ase.poker.model.rounds;
 import java.util.List;
 
 import com.sap.ase.poker.model.Bets;
+import com.sap.ase.poker.model.Bets.IllegalAmount;
 import com.sap.ase.poker.model.Card;
 import com.sap.ase.poker.model.Deck;
-import com.sap.ase.poker.model.Table.IllegalOperationException;
 import com.sap.ase.poker.model.TablePlayers;
 
 public class PreFlop extends Round {
@@ -19,7 +19,7 @@ public class PreFlop extends Round {
 		this.bets = bets;
 	}
 
-	public void start() throws IllegalOperationException {
+	public void start() throws IllegalAmount {
 		dealCardsToEachPlayer();
 		bets.raiseTo(SMALL_BLIND);
 		players.nextPlayer();

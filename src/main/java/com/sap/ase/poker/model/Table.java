@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
 
+import com.sap.ase.poker.model.Bets.IllegalAmount;
 import com.sap.ase.poker.model.rounds.Flop;
 import com.sap.ase.poker.model.rounds.PreFlop;
 import com.sap.ase.poker.model.rounds.River;
@@ -30,7 +31,7 @@ public class Table {
 		players.add(new Player(name, DEFAULT_START_CASH));
 	}
 
-	public void startGame() throws IllegalOperationException {
+	public void startGame() throws IllegalAmount {
 		deck = new Deck();
 		communityCards = new ArrayList<>();
 		bets = new Bets(players);
@@ -46,27 +47,27 @@ public class Table {
 		return communityCards;
 	}
 
-	public void call() throws IllegalOperationException {
+	public void call() throws IllegalAmount {
 		bets.call();
 		onPlayerPerformedAction();
 	}
 
-	public void check() throws IllegalOperationException {
+	public void check() throws IllegalAmount {
 		bets.check();
 		onPlayerPerformedAction();
 	}
 
-	public void fold() throws IllegalOperationException {
+	public void fold() throws IllegalAmount {
 		bets.fold();
 		onPlayerPerformedAction();
 	}
 
-	public void raiseTo(int amount) throws IllegalOperationException {
+	public void raiseTo(int amount) throws IllegalAmount {
 		bets.raiseTo(amount);
 		onPlayerPerformedAction();
 	}
 
-	private void onPlayerPerformedAction() throws IllegalOperationException {
+	private void onPlayerPerformedAction() throws IllegalAmount {
 		numOfPlayersThatPerformedAction++;
 		players.nextPlayer();
 
@@ -94,7 +95,7 @@ public class Table {
 		rounds.add(new River(players, deck, communityCards));
 	}
 	
-	private void startNextRound() throws IllegalOperationException {
+	private void startNextRound() throws IllegalAmount {
 		currentRound = rounds.remove();
 		currentRound.start();
 	}
@@ -104,23 +105,10 @@ public class Table {
 	}
 
 	private boolean shouldStartNextRound() {
-		return bets.areAllBetsEven() && didAllPlayersPerformAnAction();
+		return bets.areEven() && didAllPlayersPerformAnAction();
 	}
 
 	private boolean didAllPlayersPerformAnAction() {
 		return numOfPlayersThatPerformedAction >= players.activePlayersSize();
-	}
-	
-
-	/*
-	 * This class is internally used to identify illegal operations. Example:
-	 * raising when the player doesn't have sufficient cash. This is an illegal
-	 * usage from the client, not a server error.
-	 */
-	@SuppressWarnings("serial")
-	public static class IllegalOperationException extends Exception {
-		public IllegalOperationException(String message) {
-			super(message);
-		}
 	}
 }

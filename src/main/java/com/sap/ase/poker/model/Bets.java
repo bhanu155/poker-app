@@ -1,9 +1,8 @@
 package com.sap.ase.poker.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-import com.sap.ase.poker.model.Table.IllegalOperationException;
 
 public class Bets {
 
@@ -15,17 +14,18 @@ public class Bets {
 		this.players = players;
 	}
 
-	public void call() throws IllegalOperationException {
+	public void call() throws IllegalAmount {
 		int delta = currentMaxBet - getCurrentPlayerBet();
+		//TODO if player doesn't have enough cash, should be all-in -> side-pot
 		if (delta == 0) {
-			throw new IllegalOperationException("Calling is not possible - player has max bet already - can only check or fold");
+			throw new IllegalAmount("Calling is not possible - player has max bet already - can only check or fold");
 		}
 		bet(delta);
 	}
 
-	public void check() throws IllegalOperationException {
+	public void check() throws IllegalAmount {
 		if (getCurrentPlayerBet() != currentMaxBet) {
-			throw new IllegalOperationException("Checking not possible - player needs to bet at least " + currentMaxBet);
+			throw new IllegalAmount("Checking not possible - player needs to bet at least " + currentMaxBet);
 		}
 	}
 
@@ -33,15 +33,15 @@ public class Bets {
 		players.getCurrentPlayer().setInactive();
 	}
 
-	public void raiseTo(int amount) throws IllegalOperationException {
+	public void raiseTo(int amount) throws IllegalAmount {
 		int delta = amount - getCurrentPlayerBet();
 		if (players.getCurrentPlayer().getCash() < delta || amount <= currentMaxBet) {
-			throw new IllegalOperationException("Betting " + amount + " is insufficient or player doesn't have enough cash");
+			throw new IllegalAmount("Betting " + amount + " is insufficient or player doesn't have enough cash");
 		}
 		bet(delta);
 	}
 
-	public boolean areAllBetsEven() {
+	public boolean areEven() {
 		Set<Integer> uniqueBets = new HashSet<>();
 		for (Player p : players) {
 			if (p.isActive()) {
@@ -68,5 +68,28 @@ public class Bets {
 
 	public int getCurrentMaxBet() {
 		return currentMaxBet;
+	}
+
+	public void distributePot(List<Player> winners, Player oddChipsWinner) {
+		int oddChips = pot % winners.size();
+		for (Player player : players) {
+			player.clearBet();
+			if (winners.contains(player)) {
+				player.addCash(pot / winners.size());
+			}
+		}
+		oddChipsWinner.addCash(oddChips);
+	}
+	
+	/*
+	 * This class is internally used to identify illegal operations. Example:
+	 * raising when the player doesn't have sufficient cash. This is an illegal
+	 * usage from the client, not a server error.
+	 */
+	@SuppressWarnings("serial")
+	public static class IllegalAmount extends Exception {
+		public IllegalAmount(String message) {
+			super(message);
+		}
 	}
 }

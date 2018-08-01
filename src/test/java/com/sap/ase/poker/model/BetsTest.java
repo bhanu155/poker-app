@@ -1,5 +1,6 @@
 package com.sap.ase.poker.model;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -10,7 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.sap.ase.poker.model.Table.IllegalOperationException;
+import com.sap.ase.poker.model.Bets.IllegalAmount;
 
 public class BetsTest {
 	private Bets bets;
@@ -38,12 +39,12 @@ public class BetsTest {
 		
 		assertBetAndCash(alice, 0, 100);
 		assertBetAndCash(bob, 0, 100);
-		assertTrue(bets.areAllBetsEven());
+		assertTrue(bets.areEven());
 	}
 	
 	@Test
 	public void aliceCalls() throws Exception {
-		thrown.expect(IllegalOperationException.class);
+		thrown.expect(IllegalAmount.class);
 		bets.call();
 	}
 
@@ -53,7 +54,7 @@ public class BetsTest {
 		
 		assertBetAndCash(alice, 1, 99);
 		assertBetAndCash(bob, 0, 100);
-		assertFalse(bets.areAllBetsEven());
+		assertFalse(bets.areEven());
 	}
 	
 	@Test
@@ -62,12 +63,12 @@ public class BetsTest {
 		
 		assertBetAndCash(alice, 100, 0);
 		assertBetAndCash(bob, 0, 100);
-		assertFalse(bets.areAllBetsEven());
+		assertFalse(bets.areEven());
 	}
 	
 	@Test
 	public void aliceExceedsHerCash() throws Exception {
-		thrown.expect(IllegalOperationException.class);
+		thrown.expect(IllegalAmount.class);
 		bets.raiseTo(101);
 	}
 	
@@ -75,7 +76,7 @@ public class BetsTest {
 	public void aliceRaises_bobChecks() throws Exception {
 		bets.raiseTo(1);
 		players.nextPlayer();
-		thrown.expect(IllegalOperationException.class);
+		thrown.expect(IllegalAmount.class);
 		bets.check();
 	}
 
@@ -87,7 +88,7 @@ public class BetsTest {
 		
 		assertBetAndCash(alice, 1, 99);
 		assertBetAndCash(bob, 1, 99);
-		assertTrue(bets.areAllBetsEven());
+		assertTrue(bets.areEven());
 	}
 	
 	@Test
@@ -110,7 +111,7 @@ public class BetsTest {
 	public void aliceRaises_bobTriesToRaiseLess() throws Exception {
 		bets.raiseTo(2);
 		players.nextPlayer();
-		thrown.expect(IllegalOperationException.class);
+		thrown.expect(IllegalAmount.class);
 		bets.raiseTo(1);
 	}
 
@@ -122,7 +123,7 @@ public class BetsTest {
 
 		assertBetAndCash(alice, 1, 99);
 		assertBetAndCash(bob, 2, 98);
-		assertFalse(bets.areAllBetsEven());
+		assertFalse(bets.areEven());
 	}
 	
 	@Test
@@ -135,7 +136,59 @@ public class BetsTest {
 
 		assertBetAndCash(alice, 2, 98);
 		assertBetAndCash(bob, 2, 98);
-		assertTrue(bets.areAllBetsEven());
+		assertTrue(bets.areEven());
+	}
+	
+	@Test
+	public void distributePot_foldImmediately() throws Exception {
+		bets.raiseTo(1);
+		players.nextPlayer();
+		bets.fold();
+		bets.distributePot(asList(alice), alice);
+		assertBetAndCash(alice, 0, 100);
+		assertBetAndCash(bob, 0, 100);
+	}
+
+	@Test
+	public void distributePot_afterReRaise() throws Exception {
+		bets.raiseTo(1);
+		players.nextPlayer();
+		bets.raiseTo(2);
+		players.nextPlayer();
+		bets.fold();
+		bets.distributePot(asList(bob), alice);
+		assertBetAndCash(alice, 0, 99);
+		assertBetAndCash(bob, 0, 101);
+	}
+
+	@Test
+	public void distributePot_splitPot() throws Exception {		
+		bets.raiseTo(1);	
+		players.nextPlayer();
+		bets.call();
+		bets.distributePot(asList(alice, bob), alice);
+		assertBetAndCash(alice, 0, 100);
+		assertBetAndCash(bob, 0, 100);
+	}
+	
+	@Test
+	public void distributePot_splitPot_oddChip() throws Exception {
+		Player cindy = createPlayer("cindy");
+		players.add(cindy);
+		Player dave = createPlayer("dave");
+		players.add(dave);
+		bets.raiseTo(1);	
+		players.nextPlayer();
+		bets.call();
+		players.nextPlayer();
+		bets.call();
+		players.nextPlayer();
+		bets.call();
+		bets.distributePot(asList(alice, bob, cindy), alice);
+		assertBetAndCash(alice, 0, 101);
+		assertBetAndCash(bob, 0, 100);
+		assertBetAndCash(cindy, 0, 100);
+		assertBetAndCash(dave, 0, 99);
 	}
 	
 	private void assertBetAndCash(Player player, int bet, int cash) {
