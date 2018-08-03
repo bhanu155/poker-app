@@ -20,7 +20,7 @@ public class IllegalCards extends RuntimeException {
 	}
 
 	public static void assertNoDuplicates(List<Card> cards) throws DuplicateCards {
-		Optional<Card> firstDuplicate = cards.stream().filter(i -> frequency(cards, i) > 1).findFirst();
+		Optional<Card> firstDuplicate = cards.stream().filter(card -> frequency(cards, card) > 1).findFirst();
 		if (firstDuplicate.isPresent()) {
 			throw new DuplicateCards(firstDuplicate.get());
 		}
