@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.sap.ase.poker.model.Bets.IllegalAmount;
+import com.sap.ase.poker.winner.FindWinners.Winners;
 
 public class BetsTest {
 	private Bets bets;
@@ -144,7 +145,7 @@ public class BetsTest {
 		bets.raiseTo(1);
 		players.nextPlayer();
 		bets.fold();
-		bets.distributePot(asList(alice), alice);
+		bets.distributePot(new Winners(asList(alice), alice));
 		assertBetAndCash(alice, 0, 100);
 		assertBetAndCash(bob, 0, 100);
 	}
@@ -156,7 +157,7 @@ public class BetsTest {
 		bets.raiseTo(2);
 		players.nextPlayer();
 		bets.fold();
-		bets.distributePot(asList(bob), alice);
+		bets.distributePot(new Winners(asList(bob), alice));
 		assertBetAndCash(alice, 0, 99);
 		assertBetAndCash(bob, 0, 101);
 	}
@@ -166,7 +167,7 @@ public class BetsTest {
 		bets.raiseTo(1);	
 		players.nextPlayer();
 		bets.call();
-		bets.distributePot(asList(alice, bob), alice);
+		bets.distributePot(new Winners(asList(alice, bob), alice));
 		assertBetAndCash(alice, 0, 100);
 		assertBetAndCash(bob, 0, 100);
 	}
@@ -184,7 +185,7 @@ public class BetsTest {
 		bets.call();
 		players.nextPlayer();
 		bets.call();
-		bets.distributePot(asList(alice, bob, cindy), alice);
+		bets.distributePot(new Winners(asList(alice, bob, cindy), alice));
 		assertBetAndCash(alice, 0, 101);
 		assertBetAndCash(bob, 0, 100);
 		assertBetAndCash(cindy, 0, 100);

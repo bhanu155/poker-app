@@ -1,5 +1,7 @@
 package com.sap.ase.poker.model;
 
+import static java.util.Arrays.asList;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
@@ -10,6 +12,8 @@ import com.sap.ase.poker.model.rounds.PreFlop;
 import com.sap.ase.poker.model.rounds.River;
 import com.sap.ase.poker.model.rounds.Round;
 import com.sap.ase.poker.model.rounds.Turn;
+import com.sap.ase.poker.winner.FindWinners;
+import com.sap.ase.poker.winner.FindWinners.Winners;
 
 public class Table {
 	private static final int DEFAULT_START_CASH = 100;
@@ -17,12 +21,16 @@ public class Table {
 	private int numOfPlayersThatPerformedAction = 0;
 	private TablePlayers players = new TablePlayers();
 	private ArrayList<Card> communityCards = new ArrayList<>();
-	private Deck deck = new Deck();
+	private final Deck deck;
 	private Bets bets;
-	
+
 	private Queue<Round> rounds = new ArrayDeque<>();
 	private Round currentRound;
-	
+
+	public Table(Deck deck) {
+		this.deck = deck;
+	}
+
 	public Iterable<Player> getPlayers() {
 		return players;
 	}
@@ -32,7 +40,7 @@ public class Table {
 	}
 
 	public void startGame() throws IllegalAmount {
-		deck = new Deck();
+		deck.shuffle();
 		communityCards = new ArrayList<>();
 		bets = new Bets(players);
 		initTexasHoldemRounds();
@@ -72,13 +80,14 @@ public class Table {
 		players.nextPlayer();
 
 		if (isOnlyOneActivePlayerLeft()) {
-			getCurrentPlayer().addCash(bets.getPot());
+			bets.distributePot(new Winners(asList(getCurrentPlayer()), getCurrentPlayer()));
 			players.nextStartPlayer();
 			startGame();
 		} else if (shouldStartNextRound()) {
 			numOfPlayersThatPerformedAction = 0;
 			if (rounds.isEmpty()) {
-				// TODO determine winner
+				Winners winners = new FindWinners().apply(players.asList(), this.communityCards);
+				bets.distributePot(winners);
 				players.nextStartPlayer();
 				startGame();
 			} else {
@@ -86,7 +95,7 @@ public class Table {
 			}
 		}
 	}
-	
+
 	private void initTexasHoldemRounds() {
 		rounds.clear();
 		rounds.add(new PreFlop(players, deck, communityCards, bets));
@@ -94,7 +103,7 @@ public class Table {
 		rounds.add(new Turn(players, deck, communityCards));
 		rounds.add(new River(players, deck, communityCards));
 	}
-	
+
 	private void startNextRound() throws IllegalAmount {
 		currentRound = rounds.remove();
 		currentRound.start();

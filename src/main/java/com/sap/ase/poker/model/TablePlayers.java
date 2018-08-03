@@ -1,5 +1,7 @@
 package com.sap.ase.poker.model;
 
+import static java.util.Collections.unmodifiableList;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -50,6 +52,10 @@ public class TablePlayers implements Iterable<Player> {
 		return players.iterator();
 	}
 
+	public List<Player> asList() {
+		return unmodifiableList(players);
+	}
+	
 	private class NullPlayer extends Player {
 
 		public NullPlayer() {

@@ -1,6 +1,7 @@
 package com.sap.ase.poker.model.rounds;
 
-import java.util.Arrays;
+import static java.util.Arrays.asList;
+
 import java.util.List;
 
 import com.sap.ase.poker.model.Bets.IllegalAmount;
@@ -31,7 +32,7 @@ public abstract class Round {
 	
 	protected void dealCardsToEachPlayer() {
 		for (Player p : players) {
-			p.setCards(Arrays.asList(deck.dealCard(), deck.dealCard()));
+			p.setCards(asList(deck.dealCard(), deck.dealCard()));
 			p.clearBet();
 			p.setActive();
 		}

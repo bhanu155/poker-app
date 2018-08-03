@@ -11,7 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.sap.ase.poker.model.Deck.OutOfCardsException;
+import com.sap.ase.poker.model.DefaultDeck.OutOfCardsException;
 
 public class DeckTest {
 
@@ -20,25 +20,38 @@ public class DeckTest {
 
 	@Test
 	public void shouldReturnCardWithSuitAndKind() throws Exception {
-		Deck texDeck = new Deck();
-		Card c = texDeck.dealCard();
+		Deck deck = new DefaultDeck();
+		Card c = deck.dealCard();
 		assertNotNull(c.kind);
 		assertNotNull(c.suit);
 	}
 
 	@Test
 	public void shouldReturn52DifferentCards() throws Exception {
-		Deck texDeck = new Deck();
+		Deck deck = new DefaultDeck();
 		Set<String> uniqueCards = new HashSet<String>();
 
 		for (int i = 0; i < 52; i++) {
-			Card c = texDeck.dealCard();
+			Card c = deck.dealCard();
 			uniqueCards.add(c.suit + "_" + c.kind);
 		}
 		
 		assertThat(uniqueCards.size(), is(52));
 		
 		thrown.expect(OutOfCardsException.class);
-		texDeck.dealCard();
+		deck.dealCard();
+	}
+	
+	@Test
+	public void afterShufflingCanDeal52CardsAgain() throws Exception {
+		Deck deck = new DefaultDeck();
+		deck.dealCard();
+		deck.shuffle();
+		Set<String> uniqueCards = new HashSet<String>();
+		for (int i = 0; i < 52; i++) {
+			Card c = deck.dealCard();
+			uniqueCards.add(c.suit + "_" + c.kind);
+		}
+		assertThat(uniqueCards.size(), is(52));
 	}
 }

@@ -13,8 +13,8 @@ import com.sap.ase.poker.model.Player;
 
 public class FindWinners {
 
-	public List<Player> findWinners(List<Player> players, List<Card> communityCards) {
-		return findWinners(mapPlayersWithBestHand(players, communityCards));
+	public Winners apply(List<Player> players, List<Card> communityCards) {
+		return new Winners(findWinners(mapPlayersWithBestHand(players, communityCards)), players.get(0));
 	}
 
 	private Map<Hand, Player> mapPlayersWithBestHand(List<Player> players, List<Card> communityCards) {
@@ -22,8 +22,11 @@ public class FindWinners {
 		for (Player player : players) {
 			List<Card> sevenCards = new ArrayList<>(player.getCards());
 			sevenCards.addAll(communityCards);
+			System.out.println(sevenCards);
 			Hand hand = new FindBestHand().apply(sevenCards);
 			map.put(hand, player);
+			System.out.println(player.getName() + ": " + hand.type);
+			System.out.println(hand.cards);
 		}
 		return map;
 	}
@@ -33,10 +36,21 @@ public class FindWinners {
 		List<Player> winners = new ArrayList<>();
 		for (int i = 0; i < hands.size(); i++) {
 			if ((i == 0) || (hands.get(i).compareTo(hands.get(i - 1)) == 0)) {
-				winners.add(map.get(hands.get(i)));
+				Player winner = map.get(hands.get(i));
+				winners.add(winner);
+				System.out.println("Winner: " + winner.getName());
 			}
 		}
 
 		return winners;
+	}
+	
+	public static class Winners {
+		public final List<Player> list;
+		public Player oddChipsWinner;
+		public Winners(List<Player> list, Player oddChipsWinner) {
+			this.list = list;
+			this.oddChipsWinner = oddChipsWinner;
+		}
 	}
 }

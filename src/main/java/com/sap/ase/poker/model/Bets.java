@@ -1,8 +1,9 @@
 package com.sap.ase.poker.model;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+
+import com.sap.ase.poker.winner.FindWinners.Winners;
 
 public class Bets {
 
@@ -70,15 +71,15 @@ public class Bets {
 		return currentMaxBet;
 	}
 
-	public void distributePot(List<Player> winners, Player oddChipsWinner) {
-		int oddChips = pot % winners.size();
+	public void distributePot(Winners winners) {
+		int oddChips = pot % winners.list.size();
 		for (Player player : players) {
 			player.clearBet();
-			if (winners.contains(player)) {
-				player.addCash(pot / winners.size());
+			if (winners.list.contains(player)) {
+				player.addCash(pot / winners.list.size());
 			}
 		}
-		oddChipsWinner.addCash(oddChips);
+		winners.oddChipsWinner.addCash(oddChips);
 	}
 	
 	/*

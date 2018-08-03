@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.sap.ase.poker.model.Bets.IllegalAmount;
+import com.sap.ase.poker.model.DefaultDeck;
 import com.sap.ase.poker.model.Table;
 
 @Path("table")
@@ -17,7 +18,7 @@ import com.sap.ase.poker.model.Table;
 public class TableService {
 
 	private static final String PLAYERNAME = "Player";
-	private Table table = new Table();
+	private Table table = new Table(new DefaultDeck());
 
 	@GET
 	@Path("{tableId}")
@@ -39,7 +40,7 @@ public class TableService {
 	@POST
 	@Path("{tableId}/init")
 	public void deleteTable(@PathParam("tableId") int tableId) {
-		table = new Table();
+		table = new Table(new DefaultDeck());
 	}
 
 	@POST

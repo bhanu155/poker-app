@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.sap.ase.poker.model.Bets.IllegalAmount;
+import com.sap.ase.poker.model.DefaultDeck;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.Table;
 
@@ -17,7 +18,7 @@ public class AcceptanceTest {
 
 	@Before
 	public void setup() throws IllegalAmount {
-		table = new Table();
+		table = new Table(new DefaultDeck());
 		table.addPlayer(ALICE);
 		table.addPlayer(BOB);
 		table.startGame();
@@ -25,7 +26,7 @@ public class AcceptanceTest {
 
 	@Test
 	public void gameNotStarted_shouldGetBasicInfo() throws Exception {
-		table = new Table();
+		table = new Table(new DefaultDeck());
 		Player currentPlayer = table.getCurrentPlayer();
 		currentPlayer.getBet();
 		currentPlayer.getCash();
@@ -93,7 +94,7 @@ public class AcceptanceTest {
 
 	@Test
 	public void with3Players_foldFold() throws Exception {
-		table = new Table();
+		table = new Table(new DefaultDeck());
 		table.addPlayer(ALICE);
 		table.addPlayer(BOB);
 		table.addPlayer("chris");
@@ -114,7 +115,7 @@ public class AcceptanceTest {
 
 	@Test
 	public void with3Players_foldCallFold() throws Exception {
-		table = new Table();
+		table = new Table(new DefaultDeck());
 		table.addPlayer(ALICE);
 		table.addPlayer(BOB);
 		table.addPlayer("chris");
@@ -130,7 +131,7 @@ public class AcceptanceTest {
 
 	@Test
 	public void with3Players_chrisFoldsImmediately_bobFoldsLater() throws Exception {
-		table = new Table();
+		table = new Table(new DefaultDeck());
 		table.addPlayer(ALICE);
 		table.addPlayer(BOB);
 		table.addPlayer("chris");
