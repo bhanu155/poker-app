@@ -25,6 +25,9 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 			var model = this.getView().getModel();
 			var playerName = this.playerName;
 
+			//XXX if we had a somewhat "cleaner" REST interface from the server, we could try to implement a
+			//true JSON-based custom UI5 model, so we don't need all these ajax calls in the controller...
+			//See also the corresponding comment in the server code (TableService.placeBet)
 			jQuery.ajax({
 				url : "api/table/1/bets",
 				method : "POST",
@@ -94,11 +97,15 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 			loadData(this.getView().getModel(), this.playerName);
 		},
 		
+		//XXX see the comment below - what do we need the playerName for??
 		setPlayer : function(name) {
 			this.playerName = name;
 		}
 	});
 	
+	//XXX WTF? Why do we need the playerName in order to _load_ the current table information?
+	//And what the hell is the playerName? The name of the current player or what?
+	//I'm afraid if the code is just that non-intuitive and self-explanatory for whatever reason, we'd better leave a comment here that explains why this is needed...
 	function loadData(model, playerName) {
 		model.loadData("api/table/1", undefined, undefined, undefined, undefined, undefined, { "Player" : playerName })
 	}

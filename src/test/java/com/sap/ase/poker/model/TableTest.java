@@ -42,20 +42,24 @@ public class TableTest {
 		 * XXX we're making assumptions on implementation detail.
 		 * 
 		 * We assume the 2x2 pre-flop cards are dealt like (alice, alice, bob, bob). If
-		 * we'd change this to (alice, bob, alice, bob), the tests will break. It is
-		 * probably ok to make this assumption, as there shouldn't be a hard requirement
-		 * that forces us to make such a refactoring in future.
+		 * we'd change this to (alice, bob, alice, bob), the tests will break.
 		 * 
-		 * However this is not quite intuitive and makes the tests hard to understand,
-		 * so if we can drive the tests a bit simpler we'd be better off. One
-		 * possibility for the future: if we have different poker flavors, like e.g.
-		 * classic poker (5 hand cards only) or Omaha hold'em, then we will need a
-		 * different implementation of "FindWinners". So this will force us to make
-		 * FindWinners an interface and have different implementations for the different
-		 * poker games.
+		 * Also, this is not quite intuitive and makes the tests hard to understand,
+		 * so if we can drive the tests a bit simpler we'd be better off. 
 		 * 
-		 * With such an interface we can simply have a mock/spy implementation of
-		 * FindWinners, instead of influencing the winner through the deck.
+		 * Alternative ideas:
+		 * A) if we have different poker flavors, like e.g. classic poker (5 hand cards only) 
+		 * or Omaha hold'em, then we will need a different implementation of "FindWinners".
+		 * This will force us to make FindWinners an interface and have different implementations
+		 * for the different poker games. We can use that interface to have a mock implementation
+		 * to simulate different winners
+		 * Downside: we don't test then the integration between Table and the real FindWinners implementation
+		 * 
+		 * B) like above, we could also mock one level deeper, i.e. mock the FindBestHand instead.
+		 * by this we would be testing the integration between "Table" and "FindWinners".
+		 * We would not test the integration between "FindWinners" and "FindBestHand" - this is no problem,
+		 * as this integration is already tested through "FindWinnersTest"
+		 * 
 		 */
 		table = new Table(new FixedCardsDeck(SPADES_ACE, CLUBS_ACE, CLUBS_2, CLUBS_3, HEARTS_5, HEARTS_6, HEARTS_7,
 				SPADES_9, SPADES_10, HEARTS_JACK, DIAMONDS_JACK, SPADES_JACK, CLUBS_JACK));

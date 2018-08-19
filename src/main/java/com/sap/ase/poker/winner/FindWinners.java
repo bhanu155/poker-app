@@ -11,6 +11,10 @@ import java.util.Map;
 import com.sap.ase.poker.model.Card;
 import com.sap.ase.poker.model.Player;
 
+/**
+ * Finds the players that win the game, i.e. have the best hand on the table.
+ * Can also be multiple players (=> split pot)
+ */
 public class FindWinners {
 
 	public Winners apply(List<Player> players, List<Card> communityCards) {
@@ -22,11 +26,8 @@ public class FindWinners {
 		for (Player player : players) {
 			List<Card> sevenCards = new ArrayList<>(player.getCards());
 			sevenCards.addAll(communityCards);
-			System.out.println(sevenCards);
 			Hand hand = new FindBestHand().apply(sevenCards);
 			map.put(hand, player);
-			System.out.println(player.getName() + ": " + hand.type);
-			System.out.println(hand.cards);
 		}
 		return map;
 	}
@@ -38,7 +39,6 @@ public class FindWinners {
 			if ((i == 0) || (hands.get(i).compareTo(hands.get(i - 1)) == 0)) {
 				Player winner = map.get(hands.get(i));
 				winners.add(winner);
-				System.out.println("Winner: " + winner.getName());
 			}
 		}
 

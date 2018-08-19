@@ -19,8 +19,15 @@ public class PreFlop extends Round {
 		this.bets = bets;
 	}
 
+	//XXX exposing the "IllegalAmount" exception feels wrong in this case.
+	//In general, it is often a client error if an illegal amount is bet (i.e. bet more than the player has cash).
+	//So "IllegalAmount" being a checked exception in general feels ok.
+	//However, in this particular case, it more feels like a server error -> runtime exception.
+	//Reason: why would we even start a game when one of the players doesn't have enough money?
+	//This player should have been set inactive or even removed entirely from the players list!
+	//So we'd better try/catch, wrap the checked exception into a runtime exception, and don't expose the checked exception to the caller.
 	public void start() throws IllegalAmount {
-		dealCardsToEachPlayer();
+		dealCardsToEachPlayer();		
 		bets.raiseTo(SMALL_BLIND);
 		players.nextPlayer();
 		bets.raiseTo(BIG_BLIND);

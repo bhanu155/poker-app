@@ -17,6 +17,9 @@ import com.sap.ase.poker.model.Card;
 import com.sap.ase.poker.model.Card.Kind;
 import com.sap.ase.poker.model.Card.Suit;
 
+/**
+ * Finds the best hand out of seven cards, i.e. the 2 hole cards and the 5 community cards.
+ */
 public class FindBestHand {
 
 	private List<Card> sortedCards;

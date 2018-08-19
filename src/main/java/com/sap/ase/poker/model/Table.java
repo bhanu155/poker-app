@@ -39,6 +39,9 @@ public class Table {
 		players.add(new Player(name, DEFAULT_START_CASH));
 	}
 
+	//FIXME can we start a game with insufficient players? That would feel wrong...
+	//"IllegalNumberOfPlayers" would also be a much more accurate client error than the current
+	//"IllegalAmount" exception - see the other comments in PreFlop.start and TableService.startGame
 	public void startGame() throws IllegalAmount {
 		deck.shuffle();
 		communityCards = new ArrayList<>();
@@ -77,6 +80,17 @@ public class Table {
 
 	private void onPlayerPerformedAction() throws IllegalAmount {
 		numOfPlayersThatPerformedAction++;
+		//FIXME is that a bug? Check what happens if the next round starts:
+		//Do we then always have the right start player?
+		//Say, we play with Alice, Bob, Cindy. Cindy was start player in current round.
+		//According to Texas Hold'em poker rules, next round, the first active player
+		//next to the dealer in clockwise order should be the start player.
+		//Is that true if Cindy raised, Alice called, Bob called?
+		//I suppose currently Cindy would be start player in the next round, and that's wrong.
+		//
+		//FIXME also, check if the cards are dealt "correctly" i.e. in the right order
+		//(although technically it is a random deck, so it won't make the game unfair,
+		//however typically in Texas hold'em the cards are dealt first to the small blind player
 		players.nextPlayer();
 
 		if (isOnlyOneActivePlayerLeft()) {
@@ -86,6 +100,7 @@ public class Table {
 		} else if (shouldStartNextRound()) {
 			numOfPlayersThatPerformedAction = 0;
 			if (rounds.isEmpty()) {
+				//FIXME is that a bug? Check what happens if a folded player has the best hand
 				Winners winners = new FindWinners().apply(players.asList(), this.communityCards);
 				bets.distributePot(winners);
 				players.nextStartPlayer();
@@ -95,6 +110,21 @@ public class Table {
 			}
 		}
 	}
+	
+//	private void onPlayerPerformedAction1() throws IllegalAmount {
+//		nextPlayer();
+//		if (isOnlyOneActivePlayerLeft()) {
+//			distributePotToOnlyLeftPlayer();
+//			startNextGame();
+//		} else if (isRoundFinished()) {
+//			if (isLastRound()) {
+//				distributePotToWinner();
+//				startNextGame();
+//			} else {
+//				startNextRound();
+//			}
+//		}
+//	}
 
 	private void initTexasHoldemRounds() {
 		rounds.clear();

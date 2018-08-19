@@ -1,6 +1,11 @@
 sap.ui.define([ "sap/ui/core/Control" ], function(Control) {
 	"use strict";
 
+	//XXX can we have a simple test that just checks for the rendering in general?
+	//XXX how do we know we are doing it "right" - just have a test that verifies against hard-coded unicodes taken from below wikipedia page?
+	//    Alternative: just provide a test page that shows all 52 cards with their description so we can "look at it" easily to convince ourselves.
+	//        Such a test page would also have the additional benefit that we can use it if we wanna have "cooler" cards in future and e.g. need to fiddle with style sheets.
+
 	// Unicodes: https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
 
 	function suitToUnicodeChar(suit) {
@@ -41,7 +46,7 @@ sap.ui.define([ "sap/ui/core/Control" ], function(Control) {
 
 	var getFontColor = function(suit) {
 		return (suit === "hearts" || suit === "diamonds") ? "red" : "black";
-	}
+	};
 
 	return Control.extend("poker.controls.Card", {
 		metadata : {

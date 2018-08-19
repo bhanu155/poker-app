@@ -5,6 +5,11 @@ import java.util.Set;
 
 import com.sap.ase.poker.winner.FindWinners.Winners;
 
+//XXX maybe the design would be better if the bets would not rely so heavily on the player list.
+//Yes, right now the client doesn't need to pass the player, we get always the "right" player
+//from the playerlist, so our interface here is simple. However this means that our creator
+//needs to make sure the "right" playerlist is passed along. Basically the playerlist instance
+//MUST be shared between the table object and the bets object, and this feels a bit awkward.
 public class Bets {
 
 	private final TablePlayers players;
@@ -19,7 +24,7 @@ public class Bets {
 		int delta = currentMaxBet - getCurrentPlayerBet();
 		//TODO if player doesn't have enough cash, should be all-in -> side-pot
 		if (delta == 0) {
-			throw new IllegalAmount("Calling is not possible - player has max bet already - can only check or fold");
+			throw new IllegalAmount("Calling not possible, player has max bet already. Can only check or fold.");
 		}
 		bet(delta);
 	}
