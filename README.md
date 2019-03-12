@@ -7,3 +7,4 @@ This is the reference application for the poker game that is being developed as 
 - If you use Eclipse as an IDE, import the project as "Existing Maven project"
 - The code is packaged as a web archive (.war), so you can deploy it to a servlet container - it is tested with Tomcat 8
 - Once you deploy the packaged web archive, the application will respond at the root URL (e.g. http://localhost:8080/poker)
+
