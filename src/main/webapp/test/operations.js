@@ -56,7 +56,7 @@ sap.ui.define([], function() {
 		arrangements : new sap.ui.test.Opa5({
 			appStarted : function() {
 				jQuery.ajax({
-					url : "api/table/1/init",
+					url : "api/table/1",
 					method : "POST",
 					async : false
 				});

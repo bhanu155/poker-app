@@ -40,8 +40,8 @@ public class TableService {
 	}
 
 	@POST
-	@Path("{tableId}/init")
-	public void deleteTable(@PathParam("tableId") int tableId) {
+	@Path("{tableId}")
+	public void createTable(@PathParam("tableId") int tableId) {
 		table = new Table(new DefaultDeck());
 	}
 

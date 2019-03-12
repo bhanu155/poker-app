@@ -10,7 +10,6 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 	return Controller.extend("poker.controllers.Lobby", {
 		
 		startGame : function() {
-			post("init");
 			post("players", {
 				"playerName" : this.byId("player1").getValue()
 			});
