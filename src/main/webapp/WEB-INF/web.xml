@@ -24,6 +24,19 @@
         <param-value>true</param-value>
     </context-param>
 
+	<filter>
+		<filter-name>SecFilter</filter-name>
+		<filter-class>com.sap.ase.security.JwtAuthenticationRequestFilter</filter-class>
+		<init-param>
+			<param-name>sharedSecret</param-name>
+			<param-value>OurVerySecretiveHighlyClassifiedSharedSecret</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>SecFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
     <servlet>
         <display-name>CXFNonSpringJaxrsServlet</display-name>
         <servlet-name>CXFNonSpringJaxrsServlet</servlet-name>
@@ -41,7 +54,6 @@
         <servlet-name>CXFNonSpringJaxrsServlet</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
-
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
