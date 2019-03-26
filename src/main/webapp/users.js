@@ -1,0 +1,11 @@
+module.exports = {
+  'al-capone': {name: 'Al Capone', pw: 'welcomeAl', jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYWwtY2Fwb25lIiwidXNlcl9uYW1lIjoiQWwgQ2Fwb25lIiwiZXhwIjoyMTg0MzA2ODkxLCJpYXQiOjE1NTM1ODY4OTF9.TgUNvdbDHp6TgTrNUur8-WPyt0eG560QFVdJdGMibHc'},
+  'pat-garret': {name: 'Pat Garret', pw: 'welcomePat', jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoicGF0LWdhcnJldCIsInVzZXJfbmFtZSI6IlBhdCBHYXJyZXQiLCJleHAiOjIxODQzMDY4OTEsImlhdCI6MTU1MzU4Njg5MX0.NTPdpTNz1era6YjFigQjadHjsqC0Rg28tqCyuP0I_fw'},
+  'wyatt-earp': {name: 'Wyatt Earp', pw: 'welcomeWyatt', jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoid3lhdHQtZWFycCIsInVzZXJfbmFtZSI6Ild5YXR0IEVhcnAiLCJleHAiOjIxODQzMDY4OTEsImlhdCI6MTU1MzU4Njg5MX0.A3I7wqwWNQU6cNIkchfSd6prmqO-2P54a9Wpj_SIfyQ'},
+  'doc-holiday': {name: 'Doc Holiday', pw: 'welcomeDoc', jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZG9jLWhvbGlkYXkiLCJ1c2VyX25hbWUiOiJEb2MgSG9saWRheSIsImV4cCI6MjE4NDMwNjg5MSwiaWF0IjoxNTUzNTg2ODkxfQ.uBSKPFkRliGao7SCDnpH5CbPiSvAm7TLfiuKBxRgZC0'},
+  'wild-bill': {name: 'Wild Bill', pw: 'welcomeBill', jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoid2lsZC1iaWxsIiwidXNlcl9uYW1lIjoiV2lsZCBCaWxsIiwiZXhwIjoyMTg0MzA2ODkxLCJpYXQiOjE1NTM1ODY4OTF9.JqyRLZclsgA16R_loSSUiXNbAUNGaMYRF-sPXF1gu5I'},
+  'stu-ungar': {name: 'Stu Ungar', pw: 'welcomeStu', jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic3R1LXVuZ2FyIiwidXNlcl9uYW1lIjoiU3R1IFVuZ2FyIiwiZXhwIjoyMTg0MzA2ODkxLCJpYXQiOjE1NTM1ODY4OTF9.GCbpe-_JV7yV6M8ntreOT8ne4EIeoThz7Q-zAciiOWc'},
+  'kitty-leroy': {name: 'Kitty Leroy', pw: 'welcomeKitty', jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic3R1LXVuZ2FyIiwidXNlcl9uYW1lIjoiU3R1IFVuZ2FyIiwiZXhwIjoyMTg0MzA2ODkxLCJpYXQiOjE1NTM1ODY4OTF9.GCbpe-_JV7yV6M8ntreOT8ne4EIeoThz7Q-zAciiOWc'},
+  'poker-alice': {name: 'Poker Alice', pw: 'welcomeAlice', jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoicG9rZXItYWxpY2UiLCJ1c2VyX25hbWUiOiJQb2tlciBBbGljZSIsImV4cCI6MjE4NDMwNjg5MSwiaWF0IjoxNTUzNTg2ODkxfQ.DFcAUkfc9diMdfMRbCaPDNQa4rT6JsdIE_XwSf3jVSg'},
+  'madame-moustache': {name: 'Madame Moustache', pw: 'welcomeMadame', jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoibWFkYW1lLW1vdXN0YWNoZSIsInVzZXJfbmFtZSI6Ik1hZGFtZSBNb3VzdGFjaGUiLCJleHAiOjIxODQzMDY4OTEsImlhdCI6MTU1MzU4Njg5MX0.8rrcl73xbL8BkCWr4ny8ibW-lctbD1-rLtuCf1TCkUM'}
+};
