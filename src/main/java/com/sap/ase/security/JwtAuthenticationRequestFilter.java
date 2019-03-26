@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 
 public class JwtAuthenticationRequestFilter implements Filter {
 
@@ -31,25 +32,29 @@ public class JwtAuthenticationRequestFilter implements Filter {
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 
 		Cookie[] cookies = httpRequest.getCookies();
-		for (Cookie cookie : cookies) {
-			if (cookie.getName().toLowerCase().equals("authorization")) {
-				try {
-					String cookieValue = URLDecoder.decode(cookie.getValue(), "UTF-8");
-					jwtTools.verifyAndDecodeJwtCookie(cookieValue);
-					chain.doFilter(request, response);
-					return;
-				} catch (JWTVerificationException e) {
-					response.reset();
-					httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired JWT Token");
-					return;
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().toLowerCase().equals("jwt")) {
+					try {
+						String cookieValue = URLDecoder.decode(cookie.getValue(), "UTF-8");
+						DecodedJWT decodedJwt = jwtTools.verifyAndDecode(cookieValue);
+						String userId = decodedJwt.getClaim("user_id").asString();
+						request = new JwtUserHttpServletRequestWrapper(userId, httpRequest);
+						chain.doFilter(request, response);
+						return;
+					} catch (JWTVerificationException e) {
+						response.reset();
+						httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired JWT Token");
+						return;
+					}
 				}
 			}
 		}
+
 		response.reset();
 		httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,
 				"Missing authentication. Request must provide JWT Token in authorization header (type Bearer)");
 		return;
-
 	}
 
 	@Override

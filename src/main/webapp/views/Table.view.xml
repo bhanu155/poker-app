@@ -31,7 +31,7 @@
         </content>
 
         <footer>
-            <Toolbar>
+            <Toolbar id="toolbar">
                 <Button id="raise" text="Raise to" press="raiseTo" type="Accept" />
                 <Input id="amount" width="5em" placeholder="amount" />
                 <ToolbarSpacer />

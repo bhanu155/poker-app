@@ -32,11 +32,10 @@
 			<param-value>OurVerySecretiveHighlyClassifiedSharedSecret</param-value>
 		</init-param>
 	</filter>
-	<!--
 	<filter-mapping>
 		<filter-name>SecFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping> -->
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
 
     <servlet>
         <display-name>CXFNonSpringJaxrsServlet</display-name>

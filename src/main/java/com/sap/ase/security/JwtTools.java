@@ -16,18 +16,10 @@ public class JwtTools {
 		this.verifier = JWT.require(algorithm).build();
 	}
 
-	public DecodedJWT verifyAndDecodeJwtCookie(String cookieValue) throws JWTVerificationException {
-		if (cookieValue == null) {
-			throw new JWTVerificationException("Missing jwt cookie");
+	public DecodedJWT verifyAndDecode(String jwt) throws JWTVerificationException {
+		if (jwt == null) {
+			throw new JWTVerificationException("Missing jwt token");
 		}
-		String token = cookieValue.replaceFirst("[bB]earer ", "");
-		DecodedJWT jwt = verifier.verify(token);
-		return jwt;
+		return verifier.verify(jwt);
 	}
-
-	public String getUserNameFromAuthCookie(String authorizationCookie) throws JWTVerificationException {
-		DecodedJWT decodedToken = this.verifyAndDecodeJwtCookie(authorizationCookie);
-		return decodedToken.getClaim("user_name").asString();
-	}
-
 }

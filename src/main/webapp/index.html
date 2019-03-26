@@ -19,11 +19,6 @@
 	(function() {
 		var app = new sap.m.App("poker-app");
 
-		var lobbyView = sap.ui.xmlview({
-			viewName : "poker.views.Lobby"
-		});
-		app.addPage(lobbyView);
-
 		var tableView = sap.ui.xmlview({
 			viewName : "poker.views.Table",
 			viewData : {
@@ -32,12 +27,6 @@
 		});
 		app.addPage(tableView);
 		
-		lobbyView.getController().attachEvent("startGame", function() {
-			tableView.getController().setPlayer("a");
-			tableView.getController().refreshData();
-			app.to(tableView.getId());              
-		});
-
 		app.placeAt("content");
 	}());
 </script>
