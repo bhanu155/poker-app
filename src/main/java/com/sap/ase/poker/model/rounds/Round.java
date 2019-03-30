@@ -40,6 +40,7 @@ public abstract class Round {
 	}
 	
 	//XXX these cards are called "hole cards" according to Texas Hold'em poker terminology
+	//XXX move this to PreFlop or even Table, since clearing the bet and setting the active/status doesn't really fit here conceptually
 	protected void dealCardsToEachPlayer() {
 		//FIXME According to Texas Hold'em poker rules, one card is dealt each time in clockwise order until each player has two cards
 		//Right now, we are dealing two cards to each player in one go - so we are not compliant with Texas Hold'em poker rules, this requirement should also be specified by a test

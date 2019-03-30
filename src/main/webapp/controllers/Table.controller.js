@@ -42,22 +42,22 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 		},
 
 		call : function() {
-			bet({ "action" : "call" });
+			this.bet({ "action" : "call" });
 		},
 		
 		raiseTo : function() {
 			var amount = this.byId("amount").getValue();
-			bet({ "action" : "raiseTo", "amount" : amount });
+			this.bet({ "action" : "raiseTo", "amount" : amount });
 		},
 
 		check : function() {
-			bet({ "action" : "check" })
+			this.bet({ "action" : "check" })
 		},
 
 		fold : function() {
 			var model = this.getView().getModel();
 			var playerName = this.playerName;
-			bet({ "action" : "fold" })
+			this.bet({ "action" : "fold" })
 		},
 		
 		bet : function(betDetails) {

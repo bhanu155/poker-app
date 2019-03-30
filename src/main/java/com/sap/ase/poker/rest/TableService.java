@@ -12,7 +12,6 @@ import javax.ws.rs.core.SecurityContext;
 
 import com.sap.ase.poker.model.Bets.IllegalAmount;
 import com.sap.ase.poker.model.DefaultDeck;
-import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.Table;
 
 @Path("table")
@@ -23,38 +22,23 @@ public class TableService {
 
 	@GET
 	@Path("{tableId}")
-	public GetTableResponse getTable(
-			// @Context HttpServletRequest request,
-			@Context SecurityContext securityContext, @PathParam("tableId") int tableId) {
-		// String playerId = JwtAuthenticationRequestFilter.staticUserId;
-		// playerId = (String) request.getAttribute("user_name");
+	public GetTableResponse getTable(@Context SecurityContext securityContext, @PathParam("tableId") String tableId) {
 		String playerId = securityContext.getUserPrincipal().getName();
 		return new GetTableResponse(table, playerId);
 	}
 
 	@POST
 	@Path("{tableId}")
-	public void createTable(@PathParam("tableId") int tableId) {
+	public void createTable(@PathParam("tableId") String tableId) {
 		table = new Table(new DefaultDeck());
 	}
 
 	@POST
 	@Path("{tableId}/players")
-	public void joinTable(JoinTableRequest joinRequest, @PathParam("tableId") int tableId) {
+	public void joinTable(JoinTableRequest joinRequest, @PathParam("tableId") String tableId) throws IllegalAmount {
+		//FIXME the server should not throw in case of IllegalAmount exception:
+		//if a player doesn't have sufficient money, he/she should just become "inactive" instead
 		table.addPlayer(joinRequest.getPlayerName());
-
-		int playerCount = 0;
-		for (Player player : table.getPlayers()) {
-			playerCount++;
-		}
-		
-		if (playerCount > 1) {
-			try {
-				table.startGame();
-			} catch (IllegalAmount e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	// XXX not nice from an HTTP/REST perspective
@@ -85,7 +69,7 @@ public class TableService {
 	// true RESTful JSON model that interacts with the server, ...
 	@POST
 	@Path("{tableId}/bets")
-	public void placeBet(BetRequest betRequest, @PathParam("tableId") int tableId) {
+	public void placeBet(BetRequest betRequest, @PathParam("tableId") String tableId) {
 		try {
 			switch (betRequest.getAction()) {
 			case "call":
