@@ -22,4 +22,9 @@ public class JwtTools {
 		}
 		return verifier.verify(jwt);
 	}
+
+	public String create(String id, String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

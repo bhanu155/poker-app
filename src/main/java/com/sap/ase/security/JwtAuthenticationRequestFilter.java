@@ -22,7 +22,7 @@ public class JwtAuthenticationRequestFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		jwtTools = new JwtTools(filterConfig.getInitParameter("sharedSecret"));
+		jwtTools = new JwtTools(Secret.VALUE);
 	}
 
 	@Override
