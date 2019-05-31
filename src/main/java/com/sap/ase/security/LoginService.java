@@ -8,19 +8,19 @@ import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.NotAuthorizedException;
 
-import com.sap.ase.security.Users.User;
+import com.sap.ase.security.FakeSecurityContext.User;
 
 @Path("login")
 @Produces(MediaType.APPLICATION_JSON)
 public class LoginService {
 
-	private final JwtTools jwtTools = new JwtTools(Secret.VALUE);
-	private final Users users = new Users();
+	private final JwtTools jwtTools = new JwtTools(FakeSecurityContext.SECRET);
+	private final FakeSecurityContext users = new FakeSecurityContext();
 
 	@POST
 	public Response login(LoginRequest loginRequest) {
 		String id = loginRequest.getId();
-		User user = users.getById(id);
+		User user = users.getUserById(id);
 		
 		if (user == null || user.password != loginRequest.getPassword()) {
 			throw new NotAuthorizedException("Wrong user id or password!");

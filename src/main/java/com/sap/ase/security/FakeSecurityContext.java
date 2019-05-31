@@ -3,11 +3,13 @@ package com.sap.ase.security;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Users {
+public class FakeSecurityContext {
+
+	public static final String SECRET = "OurVerySecretiveHighlyClassifiedSharedSecret";
 
 	private final Map<String, User> users = new HashMap<>();
-
-	public Users() {
+			
+	public FakeSecurityContext() {
 		users.put("al-capone", new User("Al Capone", "welcomeAl"));
 		users.put("pat-garret", new User("Pat Garret", "welcomePat"));
 		users.put("wyatt-earp", new User("Wyatt Earp", "welcomeWyatt"));
@@ -19,7 +21,7 @@ public class Users {
 		users.put("poker-alice", new User("Poker Alice", "welcomeAlice"));
 	}
 	
-	public User getById(String id) {
+	public User getUserById(String id) {
 		return users.get(id);
 	}
 

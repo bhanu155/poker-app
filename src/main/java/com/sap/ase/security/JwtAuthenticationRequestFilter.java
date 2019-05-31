@@ -22,7 +22,7 @@ public class JwtAuthenticationRequestFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		jwtTools = new JwtTools(Secret.VALUE);
+		jwtTools = new JwtTools(FakeSecurityContext.SECRET);
 	}
 
 	@Override

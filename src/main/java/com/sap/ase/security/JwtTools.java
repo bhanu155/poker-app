@@ -24,7 +24,6 @@ public class JwtTools {
 	}
 
 	public String create(String id, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return JWT.create().withClaim("user_id", id).withClaim("user_name", name).sign(algorithm);
 	}
 }
