@@ -50,7 +50,7 @@ window.onload = function () {
             login: async function () {
                 const response = await superagent.post('api/login').send({
                     'id': this.loginUser,
-                    'pw': this.loginPassword
+                    'password': this.loginPassword
                 });
                 if (response.status === 200) {
                     this.checkLoggedIn();

@@ -7,20 +7,37 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 public class JwtUserHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
-	private String userPrincipal;
+	private String name;
+	private String displayName;
 
-	public JwtUserHttpServletRequestWrapper(String userPrincipal, HttpServletRequest request) {
+	public JwtUserHttpServletRequestWrapper(String id, String name, HttpServletRequest request) {
 		super(request);
-		this.userPrincipal = userPrincipal;
+		this.name = id;
+		this.displayName = name;
 	}
-
+	
 	@Override
 	public Principal getUserPrincipal() {
-		return new Principal() {
-			@Override
-			public String getName() {
-				return userPrincipal;
-			}
-		};
+		return new PokerUserPrincipal(name, displayName);
+	}
+	
+	public class PokerUserPrincipal implements Principal {
+		
+		private final String name;
+		private final String displayName;
+		
+		private PokerUserPrincipal(String name, String displayName) {
+			this.name = name;
+			this.displayName = displayName;
+		}
+		
+		@Override
+		public String getName() {
+			return name;
+		}
+		
+		public String getDisplayName() {
+			return displayName;
+		}
 	}
 }

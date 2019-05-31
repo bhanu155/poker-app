@@ -25,14 +25,18 @@
 	</context-param>
 
 	<filter>
-		<filter-name>SecFilter</filter-name>
+		<filter-name>AuthenticationFilter</filter-name>
 		<filter-class>com.sap.ase.security.JwtAuthenticationRequestFilter</filter-class>
 	</filter>
 	<filter-mapping>
-		<filter-name>SecFilter</filter-name>
-		<url-pattern>/api/*</url-pattern>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/api/table*</url-pattern>
 	</filter-mapping>
-
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/api/login/user</url-pattern>
+	</filter-mapping>
+	
 	<servlet>
 		<display-name>CXFNonSpringJaxrsServlet</display-name>
 		<servlet-name>CXFNonSpringJaxrsServlet</servlet-name>
@@ -43,11 +47,10 @@
 		</init-param>
 		<init-param>
 			<param-name>jaxrs.serviceClasses</param-name>
-			<param-value>com.sap.ase.poker.rest.TableService</param-value>
-		</init-param>
-		<init-param>
-			<param-name>jaxrs.serviceClasses</param-name>
-			<param-value>com.sap.ase.security.LoginService</param-value>
+			<param-value>
+				com.sap.ase.poker.rest.TableService,
+				com.sap.ase.security.LoginService
+			</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

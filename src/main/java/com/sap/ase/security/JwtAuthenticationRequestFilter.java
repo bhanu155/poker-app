@@ -39,7 +39,9 @@ public class JwtAuthenticationRequestFilter implements Filter {
 						String cookieValue = URLDecoder.decode(cookie.getValue(), "UTF-8");
 						DecodedJWT decodedJwt = jwtTools.verifyAndDecode(cookieValue);
 						String userId = decodedJwt.getClaim("user_id").asString();
-						request = new JwtUserHttpServletRequestWrapper(userId, httpRequest);
+						String userName = decodedJwt.getClaim("user_name").asString();
+						//REVISE just checking, is it really meant to be like this - we're re-setting the input parameter??
+						request = new JwtUserHttpServletRequestWrapper(userId, userName, httpRequest);
 						chain.doFilter(request, response);
 						return;
 					} catch (JWTVerificationException e) {

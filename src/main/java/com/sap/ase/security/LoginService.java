@@ -1,14 +1,18 @@
 package com.sap.ase.security;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.core.SecurityContext;
 
 import com.sap.ase.security.FakeSecurityContext.User;
+import com.sap.ase.security.JwtUserHttpServletRequestWrapper.PokerUserPrincipal;
 
 @Path("login")
 @Produces(MediaType.APPLICATION_JSON)
@@ -22,13 +26,20 @@ public class LoginService {
 		String id = loginRequest.getId();
 		User user = users.getUserById(id);
 		
-		if (user == null || user.password != loginRequest.getPassword()) {
+		if (user == null || !user.password.equals(loginRequest.getPassword())) {
 			throw new NotAuthorizedException("Wrong user id or password!");
 		}
 		String jwt = jwtTools.create(id, user.name);
 		return Response.ok().cookie(new NewCookie("jwt", jwt)).build();
 	}
 
+	@GET
+	@Path("user")
+	public UserResponse getLoggedInUser(@Context SecurityContext securityContext) {
+		PokerUserPrincipal principal = (PokerUserPrincipal)securityContext.getUserPrincipal();
+		return new UserResponse(principal.getName(), principal.getDisplayName());
+	}
+	
 	public static class LoginRequest {
 		private String id;
 		private String password;
@@ -50,4 +61,22 @@ public class LoginService {
 		}
 	}
 
+	public static class UserResponse {
+		private final String id;
+		private final String name;
+
+		public UserResponse(String id, String name) {
+			this.id = id;
+			this.name = name;
+		}
+		
+		public String getName() {
+			return name;
+		}
+
+		public String getId() {
+			return id;
+		}
+	}
+	
 }
