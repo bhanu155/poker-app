@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-public class SecretTest {
+public class JwtToolsTest {
 
 	@Test
 	public void encodeSign_decodeVerify() {
