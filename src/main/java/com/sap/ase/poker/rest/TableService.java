@@ -1,5 +1,8 @@
 package com.sap.ase.poker.rest;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -14,11 +17,16 @@ import com.sap.ase.poker.model.Bets.IllegalAmount;
 import com.sap.ase.poker.model.DefaultDeck;
 import com.sap.ase.poker.model.Table;
 
-@Path("table")
+@Path("tables")
 @Produces(MediaType.APPLICATION_JSON)
 public class TableService {
 
 	private Table table = new Table(new DefaultDeck());
+
+	@GET
+	public List<LobbyEntry> lobby() {
+		return Arrays.asList(new LobbyEntry("las-vegas", "0/10", "1/2"));
+	}
 
 	@GET
 	@Path("{tableId}")
@@ -36,28 +44,28 @@ public class TableService {
 	@POST
 	@Path("{tableId}/players")
 	public void joinTable(JoinTableRequest joinRequest, @PathParam("tableId") String tableId) throws IllegalAmount {
-		//FIXME the server should not throw in case of IllegalAmount exception:
-		//if a player doesn't have sufficient money, he/she should just become "inactive" instead
+		// FIXME the server should not throw in case of IllegalAmount exception:
+		// if a player doesn't have sufficient money, he/she should just become
+		// "inactive" instead
 		table.addPlayer(joinRequest.getPlayerName());
 	}
 
 	// XXX not nice from an HTTP/REST perspective
 	// The switch is ok here as won't need type/case extension lateron, what is not
-	// nice however
-	// is how we abuse the protocol a litle bit, as there are different kinds of
-	// posts - one has an amount,
-	// all the others don't have it (and don't need it).
+	// nice however is how we abuse the protocol a litle bit, as there are different
+	// kinds of posts - one has an amount, all the others don't have it (and don't
+	// need it).
+	//
 	// A "cleaner" REST API would just always have the amount - so actually the
-	// server wouldn't care any longer
-	// whether we "check" (amount=current max bet), "call" (amount=current max bet),
-	// raise (amount>current max bet)
-	// or "fold" (this should even be a different endpoint then - probably a DELETE
-	// /table/<id>/player!).
+	// server wouldn't care any longer whether we "check" (amount=current max bet),
+	// "call" (amount=current max bet), raise (amount>current max bet) or "fold"
+	// (this should even be a different endpoint then - probably a
+	// DELETE /table/<id>/player!).
+	//
 	// This would simplify also the table and bets classes significantly.
 	// The client then needs to do a bit more work, e.g. setting the right amount
-	// for check and call,
-	// however the client anyway has to be improved right now, e.g. to hide
-	// call/check/raise buttons in the particular cases.
+	// for check and call, however the client anyway has to be improved right now,
+	// e.g. to hide call/check/raise buttons in the particular cases.
 	// To decide this, the client needs to know about "current amount" and "delta to
 	// current max bet" _anyway_.
 	//

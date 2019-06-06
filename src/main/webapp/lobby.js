@@ -44,7 +44,7 @@ window.onload = function () {
                     .send({'playerName': this.loggedInUser.id});
 
                 if (response.status === 204) {
-                    window.open(`${table.url}`, '_blank');
+                    window.open(`table?id=${table.id}`, '_blank');                    
                 }
             },
             login: async function () {
@@ -57,7 +57,7 @@ window.onload = function () {
                 }
             },
             logout: async function () {
-                const response = await superagent.post('api/logout').send();
+                const response = await superagent.delete('api/login').send();
                 if (response.status === 204) {
                     location.reload();
                 }

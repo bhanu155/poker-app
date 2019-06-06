@@ -1,5 +1,6 @@
 package com.sap.ase.security;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.POST;
@@ -25,21 +26,27 @@ public class LoginService {
 	public Response login(LoginRequest loginRequest) {
 		String id = loginRequest.getId();
 		User user = users.getUserById(id);
-		
+
 		if (user == null || !user.password.equals(loginRequest.getPassword())) {
 			throw new NotAuthorizedException("Wrong user id or password!");
 		}
 		String jwt = jwtTools.create(id, user.name);
-		return Response.ok().cookie(new NewCookie("jwt", jwt)).build();
+		int cookieAgeSeconds = 100000;
+		return Response.ok().cookie(new NewCookie("jwt", jwt, "/", "", "jwt token for poker app", cookieAgeSeconds, false)).build();
 	}
 
+	@DELETE
+	public Response logout() {
+		return Response.noContent().cookie(new NewCookie("jwt", "", "/", "", "jwt token for poker app", 0, false)).build();
+	}
+	
 	@GET
 	@Path("user")
 	public UserResponse getLoggedInUser(@Context SecurityContext securityContext) {
-		PokerUserPrincipal principal = (PokerUserPrincipal)securityContext.getUserPrincipal();
+		PokerUserPrincipal principal = (PokerUserPrincipal) securityContext.getUserPrincipal();
 		return new UserResponse(principal.getName(), principal.getDisplayName());
 	}
-	
+
 	public static class LoginRequest {
 		private String id;
 		private String password;
@@ -69,7 +76,7 @@ public class LoginService {
 			this.id = id;
 			this.name = name;
 		}
-		
+
 		public String getName() {
 			return name;
 		}
@@ -78,5 +85,5 @@ public class LoginService {
 			return id;
 		}
 	}
-	
+
 }

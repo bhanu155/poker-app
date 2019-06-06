@@ -1,6 +1,6 @@
 sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 	"use strict";
-	const tableId = '1';
+	var tableId = '1';
 	
 	return Controller.extend("poker.controllers.Table", {
 
@@ -13,10 +13,13 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 		onInit : function() {
 			setInterval(() => {
 				jQuery.ajax({
-					url : `api/table/${tableId}`,
+					url : `../api/tables/${tableId}`,
 					method : "GET",
 					success : (data) => {
-						const currentPlayerIsMe = (this.getCookie("UserName") == data.currentPlayer);
+						var jwt = this.getCookie("jwt");
+						var userClaim = jwt.split('.')[1]
+						var user = JSON.parse(atob(userClaim));												
+						var currentPlayerIsMe = (user.user_id == data.currentPlayer);
 						this.getView().byId("toolbar").setEnabled(currentPlayerIsMe); 
 						this.getView().getModel().setData(data);
 						
@@ -62,7 +65,7 @@ sap.ui.define([ "sap/ui/core/mvc/Controller" ], function(Controller) {
 		
 		bet : function(betDetails) {
 			jQuery.ajax({
-				url : `api/table/${tableId}/bets`,
+				url : `../api/tables/${tableId}/bets`,
 				method : "POST",
 				data : JSON.stringify(betDetails),
 				contentType : "application/json",
