@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -191,7 +192,7 @@ public class BetsTest {
 		assertBetAndCash(cindy, 0, 100);
 		assertBetAndCash(dave, 0, 99);
 	}
-	
+		
 	private void assertBetAndCash(Player player, int bet, int cash) {
 		assertThat(player.getBet(), is(bet));
 		assertThat(player.getCash(), is(cash));

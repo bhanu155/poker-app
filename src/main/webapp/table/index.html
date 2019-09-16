@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<title>Poker</title>
+
+<script id="sap-ui-bootstrap" type="text/javascript"
+	src="../resources/sap-ui-core.js" data-sap-ui-theme="sap_bluecrystal"
+	data-sap-ui-libs="sap.m"
+	data-sap-ui-resourceRoots='{ "poker" : "./" }'
+	data-sap-ui-bindingSyntax='complex'></script>
+
+<style>
+      .sapMLIB.currentPlayer { background: #009de0; }
+</style>
+    
+<script type="text/javascript">
+	(function() {
+		var app = new sap.m.App("poker-app");
+
+		var tableView = sap.ui.xmlview({
+			viewName : "poker.views.Table",
+			viewData : {
+				model : new sap.ui.model.json.JSONModel()
+			}
+		});
+		app.addPage(tableView);
+		
+		app.placeAt("content");
+	}());
+</script>
+</head>
+
+<body class="sapUiBody">
+	<div id="content"></div>
+</body>
+
+</html>

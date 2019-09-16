@@ -18,8 +18,12 @@ public class GetTableResponse {
 			players.add(new Player(player));
 		}
 
-		for (com.sap.ase.poker.model.Card card : table.getCurrentPlayer().getCards()) {
-			playerCards.add(new Card(card));
+		for (com.sap.ase.poker.model.Player player: table.getPlayers()) {
+			if (player.getName().equals(uiPlayerName)) {
+				for (com.sap.ase.poker.model.Card card : player.getCards()) {
+					playerCards.add(new Card(card));
+				}							
+			}
 		}
 
 		for (com.sap.ase.poker.model.Card card : table.getCommunityCards()) {

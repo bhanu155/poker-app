@@ -1,50 +1,23 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
+
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8">
+    <title>Poker Lobby</title>
+    <link rel="stylesheet" type="text/css" href="lib/fiori-fundamentals.min.css">
+    </link>
 
-<title>Poker</title>
-
-<script id="sap-ui-bootstrap" type="text/javascript"
-	src="resources/sap-ui-core.js" data-sap-ui-theme="sap_bluecrystal"
-	data-sap-ui-libs="sap.m"
-	data-sap-ui-resourceRoots='{ "poker" : "./" }'
-	data-sap-ui-bindingSyntax='complex'></script>
-
-<style>
-      .sapMLIB.currentPlayer { background: #009de0; }
-</style>
-    
-<script type="text/javascript">
-	(function() {
-		var app = new sap.m.App("poker-app");
-
-		var lobbyView = sap.ui.xmlview({
-			viewName : "poker.views.Lobby"
-		});
-		app.addPage(lobbyView);
-
-		var tableView = sap.ui.xmlview({
-			viewName : "poker.views.Table",
-			viewData : {
-				model : new sap.ui.model.json.JSONModel()
-			}
-		});
-		app.addPage(tableView);
-		
-		lobbyView.getController().attachEvent("startGame", function() {
-			tableView.getController().setPlayer("a");
-			tableView.getController().refreshData();
-			app.to(tableView.getId());              
-		});
-
-		app.placeAt("content");
-	}());
-</script>
+    <script src="lib/vue.min.js"></script>
+    <script src="lib/vue-router.js"></script>
+    <script src="lib/FundamentalVue.umd.min.js"></script>
+    <script src="lib/superagent.js"></script>
+    <script src="lib/require.js"></script>
+    <script src="lobby.js"></script>
 </head>
 
-<body class="sapUiBody">
-	<div id="content"></div>
+<body>
+    <div id="app">
+    </div>
 </body>
 
 </html>

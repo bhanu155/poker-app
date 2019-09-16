@@ -35,14 +35,18 @@ public class Table {
 		return players;
 	}
 
-	public void addPlayer(String name) {
-		players.add(new Player(name, DEFAULT_START_CASH));
+	public void addPlayer(String name) throws IllegalAmount {
+		Player player = new Player(name, DEFAULT_START_CASH);		
+		players.add(player);
+		if (players.size() == 2) {
+			startGame();
+		}
 	}
 
 	//FIXME can we start a game with insufficient players? That would feel wrong...
 	//"IllegalNumberOfPlayers" would also be a much more accurate client error than the current
 	//"IllegalAmount" exception - see the other comments in PreFlop.start and TableService.startGame
-	public void startGame() throws IllegalAmount {
+	private void startGame() throws IllegalAmount {
 		deck.shuffle();
 		communityCards = new ArrayList<>();
 		bets = new Bets(players);
