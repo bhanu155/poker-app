@@ -34,41 +34,47 @@ window.onload = function () {
             const tableHeaders = ['Table Name', 'Players', 'Stakes', ''];
             return {loggedInUser: null, loginUser: '', loginPassword: '', tables: [], headers: tableHeaders};
         },
-        created: async function () {
+        created: function () {
             this.checkLoggedIn();
         },
         methods: {
-            join: async function (table) {
-                const response = await superagent
-                    .post(`api/tables/${table.id}/players`)
-                    .send({'playerName': this.loggedInUser.id});
-
-                if (response.status === 204) {
-                    window.open(`table?id=${table.id}`, '_blank');                    
-                }
+            join: function (table) {
+                superagent
+                	.post(`api/tables/${table.id}/players`)
+                    .send({'playerName': this.loggedInUser.id})
+                    .then(function(response) {
+                        if (response.status === 204) {
+                            window.open(`table?id=${table.id}`, '_blank');                    
+                        }                    	
+                    });
             },
-            login: async function () {
-                const response = await superagent.post('api/login').send({
-                    'id': this.loginUser,
-                    'password': this.loginPassword
+            login: function () {
+            	var that = this;
+                superagent.post('api/login')
+                	.send({'id': this.loginUser, 'password': this.loginPassword})
+                	.then(function(response) {
+                        if (response.status === 200) {
+                            that.checkLoggedIn();
+                        }                		
+                	});
+            },
+            logout: function () {
+                superagent.delete('api/login').send().then(function(response) {
+                	if (response.status === 204) {
+                		location.reload();
+                	}
                 });
-                if (response.status === 200) {
-                    this.checkLoggedIn();
-                }
             },
-            logout: async function () {
-                const response = await superagent.delete('api/login').send();
-                if (response.status === 204) {
-                    location.reload();
-                }
-            },
-            checkLoggedIn: async function () {
-                const userResponse = await superagent.get('api/login/user');
-                if (userResponse.status === 200) {
-                    this.loggedInUser = userResponse.body;
-                    const tablesResponse = await superagent.get('api/tables');
-                    this.tables = tablesResponse.body;
-                }
+            checkLoggedIn: function () {
+            	var that = this;
+            	superagent.get('api/login/user').then(function(userResponse) {
+                	if (userResponse.status === 200) {
+                		that.loggedInUser = userResponse.body;
+                		superagent.get('api/tables').then(function(tableResponse) {
+                			that.tables = tableResponse.body;                			
+                		});
+                	}
+                });
             }
         }
     });
