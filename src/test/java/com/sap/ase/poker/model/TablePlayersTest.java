@@ -88,8 +88,8 @@ public class TablePlayersTest {
 	
 	@Test
 	public void all() throws Exception {
-		Iterator<Player> it = players.iterator();
-		assertThat(it.next(),is(ALICE));
-		assertThat(it.next(),is(BOB));
+		Iterator<Player> it = players.toList().iterator();
+		assertThat(it.next(), is(ALICE));
+		assertThat(it.next(), is(BOB));
 	}
 }

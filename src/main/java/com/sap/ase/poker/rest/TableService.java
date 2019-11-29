@@ -1,53 +1,53 @@
 package com.sap.ase.poker.rest;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
+import javax.websocket.server.PathParam;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sap.ase.poker.model.Bets.IllegalAmount;
 import com.sap.ase.poker.model.DefaultDeck;
 import com.sap.ase.poker.model.Table;
+import com.sap.ase.poker.security.JwtUserHttpServletRequestWrapper.PokerUserPrincipal;
 
-@Path("tables")
-@Produces(MediaType.APPLICATION_JSON)
+@RestController
+@RequestMapping("/api/tables")
 public class TableService {
 
 	private Table table = new Table(new DefaultDeck());
 
-	@GET
+	@GetMapping
 	public List<LobbyEntry> lobby() {
 		return Arrays.asList(new LobbyEntry("las-vegas", "0/10", "1/2"));
 	}
 
-	@GET
-	@Path("{tableId}")
-	public GetTableResponse getTable(@Context SecurityContext securityContext, @PathParam("tableId") String tableId) {
-		String playerId = securityContext.getUserPrincipal().getName();
+	@GetMapping("/{tableId}")
+	public GetTableResponse getTable(Principal principal, @PathParam("tableId") String tableId) {
+		String playerId = principal.getName();
 		return new GetTableResponse(table, playerId);
 	}
 
-	@POST
-	@Path("{tableId}")
+	@PostMapping("/{tableId}")
 	public void createTable(@PathParam("tableId") String tableId) {
 		table = new Table(new DefaultDeck());
 	}
 
-	@POST
-	@Path("{tableId}/players")
-	public void joinTable(JoinTableRequest joinRequest, @PathParam("tableId") String tableId) throws IllegalAmount {
+	@PostMapping("/{tableId}/players")
+	public ResponseEntity<Void> joinTable(@RequestBody JoinTableRequest joinRequest, @PathParam("tableId") String tableId)
+			throws IllegalAmount {
 		// FIXME the server should not throw in case of IllegalAmount exception:
 		// if a player doesn't have sufficient money, he/she should just become
 		// "inactive" instead
 		table.addPlayer(joinRequest.getPlayerName());
+		return ResponseEntity.noContent().build();
 	}
 
 	// XXX not nice from an HTTP/REST perspective
@@ -75,9 +75,8 @@ public class TableService {
 	// leverage REST-based concepts on the client side,
 	// have a cleaner MVC approach, e.g. using a UI5 custom model, implementing a
 	// true RESTful JSON model that interacts with the server, ...
-	@POST
-	@Path("{tableId}/bets")
-	public void placeBet(BetRequest betRequest, @PathParam("tableId") String tableId) {
+	@PostMapping("/{tableId}/bets")
+	public void placeBet(@RequestBody BetRequest betRequest, @PathParam("tableId") String tableId) {
 		try {
 			switch (betRequest.getAction()) {
 			case "call":

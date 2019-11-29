@@ -49,7 +49,7 @@ public class Bets {
 
 	public boolean areEven() {
 		Set<Integer> uniqueBets = new HashSet<>();
-		for (Player p : players) {
+		for (Player p : players.toList()) {
 			if (p.isActive()) {
 				uniqueBets.add(p.getBet());
 			}
@@ -78,7 +78,7 @@ public class Bets {
 
 	public void distributePot(Winners winners) {
 		int oddChips = pot % winners.list.size();
-		for (Player player : players) {
+		for (Player player : players.toList()) {
 			player.clearBet();
 			if (winners.list.contains(player)) {
 				player.addCash(pot / winners.list.size());

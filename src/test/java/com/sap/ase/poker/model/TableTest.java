@@ -23,6 +23,12 @@ public class TableTest {
 	}
 
 	@Test
+	public void bobTriesToJoinTwice() throws Exception {
+		table.addPlayer(BOB);
+		assertThat(table.getPlayers().size(), is(2));
+	}
+
+	@Test
 	public void bobCalls_aliceChecks() throws Exception {
 		table.call();
 		table.check();

@@ -1,4 +1,4 @@
-package com.sap.ase.security;
+package com.sap.ase.poker.security;
 
 import java.security.Principal;
 
@@ -15,27 +15,27 @@ public class JwtUserHttpServletRequestWrapper extends HttpServletRequestWrapper 
 		this.name = id;
 		this.displayName = name;
 	}
-	
+
 	@Override
 	public Principal getUserPrincipal() {
 		return new PokerUserPrincipal(name, displayName);
 	}
-	
+
 	public class PokerUserPrincipal implements Principal {
-		
+
 		private final String name;
 		private final String displayName;
-		
+
 		private PokerUserPrincipal(String name, String displayName) {
 			this.name = name;
 			this.displayName = displayName;
 		}
-		
+
 		@Override
 		public String getName() {
 			return name;
 		}
-		
+
 		public String getDisplayName() {
 			return displayName;
 		}
