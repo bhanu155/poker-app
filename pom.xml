@@ -14,14 +14,8 @@
 	<groupId>com.sap.ase</groupId>
 	<artifactId>poker</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
 	<name>${project.artifactId}</name>
 	<description>Poker application</description>
-
-	<properties>
-		<java.version>1.8</java.version>
-		<ui5.version>1.32.3</ui5.version>
-	</properties>
 
 	<dependencies>
 		<dependency>
@@ -29,44 +23,22 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>com.sap.ui5</groupId>
-			<artifactId>resource</artifactId>
-			<version>${ui5.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sap.ui5</groupId>
-			<artifactId>core</artifactId>
-			<version>${ui5.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sap.ui5</groupId>
-			<artifactId>mobile</artifactId>
-			<version>${ui5.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sap.ui5</groupId>
-			<artifactId>themelib_sap_bluecrystal</artifactId>
-			<version>${ui5.version}</version>
-		</dependency>
-
-
 		<!-- Spring Security Dependency -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-			<version>2.1.4.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>3.7.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.auth0</groupId>
-			<artifactId>java-jwt</artifactId>
-			<version>3.7.0</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
