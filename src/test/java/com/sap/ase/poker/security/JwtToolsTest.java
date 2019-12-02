@@ -1,4 +1,4 @@
-package com.sap.ase.security;
+package com.sap.ase.poker.security;
 
 import static org.junit.Assert.assertEquals;
 

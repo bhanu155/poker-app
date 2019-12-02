@@ -4,24 +4,29 @@ import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
-public class TablePlayers implements Iterable<Player> {
+public class TablePlayers {
 
 	private List<Player> players = new ArrayList<>();
 	private int currentIndex = 0;
 	private int startIndex = 0;
 
 	public void add(Player player) {
-		players.add(player);
+		if (!playerExists(player)) {
+			players.add(player);
+		}
+	}
+
+	private boolean playerExists(Player player) {
+		return players.stream().anyMatch(p->p.getName().equals(player.getName()));
 	}
 
 	public Player getCurrentPlayer() {
 		return players.size() == 0 ? new NullPlayer() : players.get(currentIndex);
 	}
-	
-	public int activePlayersSize(){
+
+	public int activePlayersSize() {
 		int count = 0;
 		for (Player p : players) {
 			if (p.isActive()) {
@@ -34,7 +39,7 @@ public class TablePlayers implements Iterable<Player> {
 	public int size() {
 		return players.size();
 	}
-	
+
 	public void nextPlayer() {
 		currentIndex = (currentIndex + 1) % players.size();
 		if (!players.get(currentIndex).isActive()) {
@@ -47,15 +52,10 @@ public class TablePlayers implements Iterable<Player> {
 		currentIndex = startIndex;
 	}
 
-	@Override
-	public Iterator<Player> iterator() {
-		return players.iterator();
-	}
-
-	public List<Player> asList() {
+	public List<Player> toList() {
 		return unmodifiableList(players);
 	}
-	
+
 	private class NullPlayer extends Player {
 
 		public NullPlayer() {

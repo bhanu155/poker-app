@@ -1,4 +1,4 @@
-package com.sap.ase.security;
+package com.sap.ase.poker.security;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -22,7 +22,7 @@ public class JwtAuthenticationRequestFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		jwtTools = new JwtTools(FakeSecurityContext.SECRET);
+		jwtTools = new JwtTools(JwtTools.SECRET);
 	}
 
 	@Override
@@ -40,7 +40,8 @@ public class JwtAuthenticationRequestFilter implements Filter {
 						DecodedJWT decodedJwt = jwtTools.verifyAndDecode(cookieValue);
 						String userId = decodedJwt.getClaim("user_id").asString();
 						String userName = decodedJwt.getClaim("user_name").asString();
-						//REVISE just checking, is it really meant to be like this - we're re-setting the input parameter??
+						// REVISE just checking, is it really meant to be like this - we're re-setting
+						// the input parameter??
 						request = new JwtUserHttpServletRequestWrapper(userId, userName, httpRequest);
 						chain.doFilter(request, response);
 						return;

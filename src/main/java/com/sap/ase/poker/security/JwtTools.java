@@ -1,4 +1,4 @@
-package com.sap.ase.security;
+package com.sap.ase.poker.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -8,6 +8,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 public class JwtTools {
 
+	public static final String SECRET = "OurVerySecretiveHighlyClassifiedSharedSecret";
+	
 	private JWTVerifier verifier;
 	private Algorithm algorithm;
 

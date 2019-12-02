@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
 import com.sap.ase.poker.model.Bets.IllegalAmount;
@@ -31,12 +32,12 @@ public class Table {
 		this.deck = deck;
 	}
 
-	public Iterable<Player> getPlayers() {
-		return players;
+	public List<Player> getPlayers() {
+		return players.toList();
 	}
 
 	public void addPlayer(String name) throws IllegalAmount {
-		Player player = new Player(name, DEFAULT_START_CASH);		
+		Player player = new Player(name, DEFAULT_START_CASH);
 		players.add(player);
 		if (players.size() == 2) {
 			startGame();
@@ -105,7 +106,7 @@ public class Table {
 			numOfPlayersThatPerformedAction = 0;
 			if (rounds.isEmpty()) {
 				//FIXME is that a bug? Check what happens if a folded player has the best hand
-				Winners winners = new FindWinners().apply(players.asList(), this.communityCards);
+				Winners winners = new FindWinners().apply(players.toList(), this.communityCards);
 				bets.distributePot(winners);
 				players.nextStartPlayer();
 				startGame();

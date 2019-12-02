@@ -48,7 +48,7 @@ public abstract class Round {
 		//This is also a Texas Hold'em rule, so this requirement also needs to be specified by a test.
 		//FIXME Could it be that we are dealing cards to inactive players?
 		//What e.g. if a player is out of money? That player should become and remain inactive, or even be removed from the player list. 
-		for (Player p : players) {
+		for (Player p : players.toList()) {
 			p.setCards(asList(deck.dealCard(), deck.dealCard()));
 			p.clearBet();
 			p.setActive();

@@ -1,7 +1,7 @@
 window.onload = function () {
 
-    //REVISE split into 3 components (login, lobby, leaderboard)
-    //TODO error handling (e.g. failing login, join, ...)
+    // REVISE split into 3 components (login, lobby, leaderboard)
+    // TODO error handling (e.g. failing login, join, ...)
     
     Vue.use(FundamentalVue);
 
@@ -44,14 +44,14 @@ window.onload = function () {
                     .send({'playerName': this.loggedInUser.id})
                     .then(function(response) {
                         if (response.status === 204) {
-                            window.open(`table?id=${table.id}`, '_blank');                    
+                            window.open(`table/index.html?id=${table.id}`, '_blank');                    
                         }                    	
                     });
             },
             login: function () {
             	var that = this;
-                superagent.post('api/login')
-                	.send({'id': this.loginUser, 'password': this.loginPassword})
+                superagent.post('api/login').auth(this.loginUser, this.loginPassword)
+                	.send()
                 	.then(function(response) {
                         if (response.status === 200) {
                             that.checkLoggedIn();

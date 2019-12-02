@@ -6,9 +6,11 @@ This is the reference application for the poker game that is being developed as 
 - This repository is supposed to be forked for your training so that you can share code changes among your training team
 - The code requires at least Java 8 and Maven 3 to compile and package
 - If you use Eclipse as an IDE, import the project as "Existing Maven project"
-- The code is packaged as a web archive (.war), so you can deploy it to a servlet container - it is tested with Tomcat 8
-- Once you deploy the packaged web archive, the application will respond at the root URL (e.g. http://localhost:8080/poker)
-
+- The project is a self contained Spring Boot project
+- You can start the application either:
+	- using `mvn spring-boot:run`, from the command line or within your IDE
+	- if you are using [Spring Tool Suite](https://spring.io/tools): using "Run As" -> "Spring Boot App" or from the "Boot Dashboard" view
+- The application will be available at http://localhost:8080
 ## Test support tools
 - To continuously execute your tests you can use [Infinitest](http://infinitest.github.io/) which has plugins for Eclipse and IntelliJ
 - To get code coverage statistics you can use:
