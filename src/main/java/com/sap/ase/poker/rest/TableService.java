@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sap.ase.poker.model.Bets.IllegalAmount;
 import com.sap.ase.poker.model.DefaultDeck;
 import com.sap.ase.poker.model.Table;
-import com.sap.ase.poker.security.JwtUserHttpServletRequestWrapper.PokerUserPrincipal;
 
 @RestController
-@RequestMapping("/api/tables")
+@RequestMapping(TableService.PATH)
 public class TableService {
+
+	public static final String PATH = "/api/tables";
 
 	private Table table = new Table(new DefaultDeck());
 
