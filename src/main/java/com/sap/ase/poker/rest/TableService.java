@@ -36,11 +36,6 @@ public class TableService {
 		return new GetTableResponse(table, playerId);
 	}
 
-	@PostMapping("/{tableId}")
-	public void createTable(@PathParam("tableId") String tableId) {
-		table = new Table(new DefaultDeck());
-	}
-
 	@PostMapping("/{tableId}/players")
 	public ResponseEntity<Void> joinTable(@RequestBody JoinTableRequest joinRequest, @PathParam("tableId") String tableId)
 			throws IllegalAmount {
