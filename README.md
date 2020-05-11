@@ -11,6 +11,10 @@ This is the reference application for the poker game that is being developed as 
 	- using `mvn spring-boot:run`, from the command line or within your IDE
 	- if you are using [Spring Tool Suite](https://spring.io/tools): using "Run As" -> "Spring Boot App" or from the "Boot Dashboard" view
 - The application will be available at http://localhost:8080
+- If you would like to use Gradle instead of Maven:
+  - Use `gradle init` to generate Gradle artifacts from the Maven pom.xml
+  - [Add the Spring Boot plugin for Gradle](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/), otherwise the `bootRun` Gradle task will not work
+
 ## Test support tools
 - To continuously execute your tests you can use [Infinitest](http://infinitest.github.io/) which has plugins for Eclipse and IntelliJ
 - To get code coverage statistics you can use:
