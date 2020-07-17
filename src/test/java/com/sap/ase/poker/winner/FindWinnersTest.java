@@ -2,15 +2,14 @@ package com.sap.ase.poker.winner;
 
 import static com.sap.ase.poker.model.CardFixtures.*;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import org.junit.Test;
-
 import com.sap.ase.poker.model.Card;
 import com.sap.ase.poker.model.Player;
+import org.junit.jupiter.api.Test;
 
 public class FindWinnersTest {
 

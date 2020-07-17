@@ -3,12 +3,11 @@ package com.sap.ase.poker.winner;
 import static com.sap.ase.poker.model.CardFixtures.*;
 import static com.sap.ase.poker.winner.Hand.Type.*;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.sap.ase.poker.winner.Hand.Type;
+import org.junit.jupiter.api.Test;
 
 public class HandTest {
 

@@ -1,22 +1,21 @@
 package com.sap.ase.poker.acceptance;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import com.sap.ase.poker.model.Bets.IllegalAmount;
 import com.sap.ase.poker.model.DefaultDeck;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.Table;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class AcceptanceTest {
 	private Table table;
 	private static final String ALICE = "alice";
 	private static final String BOB = "bob";
 
-	@Before
+	@BeforeEach
 	public void setup() throws IllegalAmount {
 		table = new Table(new DefaultDeck());
 		table.addPlayer(ALICE);

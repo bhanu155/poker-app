@@ -1,12 +1,12 @@
 package com.sap.ase.poker.model;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.Iterator;
-
-import org.junit.Before;
-import org.junit.Test;
 
 public class TablePlayersTest {
 
@@ -15,7 +15,7 @@ public class TablePlayersTest {
 	private static final Player CHRIS = new Player("chris", 0);
 	private TablePlayers players;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		ALICE.setActive();
 		BOB.setActive();

@@ -1,22 +1,17 @@
 package com.sap.ase.poker.model;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import com.sap.ase.poker.model.DefaultDeck.OutOfCardsException;
+import org.junit.jupiter.api.Test;
 
 public class DeckTest {
-
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void shouldReturnCardWithSuitAndKind() throws Exception {
@@ -38,8 +33,9 @@ public class DeckTest {
 		
 		assertThat(uniqueCards.size(), is(52));
 		
-		thrown.expect(OutOfCardsException.class);
-		deck.dealCard();
+		assertThrows(OutOfCardsException.class, () -> {
+			deck.dealCard();
+		});
 	}
 	
 	@Test

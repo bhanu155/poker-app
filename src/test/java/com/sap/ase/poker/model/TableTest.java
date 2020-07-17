@@ -2,12 +2,11 @@ package com.sap.ase.poker.model;
 
 import static com.sap.ase.poker.model.CardFixtures.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import com.sap.ase.poker.model.Bets.IllegalAmount;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TableTest {
 	private Table table;
@@ -15,7 +14,7 @@ public class TableTest {
 	private static final String BOB = "bob";
 	private static final String CHRIS = "chris";
 
-	@Before
+	@BeforeEach
 	public void setup() throws IllegalAmount {
 		table = new Table(new DefaultDeck());
 		table.addPlayer(ALICE);

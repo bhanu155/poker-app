@@ -5,14 +5,13 @@ import static com.sap.ase.poker.model.Card.Suit.CLUBS;
 import static com.sap.ase.poker.model.CardFixtures.*;
 import static com.sap.ase.poker.winner.Hand.Type.*;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.sap.ase.poker.model.Card;
 import com.sap.ase.poker.winner.IllegalCards.DuplicateCards;
 import com.sap.ase.poker.winner.IllegalCards.IllegalNumberOfCards;
+import org.junit.jupiter.api.Test;
 
 public class FindBestHandTest {
 

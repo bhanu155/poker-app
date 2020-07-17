@@ -2,18 +2,13 @@ package com.sap.ase.poker.model;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.sap.ase.poker.model.Bets.IllegalAmount;
 import com.sap.ase.poker.winner.FindWinners.Winners;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class BetsTest {
 	private Bets bets;
@@ -21,10 +16,7 @@ public class BetsTest {
 	private Player bob;
 	private TablePlayers players;
 	
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
-	@Before
+	@BeforeEach
 	public void setup() {
 		players = new TablePlayers();
 		alice = createPlayer("alice");
@@ -46,8 +38,9 @@ public class BetsTest {
 	
 	@Test
 	public void aliceCalls() throws Exception {
-		thrown.expect(IllegalAmount.class);
-		bets.call();
+		assertThrows(IllegalAmount.class, () -> {
+			bets.call();
+		});
 	}
 
 	@Test
@@ -70,16 +63,18 @@ public class BetsTest {
 	
 	@Test
 	public void aliceExceedsHerCash() throws Exception {
-		thrown.expect(IllegalAmount.class);
-		bets.raiseTo(101);
+		assertThrows(IllegalAmount.class, () -> {
+			bets.raiseTo(101);
+		});
 	}
 	
 	@Test
 	public void aliceRaises_bobChecks() throws Exception {
 		bets.raiseTo(1);
 		players.nextPlayer();
-		thrown.expect(IllegalAmount.class);
-		bets.check();
+		assertThrows(IllegalAmount.class, () -> {
+			bets.check();
+		});
 	}
 
 	@Test
@@ -113,8 +108,9 @@ public class BetsTest {
 	public void aliceRaises_bobTriesToRaiseLess() throws Exception {
 		bets.raiseTo(2);
 		players.nextPlayer();
-		thrown.expect(IllegalAmount.class);
-		bets.raiseTo(1);
+		assertThrows(IllegalAmount.class, () -> {
+			bets.raiseTo(1);
+		});
 	}
 
 	@Test
