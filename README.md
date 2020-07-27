@@ -13,7 +13,20 @@ This is the reference application for the poker game that is being developed as 
 - The application will be available at http://localhost:8080
 - If you would like to use Gradle instead of Maven:
   - Use `gradle init` to generate Gradle artifacts from the Maven pom.xml
+  - Add `mavenCentral()` to the `repositories`
   - [Add the Spring Boot plugin for Gradle](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/), otherwise the `bootRun` Gradle task will not work
+  - Add the following to enable JUnit5: 
+    ```groovy
+    test {
+        useJUnitPlatform()
+    }
+    ```
+  - For PITest add the plugin `id 'info.solidsoft.pitest' version '1.5.1'` and the following to support JUnit 5 tests:
+    ```groovy
+    pitest {
+        junit5PluginVersion = '0.12'
+    }
+    ```
 
 ## Test support tools
 - To continuously execute your tests you can use [Infinitest](http://infinitest.github.io/) which has plugins for Eclipse and IntelliJ
