@@ -11,7 +11,6 @@ public class Player {
 	private final String name;
 	private int cash;
 
-	private List<Card> cards = new ArrayList<Card>();
 	private int bet = 0;
 	private boolean isActive = false;
 
@@ -22,14 +21,6 @@ public class Player {
 
 	public String getName() {
 		return name;
-	}
-
-	public List<Card> getCards() {
-		return unmodifiableList(cards);
-	}
-
-	public void setCards(Collection<Card> cards) {
-		this.cards = new ArrayList<Card>(cards);
 	}
 
 	public void bet(int bet) {
