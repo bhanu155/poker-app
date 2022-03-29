@@ -1,12 +1,12 @@
-package com.sap.ase.poker.rest;
+package com.sap.ase.poker.dto;
 
-public class LobbyEntry {
+public class LobbyEntryDto {
 
 	private final String id;
 	private final String players;
 	private final String stakes;
 	
-	public LobbyEntry(String id, String players, String stakes) {
+	public LobbyEntryDto(String id, String players, String stakes) {
 		this.id = id;
 		this.players = players;
 		this.stakes = stakes;

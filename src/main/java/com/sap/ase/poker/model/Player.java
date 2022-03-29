@@ -1,11 +1,5 @@
 package com.sap.ase.poker.model;
 
-import static java.util.Collections.unmodifiableList;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 public class Player {
 
 	private final String name;

@@ -1,6 +1,6 @@
-package com.sap.ase.poker.rest;
+package com.sap.ase.poker.dto;
 
-public class BetRequest {
+public class BetRequestDto {
 
 	private int amount;
 	private String action;

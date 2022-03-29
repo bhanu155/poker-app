@@ -1,9 +1,8 @@
 package com.sap.ase.poker.security;
 
-import java.security.Principal;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.security.Principal;
 
 public class JwtUserHttpServletRequestWrapper extends HttpServletRequestWrapper {
 

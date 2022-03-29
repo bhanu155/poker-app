@@ -1,6 +1,6 @@
-package com.sap.ase.poker.rest;
+package com.sap.ase.poker.dto;
 
-public class JoinTableRequest {
+public class JoinTableRequestDto {
 	private String playerName;
 
 	public String getPlayerName() {

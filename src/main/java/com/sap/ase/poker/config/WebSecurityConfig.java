@@ -1,5 +1,8 @@
 package com.sap.ase.poker.config;
 
+import com.sap.ase.poker.rest.TableController;
+import com.sap.ase.poker.security.JwtAuthenticationRequestFilter;
+import com.sap.ase.poker.security.LoginService;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,10 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm;
-
-import com.sap.ase.poker.rest.TableService;
-import com.sap.ase.poker.security.JwtAuthenticationRequestFilter;
-import com.sap.ase.poker.security.LoginService;
 
 @Configuration
 @EnableWebSecurity()
@@ -32,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		FilterRegistrationBean<JwtAuthenticationRequestFilter> filterRegistrationBean = new FilterRegistrationBean<JwtAuthenticationRequestFilter>();
 		JwtAuthenticationRequestFilter jwtAuthenticationFilter = new JwtAuthenticationRequestFilter();
 		filterRegistrationBean.setFilter(jwtAuthenticationFilter);
-		filterRegistrationBean.addUrlPatterns(TableService.PATH + "/*");
+		filterRegistrationBean.addUrlPatterns(TableController.PATH + "/*");
 		filterRegistrationBean.addUrlPatterns(LoginService.PATH + "/user");
 		filterRegistrationBean.setOrder(2);
 		return filterRegistrationBean;
