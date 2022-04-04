@@ -2,17 +2,12 @@ package com.sap.ase.poker.rest;
 
 import com.sap.ase.poker.dto.BetRequestDto;
 import com.sap.ase.poker.dto.GetTableResponseDto;
-import com.sap.ase.poker.dto.JoinTableRequestDto;
-import com.sap.ase.poker.dto.LobbyEntryDto;
 import com.sap.ase.poker.security.JwtUserHttpServletRequestWrapper;
 import com.sap.ase.poker.service.TableService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.security.Principal;
-import java.util.Collections;
-import java.util.List;
 
 @RestController
 @RequestMapping(TableController.PATH)
@@ -32,17 +27,16 @@ public class TableController {
 //	}
 
 	@GetMapping
-	public GetTableResponseDto getTable(JwtUserHttpServletRequestWrapper.PokerUserPrincipal principal) {
+	public GetTableResponseDto getTable(Principal principal) {
 		String playerId = principal.getName();
-		String playerName = principal.getDisplayName();
 		GetTableResponseDto tableStatus = tableService.getTableStatus(playerId);
 		return tableStatus;
 	}
 
 	@PostMapping("/players")
-	public ResponseEntity<Void> joinTable(JwtUserHttpServletRequestWrapper.PokerUserPrincipal principal)
+	public ResponseEntity<Void> joinTable(Principal principal)
 			throws IllegalAmount {
-		tableService.addPlayer(principal.getName(), principal.getDisplayName());
+		tableService.addPlayer(principal.getName());
 		return ResponseEntity.noContent().build();
 	}
 

@@ -18,7 +18,7 @@ import java.util.Map;
 @Service
 public class TableService {
 
-    public void addPlayer(String playerId, String playerName) {
+    public void addPlayer(String playerId) {
 //        TODO: implement me
     }
 
