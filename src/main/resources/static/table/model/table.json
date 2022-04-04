@@ -1,0 +1,11 @@
+{
+  "player": null,
+  "currentPlayer": null,
+  "players": [],
+  "communityCards": [],
+  "playerCards": [],
+  "bets": null,
+  "pot": 0,
+  "enabled": false,
+  "amount": 0
+}

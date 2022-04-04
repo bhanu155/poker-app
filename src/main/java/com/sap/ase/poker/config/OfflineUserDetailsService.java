@@ -1,6 +1,7 @@
 package com.sap.ase.poker.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,21 +25,25 @@ public class OfflineUserDetailsService implements UserDetailsService {
 	public OfflineUserDetailsService(PasswordEncoder passwordEncoder) {
 		this.passwordEncoder = passwordEncoder;
 
-		users.put("al-capone", new PokerUser("al-capone", "welcomeAl", "Al Capone"));
-		users.put("pat-garret", new PokerUser("pat-garret", "welcomePat", "Pat Garret"));
-		users.put("wyatt-earp", new PokerUser("wyatt-earp", "welcomeWyatt", "Wyatt Earp"));
-		users.put("doc-holiday", new PokerUser("doc-holiday", "welcomeDoc", "Doc Holiday"));
-		users.put("wild-bill", new PokerUser("wild-bill", "welcomeBill", "Wild Bill"));
-		users.put("calamity-jane", new PokerUser("calamity-jane", "welcomeJane", "Calamity Jane"));
-		users.put("kitty-leroy", new PokerUser("kitty-leroy", "welcomeKitty", "Kitty Leroy"));
-		users.put("madame-moustache", new PokerUser("madame-moustache", "welcomeMadame", "Madame Moustache"));
-		users.put("poker-alice", new PokerUser("poker-alice", "welcomeAlice", "Poker Alice"));
+		users.put("al-capone", new PokerUser("al-capone", "all-in", "Al Capone"));
+		users.put("pat-garret", new PokerUser("pat-garret", "all-in", "Pat Garret"));
+		users.put("wyatt-earp", new PokerUser("wyatt-earp", "all-in", "Wyatt Earp"));
+		users.put("doc-holiday", new PokerUser("doc-holiday", "all-in", "Doc Holiday"));
+		users.put("wild-bill", new PokerUser("wild-bill", "all-in", "Wild Bill"));
+		users.put("calamity-jane", new PokerUser("calamity-jane", "all-in", "Calamity Jane"));
+		users.put("kitty-leroy", new PokerUser("kitty-leroy", "all-in", "Kitty Leroy"));
+		users.put("madame-moustache", new PokerUser("madame-moustache", "all-in", "Madame Moustache"));
+		users.put("poker-alice", new PokerUser("poker-alice", "all-in", "Poker Alice"));
 
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return users.get(username);
+	}
+
+	public boolean isPasswordCorrect(String id, String password) {
+		return passwordEncoder.matches(password, loadUserByUsername(id).getPassword());
 	}
 
 	public class PokerUser extends org.springframework.security.core.userdetails.User {

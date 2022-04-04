@@ -10,10 +10,9 @@ import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.deck.Card;
 import com.sap.ase.poker.model.deck.Kind;
 import com.sap.ase.poker.model.deck.Suit;
+import com.sap.ase.poker.security.JwtUserHttpServletRequestWrapper;
 import com.sap.ase.poker.service.TableService;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,7 +21,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.nio.file.Path;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +33,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc(addFilters = false)
 public class TableControllerTest {
 
-    private static final String PATH = "/api/tables";
+    private static final String PATH = "/api/v1/";
 
     @Autowired
     MockMvc mockMvc;
@@ -47,35 +45,20 @@ public class TableControllerTest {
     TableService tableService;
 
     @Test
-    public void lobby_returnsLobbyEntryDtoWithLobbyInformation() throws Exception {
-        MockHttpServletResponse response = this.mockMvc.perform(get(PATH))
-                .andExpect(status().isOk()).andReturn().getResponse();
-
-        List<LobbyEntryDto> result = objectMapper.readValue(response.getContentAsString(), new TypeReference<List<LobbyEntryDto>>() {
-        });
-
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getId()).isEqualTo("las-vegas");
-        assertThat(result.get(0).getPlayers()).isEqualTo("0/10");
-        assertThat(result.get(0).getStakes()).isEqualTo("1/2");
-    }
-
-    @Test
     void getTable_returnsGetTableResponseDtoWithTableStatus() throws Exception {
-        Principal mockPrincipal = Mockito.mock(Principal.class);
+        JwtUserHttpServletRequestWrapper.PokerUserPrincipal mockPrincipal = Mockito.mock(JwtUserHttpServletRequestWrapper.PokerUserPrincipal.class);
         Mockito.when(mockPrincipal.getName()).thenReturn("alice");
+        Mockito.when(mockPrincipal.getDisplayName()).thenReturn("Alice");
 
         GetTableResponseDto tableStatus = createGetTableResponseDto();
         Mockito.when(tableService.getTableStatus(mockPrincipal.getName())).thenReturn(tableStatus);
 
-        MockHttpServletResponse response = mockMvc.perform(get(PATH + "/las-vegas").principal(mockPrincipal))
+        MockHttpServletResponse response = mockMvc.perform(get(PATH).principal(mockPrincipal))
                 .andExpect(status().isOk()).andReturn().getResponse();
 
         GetTableResponseDto result = objectMapper.readValue(response.getContentAsString(), GetTableResponseDto.class);
 
-        assertThat(result.getPlayerDtos()).hasSize(2);
-
-
+        assertThat(result.getPlayers()).hasSize(2);
     }
 
     private GetTableResponseDto createGetTableResponseDto() {
@@ -89,12 +72,12 @@ public class TableControllerTest {
                 new CardDto(new Card(Kind.ACE, Suit.HEARTS))
         );
         List<PlayerDto> playerDtos = Arrays.asList(
-                new PlayerDto(new Player("alice", 100)),
-                new PlayerDto(new Player("bob", 100)));
-        tableStatus.setCommunityCardDtos(communityCardDtos);
-        tableStatus.setCurrentPlayer("alice");
-        tableStatus.setPlayerCardDtos(playerCardDtos);
-        tableStatus.setPlayerDtos(playerDtos);
+                new PlayerDto(new Player("alice", "Alice", 100)),
+                new PlayerDto(new Player("bob", "Bob", 100)));
+        tableStatus.setCommunityCards(communityCardDtos);
+        tableStatus.setCurrentPlayer(new PlayerDto(new Player("alice", "Alice", 100)));
+        tableStatus.setPlayerCards(playerCardDtos);
+        tableStatus.setPlayers(playerDtos);
         return tableStatus;
     }
 }

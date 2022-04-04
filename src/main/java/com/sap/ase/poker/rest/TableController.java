@@ -4,6 +4,7 @@ import com.sap.ase.poker.dto.BetRequestDto;
 import com.sap.ase.poker.dto.GetTableResponseDto;
 import com.sap.ase.poker.dto.JoinTableRequestDto;
 import com.sap.ase.poker.dto.LobbyEntryDto;
+import com.sap.ase.poker.security.JwtUserHttpServletRequestWrapper;
 import com.sap.ase.poker.service.TableService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequestMapping(TableController.PATH)
 public class TableController {
 
-	public static final String PATH = "/api/tables";
+	public static final String PATH = "/api/v1";
 
 	private TableService tableService;
 
@@ -25,27 +26,28 @@ public class TableController {
 		this.tableService = tableService;
 	}
 
-	@GetMapping
-	public List<LobbyEntryDto> lobby() {
-		return Collections.singletonList(new LobbyEntryDto("las-vegas", "0/10", "1/2"));
-	}
+//	@GetMapping
+//	public List<LobbyEntryDto> lobby() {
+//		return Collections.singletonList(new LobbyEntryDto("las-vegas", "0/10", "1/2"));
+//	}
 
-	@GetMapping("/{tableId}")
-	public GetTableResponseDto getTable(Principal principal, @PathParam("tableId") String tableId) {
+	@GetMapping
+	public GetTableResponseDto getTable(JwtUserHttpServletRequestWrapper.PokerUserPrincipal principal) {
 		String playerId = principal.getName();
+		String playerName = principal.getDisplayName();
 		GetTableResponseDto tableStatus = tableService.getTableStatus(playerId);
 		return tableStatus;
 	}
 
-	@PostMapping("/{tableId}/players")
-	public ResponseEntity<Void> joinTable(@RequestBody JoinTableRequestDto joinRequest, @PathParam("tableId") String tableId)
+	@PostMapping("/players")
+	public ResponseEntity<Void> joinTable(JwtUserHttpServletRequestWrapper.PokerUserPrincipal principal)
 			throws IllegalAmount {
-		tableService.addPlayer(joinRequest.getPlayerName());
+		tableService.addPlayer(principal.getName(), principal.getDisplayName());
 		return ResponseEntity.noContent().build();
 	}
 
-	@PostMapping("/{tableId}/bets")
-	public void placeBet(@RequestBody BetRequestDto betRequest, @PathParam("tableId") String tableId) {
+	@PostMapping("/actions")
+	public void placeBet(@RequestBody BetRequestDto betRequest) {
 		try {
 			switch (betRequest.getAction()) {
 				case "call":

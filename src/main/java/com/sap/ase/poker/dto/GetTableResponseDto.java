@@ -1,14 +1,21 @@
 package com.sap.ase.poker.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GetTableResponseDto {
 
-	private List<PlayerDto> playerDtos = new ArrayList<>();
-	private List<CardDto> playerCardDtos = new ArrayList<>();
-	private String currentPlayer = "nobody";
-	private List<CardDto> communityCardDtos = new ArrayList<>();
+	private List<PlayerDto> players = new ArrayList<>();
+	private List<CardDto> playerCards = new ArrayList<>();
+	private PlayerDto currentPlayer;
+	private List<CardDto> communityCards = new ArrayList<>();
+	private int pot;
+	private Map<String, Integer> bets = new HashMap<>();
+	private String game;
+	private List<PlayerDto> winners;
+	private List<CardDto> cards;
 
 	public GetTableResponseDto() {
 	}
@@ -16,35 +23,51 @@ public class GetTableResponseDto {
 	public GetTableResponseDto(String uiPlayerName) {
 	}
 
-	public List<PlayerDto> getPlayerDtos() {
-		return playerDtos;
+	public List<PlayerDto> getPlayers() {
+		return players;
 	}
 
-	public void setPlayerDtos(List<PlayerDto> playerDtos) {
-		this.playerDtos = playerDtos;
+	public void setPlayers(List<PlayerDto> players) {
+		this.players = players;
 	}
 
-	public List<CardDto> getPlayerCardDtos() {
-		return playerCardDtos;
+	public List<CardDto> getPlayerCards() {
+		return playerCards;
 	}
 
-	public void setPlayerCardDtos(List<CardDto> playerCardDtos) {
-		this.playerCardDtos = playerCardDtos;
+	public void setPlayerCards(List<CardDto> playerCards) {
+		this.playerCards = playerCards;
 	}
 
-	public String getCurrentPlayer() {
+	public PlayerDto getCurrentPlayer() {
 		return currentPlayer;
 	}
 
-	public void setCurrentPlayer(String currentPlayer) {
+	public void setCurrentPlayer(PlayerDto currentPlayer) {
 		this.currentPlayer = currentPlayer;
 	}
 
-	public List<CardDto> getCommunityCardDtos() {
-		return communityCardDtos;
+	public List<CardDto> getCommunityCards() {
+		return communityCards;
 	}
 
-	public void setCommunityCardDtos(List<CardDto> communityCardDtos) {
-		this.communityCardDtos = communityCardDtos;
+	public void setCommunityCards(List<CardDto> communityCards) {
+		this.communityCards = communityCards;
+	}
+
+	public int getPot() {
+		return pot;
+	}
+
+	public void setPot(int pot) {
+		this.pot = pot;
+	}
+
+	public Map<String, Integer> getBets() {
+		return bets;
+	}
+
+	public void setBets(Map<String, Integer> bets) {
+		this.bets = bets;
 	}
 }
