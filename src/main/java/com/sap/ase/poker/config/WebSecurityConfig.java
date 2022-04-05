@@ -2,6 +2,8 @@ package com.sap.ase.poker.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sap.ase.poker.security.JsonUsernamePasswordAuthenticationFilter;
+import com.sap.ase.poker.security.JwtAuthenticationRequestFilter;
+import com.sap.ase.poker.security.JwtTools;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,8 +42,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public FilterRegistrationBean<UsernamePasswordAuthenticationFilter> jwtAuthenticationFilterRegistrationBean(AuthenticationManager authenticationManager, ObjectMapper objectMapper) {
         FilterRegistrationBean<UsernamePasswordAuthenticationFilter> filterRegistrationBean = new FilterRegistrationBean<>();
-        JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter = new JsonUsernamePasswordAuthenticationFilter(authenticationManager, objectMapper);
+        JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter = new JsonUsernamePasswordAuthenticationFilter(authenticationManager, objectMapper, new JwtTools(JwtTools.SECRET));
         filterRegistrationBean.setFilter(jsonUsernamePasswordAuthenticationFilter);
+        return filterRegistrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean<JwtAuthenticationRequestFilter> jwtAuthenticationFilterRegistrationBean() {
+        FilterRegistrationBean<JwtAuthenticationRequestFilter> filterRegistrationBean = new FilterRegistrationBean<>();
+        JwtAuthenticationRequestFilter jwtAuthenticationRequestFilter = new JwtAuthenticationRequestFilter();
+        filterRegistrationBean.setFilter(jwtAuthenticationRequestFilter);
         return filterRegistrationBean;
     }
 
@@ -53,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .formLogin(form -> form.loginPage("/login/index.html").permitAll())
                 .authorizeRequests()
                 .antMatchers("/table/**").authenticated()
