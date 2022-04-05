@@ -1,16 +1,13 @@
 package com.sap.ase.poker.rest;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sap.ase.poker.dto.CardDto;
 import com.sap.ase.poker.dto.GetTableResponseDto;
-import com.sap.ase.poker.dto.LobbyEntryDto;
 import com.sap.ase.poker.dto.PlayerDto;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.deck.Card;
 import com.sap.ase.poker.model.deck.Kind;
 import com.sap.ase.poker.model.deck.Suit;
-import com.sap.ase.poker.security.JwtUserHttpServletRequestWrapper;
 import com.sap.ase.poker.service.TableService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -46,9 +43,8 @@ public class TableControllerTest {
 
     @Test
     void getTable_returnsGetTableResponseDtoWithTableStatus() throws Exception {
-        JwtUserHttpServletRequestWrapper.PokerUserPrincipal mockPrincipal = Mockito.mock(JwtUserHttpServletRequestWrapper.PokerUserPrincipal.class);
+        Principal mockPrincipal = Mockito.mock(Principal.class);
         Mockito.when(mockPrincipal.getName()).thenReturn("alice");
-        Mockito.when(mockPrincipal.getDisplayName()).thenReturn("Alice");
 
         GetTableResponseDto tableStatus = createGetTableResponseDto();
         Mockito.when(tableService.getTableStatus(mockPrincipal.getName())).thenReturn(tableStatus);

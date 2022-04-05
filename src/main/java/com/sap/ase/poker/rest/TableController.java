@@ -2,7 +2,6 @@ package com.sap.ase.poker.rest;
 
 import com.sap.ase.poker.dto.BetRequestDto;
 import com.sap.ase.poker.dto.GetTableResponseDto;
-import com.sap.ase.poker.security.JwtUserHttpServletRequestWrapper;
 import com.sap.ase.poker.service.TableService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
