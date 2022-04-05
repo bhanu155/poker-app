@@ -29,13 +29,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public UserDetailsService users() {
-        UserDetails user = User.builder()
+        User.UserBuilder userBuilder = User.builder()
                 .passwordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder()::encode)
-                        .username("al-capone")
-                        .password("all-in")
-                        .roles("USER")
-                        .build();
-        return new InMemoryUserDetailsManager(user);
+                .roles("USER");
+        return new InMemoryUserDetailsManager(
+                userBuilder.username("al-capone").password("all-in").build(),
+                userBuilder.username("pat-garret").password("all-in").build(),
+                userBuilder.username("wyatt-earp").password("all-in").build(),
+                userBuilder.username("doc-holiday").password("all-in").build(),
+                userBuilder.username("wild-bill").password("all-in").build(),
+                userBuilder.username("stu-ungar").password("all-in").build(),
+                userBuilder.username("kitty-leroy").password("all-in").build(),
+                userBuilder.username("poker-alice").password("all-in").build(),
+                userBuilder.username("madame-moustache").password("all-in").build()
+        );
     }
 
     @Override
