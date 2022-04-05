@@ -5,8 +5,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.*;
@@ -19,12 +17,10 @@ import java.util.ArrayList;
 
 public class JwtAuthenticationRequestFilter extends BasicAuthenticationFilter {
 
-    private final PokerUserRepository pokerUserRepository;
     private final JwtTools jwtTools;
 
-    public JwtAuthenticationRequestFilter(AuthenticationManager authenticationManager, PokerUserRepository pokerUserRepository, JwtTools jwtTools) {
+    public JwtAuthenticationRequestFilter(AuthenticationManager authenticationManager, JwtTools jwtTools) {
         super(authenticationManager);
-        this.pokerUserRepository = pokerUserRepository;
         this.jwtTools = jwtTools;
     }
 
@@ -44,11 +40,9 @@ public class JwtAuthenticationRequestFilter extends BasicAuthenticationFilter {
                     String userId = decodedJwt.getClaim("user_id").asString();
                     String userName = decodedJwt.getClaim("user_name").asString();
 
-                    pokerUserRepository.findUserByName(userId).ifPresent(user -> {
-                        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, user.getPassword(), new ArrayList<>());
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>());
 
-                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                    });
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 } catch (JWTVerificationException ignored) {
                 }
             }
