@@ -13,19 +13,21 @@ sap.ui.define([], () => {
   return {
     async fetch() {
       const response = await _fetch(API_PATH)
-      const { currentPlayer, players, communityCards, playerCards, bets, pot } = await response.json()
-      return {
-        currentPlayer,
-        players,
-        communityCards,
-        playerCards,
-        bets,
-        pot
-      }
+      const table = await response.json()
+      return table
     },
 
     async join() {
       await _fetch(`${API_PATH}/players`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    },
+
+    async start() {
+      await _fetch(`${API_PATH}/start`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

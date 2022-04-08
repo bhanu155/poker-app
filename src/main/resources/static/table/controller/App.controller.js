@@ -39,21 +39,30 @@ sap.ui.define([
     async _updateModel() {
       try {
         const player = this._getPlayer()
-        const { currentPlayer, players, bets, pot, communityCards, playerCards } = await table.fetch()
+        const { state, currentPlayer, players, bets, pot, communityCards, playerCards, winner, winnerHand } = await table.fetch()
         const view = this.getView()
         const model = view.getModel()
         model.setProperty('/', Object.assign({}, model.getProperty('/'), {
+          state,
           player,
           currentPlayer,
           players,
-          bets: Object.entries(bets).map(([id, bet]) => {
+          bets: bets ? Object.entries(bets).map(([id, bet]) => {
             const name = players.find(p => p.id === id)?.name
             return { name, bet }
-          }),
+          }) : [],
           pot,
           communityCards,
           playerCards,
-          enabled: currentPlayer.name === player.name
+          winner,
+          winnerHand,
+          start: {
+            visible: player.id === players?.[0]?.id,
+            enabled: (state === 0 || state === 5) && (players.length > 1)
+          },
+          actions: {
+            enabled: currentPlayer?.name === player.name
+          }
         }))
       } catch ({ message, stack }) {
         console.error(stack)
@@ -69,6 +78,15 @@ sap.ui.define([
         if (!players.find(({ name }) => name === player.name)) {
           await table.join()
         }
+      } catch ({ message, stack }) {
+        console.error(stack)
+        MessageBox.error(message)
+      }
+    },
+
+    async start() {
+      try {
+        await table.start()
       } catch ({ message, stack }) {
         console.error(stack)
         MessageBox.error(message)

@@ -1,11 +1,20 @@
 {
+  "state": 0,
   "player": null,
   "currentPlayer": null,
   "players": [],
   "communityCards": [],
   "playerCards": [],
-  "bets": null,
+  "bets": [],
   "pot": 0,
-  "enabled": false,
+  "winner:": null,
+  "winnerHand": [],
+  "actions": {
+    "enabled": false
+  },
+  "start": {
+    "visible": false,
+    "enabled": false
+  },
   "amount": 0
 }
