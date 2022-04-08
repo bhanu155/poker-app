@@ -5,6 +5,7 @@ import com.sap.ase.poker.dto.GetTableResponseDto;
 import com.sap.ase.poker.dto.PlayerDto;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.deck.Card;
+import com.sap.ase.poker.model.deck.GameState;
 import com.sap.ase.poker.model.deck.Kind;
 import com.sap.ase.poker.model.deck.Suit;
 import com.sap.ase.poker.rest.IllegalAmount;
@@ -18,56 +19,86 @@ import java.util.Map;
 @Service
 public class TableService {
 
-    public void addPlayer(String playerId) {
-//        TODO: implement me
+    public int getState() {
+        // TODO: implement me
+        return GameState.ENDED.getValue();
     }
 
-    public void call() {
-//        TODO: implement me
-    }
-
-    public void check() {
-//        TODO: implement me
-    }
-
-    public void fold() {
-//        TODO: implement me
-    }
-
-    public void raiseTo(int amount) throws IllegalAmount {
-//        TODO: implement me
-    }
-
-    public GetTableResponseDto getTableStatus(String playerId) {
-
-        GetTableResponseDto responseDto = new GetTableResponseDto("");
-
-
-        List<PlayerDto> playerDtos = Arrays.asList(
-                new PlayerDto(new Player("al", "Al", 100)),
+    public List<PlayerDto> getPlayers() {
+        // TODO: implement me
+        return Arrays.asList(
+                new PlayerDto(new Player("al-capone", "Al Capone", 100)),
                 new PlayerDto(new Player("alice", "Alice", 100))
         );
-        PlayerDto currentPlayerDto = new PlayerDto(new Player("al", "Al", 100));
-        List<CardDto> playerCardDtos = Arrays.asList(
-                new CardDto(new Card(Kind.ACE, Suit.CLUBS)),
-                new CardDto(new Card(Kind.ACE, Suit.DIAMONDS))
-        );
-        List<CardDto> communityCardDtos = Arrays.asList(
-                new CardDto(new Card(Kind.ACE, Suit.SPADES)),
-                new CardDto(new Card(Kind.ACE, Suit.HEARTS)),
-                new CardDto(new Card(Kind.SEVEN, Suit.HEARTS))
-        );
-        Map<String, Integer> bets = new HashMap<>();
-
-        bets.put("al", 100);
-        bets.put("alice", 50);
-
-        responseDto.setPlayers(playerDtos);
-        responseDto.setCurrentPlayer(currentPlayerDto);
-        responseDto.setPot(0);
-        responseDto.setPlayerCards(playerCardDtos);
-        responseDto.setCommunityCards(communityCardDtos);
-        responseDto.setBets(bets);
-        return responseDto;
     }
+
+    public List<CardDto> getPlayerCards(String playerId) {
+        // TODO: implement me
+        return Arrays.asList(
+                new CardDto(new Card(Kind.JACK, Suit.CLUBS)),
+                new CardDto(new Card(Kind.TEN, Suit.CLUBS))
+        );
+    }
+
+    public List<CardDto> getCommunityCards() {
+        // TODO: implement me
+        return Arrays.asList(
+                new CardDto(new Card(Kind.ACE, Suit.CLUBS)),
+                new CardDto(new Card(Kind.KING, Suit.CLUBS)),
+                new CardDto(new Card(Kind.QUEEN, Suit.CLUBS)),
+                new CardDto(new Card(Kind.FOUR, Suit.HEARTS)),
+                new CardDto(new Card(Kind.SEVEN, Suit.SPADES))
+        );
+    }
+
+    public PlayerDto getCurrentPlayer() {
+        // TODO: implement me
+        return new PlayerDto(new Player("al-capone", "Al", 100));
+    }
+
+    public Map<String, Integer> getBets() {
+        // TODO: implement me
+        return new HashMap<String, Integer>() {
+            {
+                put("al-capone", 100);
+                put("alice", 50);
+            }
+        };
+    }
+
+    public int getPot() {
+        // TODO: implement me
+        return 150;
+    }
+
+    public PlayerDto getWinner() {
+        // TODO: implement me
+        return new PlayerDto(new Player("al-capone", "Al capone", 500));
+    }
+
+    public List<CardDto> getWinnerHand() {
+        // TODO: implement me
+        return Arrays.asList(
+                new CardDto(new Card(Kind.ACE, Suit.CLUBS)),
+                new CardDto(new Card(Kind.KING, Suit.CLUBS)),
+                new CardDto(new Card(Kind.QUEEN, Suit.CLUBS)),
+                new CardDto(new Card(Kind.JACK, Suit.CLUBS)),
+                new CardDto(new Card(Kind.TEN, Suit.CLUBS))
+        );
+    }
+
+    public void start() {
+        // TODO: implement me
+    }
+
+    public void addPlayer(String playerId) {
+        // TODO: implement me
+        System.out.printf("Player joined the table: %s%n", playerId);
+    }
+
+    public void performAction(String action, int amount) throws IllegalAmount {
+        // TODO: implement me
+        System.out.printf("Action performed: %s, amount: %d%n", action, amount);
+    }
+
 }

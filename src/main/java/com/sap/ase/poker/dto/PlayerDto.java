@@ -10,9 +10,17 @@ public class PlayerDto {
     }
 
     public PlayerDto(com.sap.ase.poker.model.Player player) {
-        this.id = player.getName();
+        this.id = player.getId();
         this.name = player.getName();
         this.cash = player.getCash();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {

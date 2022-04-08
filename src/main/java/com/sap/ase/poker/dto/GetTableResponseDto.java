@@ -13,9 +13,9 @@ public class GetTableResponseDto {
 	private List<CardDto> communityCards = new ArrayList<>();
 	private int pot;
 	private Map<String, Integer> bets = new HashMap<>();
-	private String game;
-	private List<PlayerDto> winners;
-	private List<CardDto> cards;
+	private int state;
+	private PlayerDto winner;
+	private List<CardDto> winnerHand;
 
 	public GetTableResponseDto() {
 	}
@@ -69,5 +69,29 @@ public class GetTableResponseDto {
 
 	public void setBets(Map<String, Integer> bets) {
 		this.bets = bets;
+	}
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+
+	public PlayerDto getWinner() {
+		return winner;
+	}
+
+	public void setWinner(PlayerDto winner) {
+		this.winner = winner;
+	}
+
+	public List<CardDto> getWinnerHand() {
+		return winnerHand;
+	}
+
+	public void setWinnerHand(List<CardDto> winnerHand) {
+		this.winnerHand = winnerHand;
 	}
 }

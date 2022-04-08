@@ -46,8 +46,9 @@ public class TableControllerTest {
         Principal mockPrincipal = Mockito.mock(Principal.class);
         Mockito.when(mockPrincipal.getName()).thenReturn("alice");
 
-        GetTableResponseDto tableStatus = createGetTableResponseDto();
-        Mockito.when(tableService.getTableStatus(mockPrincipal.getName())).thenReturn(tableStatus);
+        Mockito.when(tableService.getPlayers()).thenReturn(Arrays.asList(
+                new PlayerDto(new Player("alice", "Alice", 100)),
+                new PlayerDto(new Player("bob", "Bob", 100))));
 
         MockHttpServletResponse response = mockMvc.perform(get(PATH).principal(mockPrincipal))
                 .andExpect(status().isOk()).andReturn().getResponse();
@@ -55,25 +56,5 @@ public class TableControllerTest {
         GetTableResponseDto result = objectMapper.readValue(response.getContentAsString(), GetTableResponseDto.class);
 
         assertThat(result.getPlayers()).hasSize(2);
-    }
-
-    private GetTableResponseDto createGetTableResponseDto() {
-        GetTableResponseDto tableStatus = new GetTableResponseDto("alice");
-        List<CardDto> communityCardDtos = Arrays.asList(
-                new CardDto(new Card(Kind.ACE, Suit.DIAMONDS)),
-                new CardDto(new Card(Kind.KING, Suit.DIAMONDS)),
-                new CardDto(new Card(Kind.NINE, Suit.CLUBS)));
-        List<CardDto> playerCardDtos = Arrays.asList(
-                new CardDto(new Card(Kind.ACE, Suit.CLUBS)),
-                new CardDto(new Card(Kind.ACE, Suit.HEARTS))
-        );
-        List<PlayerDto> playerDtos = Arrays.asList(
-                new PlayerDto(new Player("alice", "Alice", 100)),
-                new PlayerDto(new Player("bob", "Bob", 100)));
-        tableStatus.setCommunityCards(communityCardDtos);
-        tableStatus.setCurrentPlayer(new PlayerDto(new Player("alice", "Alice", 100)));
-        tableStatus.setPlayerCards(playerCardDtos);
-        tableStatus.setPlayers(playerDtos);
-        return tableStatus;
     }
 }

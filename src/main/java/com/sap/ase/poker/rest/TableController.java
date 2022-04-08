@@ -20,21 +20,25 @@ public class TableController {
 		this.tableService = tableService;
 	}
 
-//	@GetMapping
-//	public List<LobbyEntryDto> lobby() {
-//		return Collections.singletonList(new LobbyEntryDto("las-vegas", "0/10", "1/2"));
-//	}
-
 	@GetMapping
 	public GetTableResponseDto getTable(Principal principal) {
 		String playerId = principal.getName();
-		GetTableResponseDto tableStatus = tableService.getTableStatus(playerId);
+		GetTableResponseDto tableStatus = new GetTableResponseDto();
+
+		tableStatus.setPlayers(tableService.getPlayers());
+		tableStatus.setCurrentPlayer(tableService.getCurrentPlayer());
+		tableStatus.setPot(tableService.getPot());
+		tableStatus.setPlayerCards(tableService.getPlayerCards(playerId));
+		tableStatus.setCommunityCards(tableService.getCommunityCards());
+		tableStatus.setBets(tableService.getBets());
+		tableStatus.setState(tableService.getState());
+		tableStatus.setWinner(tableService.getWinner());
+		tableStatus.setWinnerHand(tableService.getWinnerHand());
 		return tableStatus;
 	}
 
 	@PostMapping("/players")
-	public ResponseEntity<Void> joinTable(Principal principal)
-			throws IllegalAmount {
+	public ResponseEntity<Void> joinTable(Principal principal) {
 		tableService.addPlayer(principal.getName());
 		return ResponseEntity.noContent().build();
 	}
@@ -42,20 +46,7 @@ public class TableController {
 	@PostMapping("/actions")
 	public void placeBet(@RequestBody BetRequestDto betRequest) {
 		try {
-			switch (betRequest.getAction()) {
-				case "call":
-					tableService.call();
-					break;
-				case "check":
-					tableService.check();
-					break;
-				case "fold":
-					tableService.fold();
-					break;
-				case "raiseTo":
-					tableService.raiseTo(betRequest.getAmount());
-					break;
-			}
+			tableService.performAction(betRequest.getAction(), betRequest.getAmount());
 		} catch (IllegalAmount e) {
 			e.printStackTrace();
 			throw new BadRequestException(e.getMessage());

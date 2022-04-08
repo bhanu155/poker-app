@@ -7,14 +7,14 @@ import com.sap.ase.poker.model.deck.Suit;
 public class CardDto {
 
     private String suit;
-    private String kind;
+    private String rank;
 
     public CardDto() {
     }
 
     public CardDto(Card card) {
         suit = suitToString(card.suit);
-        kind = kindToString(card.kind);
+        rank = kindToString(card.kind);
     }
 
     private String suitToString(Suit suit) {
@@ -62,15 +62,14 @@ public class CardDto {
         this.suit = suit;
     }
 
-    public String getKind() {
-        return kind;
+    public String getRank() {
+        return rank;
     }
 
-    public void setKind(String kind) {
-        this.kind = kind;
+    public void setRank(String rank) {
+        this.rank = rank;
     }
 
-    @SuppressWarnings("serial")
     private class UnknownKindException extends RuntimeException {
         public UnknownKindException(Kind kind) {
             super("unknown kind: " + kind);
