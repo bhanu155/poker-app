@@ -5,7 +5,7 @@ import com.sap.ase.poker.dto.PlayerDto;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.deck.*;
 import com.sap.ase.poker.model.GameState;
-import com.sap.ase.poker.rest.IllegalAmountException;
+import com.sap.ase.poker.model.IllegalAmountException;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;

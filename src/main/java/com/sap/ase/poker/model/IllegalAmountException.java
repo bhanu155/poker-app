@@ -1,4 +1,4 @@
-package com.sap.ase.poker.rest;
+package com.sap.ase.poker.model;
 
 /*
  * This class is internally used to identify illegal operations. Example:
