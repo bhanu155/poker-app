@@ -5,7 +5,7 @@ import com.sap.ase.poker.dto.PlayerDto;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.deck.*;
 import com.sap.ase.poker.model.GameState;
-import com.sap.ase.poker.rest.IllegalAmount;
+import com.sap.ase.poker.rest.IllegalAmountException;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -100,7 +100,7 @@ public class TableService {
         System.out.printf("Player joined the table: %s%n", playerId);
     }
 
-    public void performAction(String action, int amount) throws IllegalAmount {
+    public void performAction(String action, int amount) throws IllegalAmountException {
         // TODO: implement me
         System.out.printf("Action performed: %s, amount: %d%n", action, amount);
     }

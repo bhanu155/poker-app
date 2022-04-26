@@ -62,7 +62,7 @@ public class TableController {
 	public void placeBet(@RequestBody BetRequestDto betRequest) {
 		try {
 			tableService.performAction(betRequest.getAction(), betRequest.getAmount());
-		} catch (IllegalAmount e) {
+		} catch (IllegalAmountException e) {
 			e.printStackTrace();
 			throw new BadRequestException(e.getMessage());
 		}

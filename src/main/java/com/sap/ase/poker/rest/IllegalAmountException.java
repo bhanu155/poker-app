@@ -6,8 +6,8 @@ package com.sap.ase.poker.rest;
  * usage from the client, not a server error.
  */
 @SuppressWarnings("serial")
-public class IllegalAmount extends Exception {
-    public IllegalAmount(String message) {
+public class IllegalAmountException extends RuntimeException {
+    public IllegalAmountException(String message) {
         super(message);
     }
 }
