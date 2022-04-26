@@ -3,8 +3,6 @@ package com.sap.ase.poker.model.deck;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -12,21 +10,17 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest
 class DeckTest {
 
     public static final int EXPECTED_DECK_SIZE = 52;
 
     CardShuffler shuffler = Mockito.mock(CardShuffler.class);
 
-    @Autowired
-    private List<Card> pokerCards;
-
     Deck deck;
 
     @BeforeEach
     void setUp() {
-        deck = new Deck(pokerCards, shuffler);
+        deck = new Deck(new PokerCardsSupplier().get(), shuffler);
     }
 
     @Test
@@ -61,7 +55,7 @@ class DeckTest {
 
     @Test
     void shuffleResetsDeck() {
-        deck = new Deck(pokerCards, new RandomCardShuffler());
+        deck = new Deck(new PokerCardsSupplier().get(), new RandomCardShuffler());
 
         IntStream.range(0,52).forEach(drawAmounts -> deck.draw());
 

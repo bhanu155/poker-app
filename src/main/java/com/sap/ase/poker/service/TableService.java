@@ -3,10 +3,8 @@ package com.sap.ase.poker.service;
 import com.sap.ase.poker.dto.CardDto;
 import com.sap.ase.poker.dto.PlayerDto;
 import com.sap.ase.poker.model.Player;
-import com.sap.ase.poker.model.deck.Card;
+import com.sap.ase.poker.model.deck.*;
 import com.sap.ase.poker.model.GameState;
-import com.sap.ase.poker.model.deck.Kind;
-import com.sap.ase.poker.model.deck.Suit;
 import com.sap.ase.poker.rest.IllegalAmount;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +12,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @Service
 public class TableService {
+
+    private final Supplier<Deck> deckSupplier;
+
+    public TableService(Supplier<Deck> deckSupplier) {
+        this.deckSupplier = deckSupplier;
+    }
 
     public int getState() {
         // TODO: implement me
