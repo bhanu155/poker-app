@@ -44,7 +44,7 @@ public class TableController {
 		tableStatus.setPlayerCards(tableService.getPlayerCards(playerId));
 		tableStatus.setCommunityCards(tableService.getCommunityCards());
 		tableStatus.setBets(tableService.getBets());
-		tableStatus.setState(tableService.getState());
+		tableStatus.setState(tableService.getState().getValue());
 		tableStatus.setWinner(tableService.getWinner());
 		tableStatus.setWinnerHand(tableService.getWinnerHand());
 		return tableStatus;

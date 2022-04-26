@@ -23,9 +23,9 @@ public class TableService {
         this.deckSupplier = deckSupplier;
     }
 
-    public int getState() {
+    public GameState getState() {
         // TODO: implement me
-        return GameState.ENDED.getValue();
+        return GameState.ENDED;
     }
 
     public List<PlayerDto> getPlayers() {
