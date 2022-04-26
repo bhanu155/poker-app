@@ -90,7 +90,7 @@ public class TableService {
         // TODO: implement me
     }
 
-    public void addPlayer(String playerId) {
+    public void addPlayer(String playerId, String playerName) {
         // TODO: implement me
         System.out.printf("Player joined the table: %s%n", playerId);
     }

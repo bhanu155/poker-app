@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping(TableController.PATH)
@@ -14,10 +16,21 @@ public class TableController {
 
 	public static final String PATH = "/api/v1";
 
-	private TableService tableService;
+	private final TableService tableService;
+
+	private final Map<String, String> playerIdToName = new HashMap<>();
 
 	public TableController(TableService tableService) {
 		this.tableService = tableService;
+		playerIdToName.put("al-capone", "Al Capone");
+		playerIdToName.put("pat-garret", "Pat Garret");
+		playerIdToName.put("wyatt-earp", "Wyatt Earp");
+		playerIdToName.put("doc-holiday", "Doc Holiday");
+		playerIdToName.put("wild-bill", "Wild Bill");
+		playerIdToName.put("stu-ungar", "Stu Ungar");
+		playerIdToName.put("kitty-leroy", "Kitty Leroy");
+		playerIdToName.put("poker-alice", "Poker Alice");
+		playerIdToName.put("madame-moustache", "Madame Moustache");
 	}
 
 	@GetMapping
@@ -39,7 +52,9 @@ public class TableController {
 
 	@PostMapping("/players")
 	public ResponseEntity<Void> joinTable(Principal principal) {
-		tableService.addPlayer(principal.getName());
+		String playerId = principal.getName();
+		String playerName = playerIdToName.getOrDefault(playerId, "Unknown");
+		tableService.addPlayer(playerId, playerName);
 		return ResponseEntity.noContent().build();
 	}
 
