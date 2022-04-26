@@ -1,11 +1,10 @@
 package com.sap.ase.poker.service;
 
 import com.sap.ase.poker.dto.CardDto;
-import com.sap.ase.poker.dto.GetTableResponseDto;
 import com.sap.ase.poker.dto.PlayerDto;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.deck.Card;
-import com.sap.ase.poker.model.deck.GameState;
+import com.sap.ase.poker.model.GameState;
 import com.sap.ase.poker.model.deck.Kind;
 import com.sap.ase.poker.model.deck.Suit;
 import com.sap.ase.poker.rest.IllegalAmount;

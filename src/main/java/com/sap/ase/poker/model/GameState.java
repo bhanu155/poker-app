@@ -1,4 +1,4 @@
-package com.sap.ase.poker.model.deck;
+package com.sap.ase.poker.model;
 
 public enum GameState {
 
