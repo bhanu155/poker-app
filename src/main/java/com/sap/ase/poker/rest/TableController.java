@@ -1,5 +1,6 @@
 package com.sap.ase.poker.rest;
 
+import com.sap.ase.poker.data.PlayerNamesRepository;
 import com.sap.ase.poker.dto.BetRequestDto;
 import com.sap.ase.poker.dto.GetTableResponseDto;
 import com.sap.ase.poker.model.IllegalAmountException;
@@ -8,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping(TableController.PATH)
@@ -19,19 +18,11 @@ public class TableController {
 
 	private final TableService tableService;
 
-	private final Map<String, String> playerIdToName = new HashMap<>();
+	private final PlayerNamesRepository playerNamesRepository;
 
-	public TableController(TableService tableService) {
+	public TableController(TableService tableService, PlayerNamesRepository playerNamesRepository) {
 		this.tableService = tableService;
-		playerIdToName.put("al-capone", "Al Capone");
-		playerIdToName.put("pat-garret", "Pat Garret");
-		playerIdToName.put("wyatt-earp", "Wyatt Earp");
-		playerIdToName.put("doc-holiday", "Doc Holiday");
-		playerIdToName.put("wild-bill", "Wild Bill");
-		playerIdToName.put("stu-ungar", "Stu Ungar");
-		playerIdToName.put("kitty-leroy", "Kitty Leroy");
-		playerIdToName.put("poker-alice", "Poker Alice");
-		playerIdToName.put("madame-moustache", "Madame Moustache");
+		this.playerNamesRepository = playerNamesRepository;
 	}
 
 	@GetMapping
@@ -54,7 +45,7 @@ public class TableController {
 	@PostMapping("/players")
 	public ResponseEntity<Void> joinTable(Principal principal) {
 		String playerId = principal.getName();
-		String playerName = playerIdToName.getOrDefault(playerId, "Unknown");
+		String playerName = playerNamesRepository.getNameForId(playerId);
 		tableService.addPlayer(playerId, playerName);
 		return ResponseEntity.noContent().build();
 	}
