@@ -9,7 +9,6 @@ import java.util.function.Supplier;
 
 import static com.sap.ase.poker.model.deck.Kind.*;
 import static com.sap.ase.poker.model.deck.Suit.*;
-import static com.sap.ase.poker.model.deck.Suit.HEARTS;
 
 @Component
 public class PokerCardsSupplier implements Supplier<List<Card>> {
