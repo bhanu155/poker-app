@@ -29,8 +29,8 @@
                       <items>
                         <ColumnListItem>
                           <cells>
-                            <Text text="{name}" />
-                            <Text text="{cash}" />
+                            <ObjectStatus text="{name}" state="{= ${id} === ${/currentPlayer/id} ? 'Information' : 'None' }" />
+                            <ObjectStatus text="{cash}" state="{= ${id} === ${/currentPlayer/id} ? 'Information' : 'None' }" />
                           </cells>
                         </ColumnListItem>
                       </items>
