@@ -18,7 +18,7 @@ public enum Kind {
     public final int rank;
     public final String value;
 
-    private Kind(int rank, String value) {
+    Kind(int rank, String value) {
         this.rank = rank;
         this.value = value;
     }

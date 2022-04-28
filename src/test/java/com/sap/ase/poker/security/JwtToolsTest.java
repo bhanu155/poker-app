@@ -29,8 +29,6 @@ public class JwtToolsTest {
 		JwtTools jwtTools2 = new JwtTools("test-secret2");
 		String signedAndEncoded = jwtTools1.create("john-doe", "John Doe");
 
-		assertThrows(SignatureVerificationException.class, () -> {
-			jwtTools2.verifyAndDecode(signedAndEncoded);
-		});
+		assertThrows(SignatureVerificationException.class, () -> jwtTools2.verifyAndDecode(signedAndEncoded));
 	}
 }

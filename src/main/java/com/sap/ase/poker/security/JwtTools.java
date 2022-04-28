@@ -10,8 +10,8 @@ public class JwtTools {
 
 	public static final String SECRET = "OurVerySecretiveHighlyClassifiedSharedSecret";
 	
-	private JWTVerifier verifier;
-	private Algorithm algorithm;
+	private final JWTVerifier verifier;
+	private final Algorithm algorithm;
 
 	public JwtTools(String secret) {
 		algorithm = Algorithm.HMAC256(secret);

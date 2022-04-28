@@ -9,7 +9,7 @@ public enum GameState {
     RIVER(4),
     ENDED(5);
 
-    private int value;
+    private final int value;
 
     GameState(int value) {
         this.value = value;
