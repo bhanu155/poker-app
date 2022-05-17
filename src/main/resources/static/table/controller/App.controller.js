@@ -61,7 +61,7 @@ sap.ui.define([
             enabled: (state === 0 || state === 5) && (players.length > 1)
           },
           actions: {
-            enabled: currentPlayer?.name === player.name
+            enabled: currentPlayer?.id === player.id
           }
         }))
       } catch ({ message, stack }) {
