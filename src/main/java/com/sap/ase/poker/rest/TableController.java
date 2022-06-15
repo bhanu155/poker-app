@@ -53,10 +53,18 @@ public class TableController {
 	@PostMapping("/actions")
 	public void placeBet(@RequestBody BetRequestDto betRequest) {
 		try {
-			tableService.performAction(betRequest.getAction(), betRequest.getAmount());
+			int amount = betRequest.getArgs().length == 0 ? 0 : betRequest.getArgs()[0];
+			tableService.performAction(betRequest.getType(), amount);
 		} catch (IllegalAmountException e) {
 			e.printStackTrace();
 			throw new BadRequestException(e.getMessage());
 		}
+	}
+
+	@PostMapping("/start")
+	public ResponseEntity<Void> start() {
+		tableService.start();
+		return ResponseEntity.noContent().build();
+
 	}
 }

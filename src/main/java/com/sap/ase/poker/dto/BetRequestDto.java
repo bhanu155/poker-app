@@ -2,22 +2,22 @@ package com.sap.ase.poker.dto;
 
 public class BetRequestDto {
 
-	private int amount;
-	private String action;
+	private int[] args;
+	private String type;
 
-	public String getAction() {
-		return action;
+	public String getType() {
+		return type;
 	}
 
-	public void setAction(String action) {
-		this.action = action;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public int getAmount() {
-		return amount;
+	public int[] getArgs() {
+		return args;
 	}
 
-	public void setAmount(int amount) {
-		this.amount = amount;
+	public void setArgs(int[] args) {
+		this.args = args;
 	}
 }
