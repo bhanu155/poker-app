@@ -2,13 +2,16 @@ package com.sap.ase.poker.rest;
 
 import com.sap.ase.poker.data.PlayerNamesRepository;
 import com.sap.ase.poker.dto.BetRequestDto;
+import com.sap.ase.poker.dto.CardDto;
 import com.sap.ase.poker.dto.GetTableResponseDto;
+import com.sap.ase.poker.dto.PlayerDto;
 import com.sap.ase.poker.model.IllegalAmountException;
 import com.sap.ase.poker.service.TableService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(TableController.PATH)
@@ -30,15 +33,15 @@ public class TableController {
 		String playerId = principal.getName();
 		GetTableResponseDto tableStatus = new GetTableResponseDto();
 
-		tableStatus.setPlayers(tableService.getPlayers());
-		tableStatus.setCurrentPlayer(tableService.getCurrentPlayer());
+		tableStatus.setPlayers(tableService.getPlayers().stream().map(PlayerDto::new).collect(Collectors.toList()));
+		tableStatus.setCurrentPlayer(tableService.getCurrentPlayer().map(PlayerDto::new).orElse(null));
 		tableStatus.setPot(tableService.getPot());
-		tableStatus.setPlayerCards(tableService.getPlayerCards(playerId));
-		tableStatus.setCommunityCards(tableService.getCommunityCards());
+		tableStatus.setPlayerCards(tableService.getPlayerCards(playerId).stream().map(CardDto::new).collect(Collectors.toList()));
+		tableStatus.setCommunityCards(tableService.getCommunityCards().stream().map(CardDto::new).collect(Collectors.toList()));
 		tableStatus.setBets(tableService.getBets());
 		tableStatus.setState(tableService.getState().getValue());
-		tableStatus.setWinner(tableService.getWinner());
-		tableStatus.setWinnerHand(tableService.getWinnerHand());
+		tableStatus.setWinner(tableService.getWinner().map(PlayerDto::new).orElse(null));
+		tableStatus.setWinnerHand(tableService.getWinnerHand().stream().map(CardDto::new).collect(Collectors.toList()));
 		return tableStatus;
 	}
 

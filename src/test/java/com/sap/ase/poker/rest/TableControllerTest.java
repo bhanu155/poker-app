@@ -3,7 +3,6 @@ package com.sap.ase.poker.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sap.ase.poker.data.PlayerNamesRepository;
 import com.sap.ase.poker.dto.GetTableResponseDto;
-import com.sap.ase.poker.dto.PlayerDto;
 import com.sap.ase.poker.model.GameState;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.service.TableService;
@@ -47,8 +46,8 @@ public class TableControllerTest {
         Mockito.when(mockPrincipal.getName()).thenReturn("alice");
 
         Mockito.when(tableService.getPlayers()).thenReturn(Arrays.asList(
-                new PlayerDto(new Player("alice", "Alice", 100)),
-                new PlayerDto(new Player("bob", "Bob", 100))));
+                new Player("alice", "Alice", 100),
+                new Player("bob", "Bob", 100)));
         Mockito.when(tableService.getState()).thenReturn(GameState.FLOP);
 
         MockHttpServletResponse response = mockMvc.perform(get(PATH).principal(mockPrincipal))

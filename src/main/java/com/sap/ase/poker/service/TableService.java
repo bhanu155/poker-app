@@ -1,17 +1,15 @@
 package com.sap.ase.poker.service;
 
-import com.sap.ase.poker.dto.CardDto;
-import com.sap.ase.poker.dto.PlayerDto;
-import com.sap.ase.poker.model.Player;
-import com.sap.ase.poker.model.deck.*;
 import com.sap.ase.poker.model.GameState;
 import com.sap.ase.poker.model.IllegalAmountException;
+import com.sap.ase.poker.model.Player;
+import com.sap.ase.poker.model.deck.Card;
+import com.sap.ase.poker.model.deck.Deck;
+import com.sap.ase.poker.model.deck.Kind;
+import com.sap.ase.poker.model.deck.Suit;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 @Service
@@ -28,36 +26,34 @@ public class TableService {
         return GameState.ENDED;
     }
 
-    public List<PlayerDto> getPlayers() {
+    public List<Player> getPlayers() {
         // TODO: implement me
-        return Arrays.asList(
-                new PlayerDto(new Player("al-capone", "Al Capone", 100)),
-                new PlayerDto(new Player("alice", "Alice", 100))
+        return Arrays.asList(new Player("al-capone", "Al Capone", 100),
+                new Player("alice", "Alice", 100)
         );
     }
 
-    public List<CardDto> getPlayerCards(String playerId) {
+    public List<Card> getPlayerCards(String playerId) {
         // TODO: implement me
-        return Arrays.asList(
-                new CardDto(new Card(Kind.JACK, Suit.CLUBS)),
-                new CardDto(new Card(Kind.TEN, Suit.CLUBS))
+        return Arrays.asList(new Card(Kind.JACK, Suit.CLUBS),
+                new Card(Kind.TEN, Suit.CLUBS)
         );
     }
 
-    public List<CardDto> getCommunityCards() {
+    public List<Card> getCommunityCards() {
         // TODO: implement me
         return Arrays.asList(
-                new CardDto(new Card(Kind.ACE, Suit.CLUBS)),
-                new CardDto(new Card(Kind.KING, Suit.CLUBS)),
-                new CardDto(new Card(Kind.QUEEN, Suit.CLUBS)),
-                new CardDto(new Card(Kind.FOUR, Suit.HEARTS)),
-                new CardDto(new Card(Kind.SEVEN, Suit.SPADES))
+                new Card(Kind.ACE, Suit.CLUBS),
+                new Card(Kind.KING, Suit.CLUBS),
+                new Card(Kind.QUEEN, Suit.CLUBS),
+                new Card(Kind.FOUR, Suit.HEARTS),
+                new Card(Kind.SEVEN, Suit.SPADES)
         );
     }
 
-    public PlayerDto getCurrentPlayer() {
+    public Optional<Player> getCurrentPlayer() {
         // TODO: implement me
-        return new PlayerDto(new Player("al-capone", "Al", 100));
+        return Optional.of(new Player("al-capone", "Al", 100));
     }
 
     public Map<String, Integer> getBets() {
@@ -75,19 +71,19 @@ public class TableService {
         return 150;
     }
 
-    public PlayerDto getWinner() {
+    public Optional<Player> getWinner() {
         // TODO: implement me
-        return new PlayerDto(new Player("al-capone", "Al capone", 500));
+        return Optional.of(new Player("al-capone", "Al capone", 500));
     }
 
-    public List<CardDto> getWinnerHand() {
+    public List<Card> getWinnerHand() {
         // TODO: implement me
         return Arrays.asList(
-                new CardDto(new Card(Kind.ACE, Suit.CLUBS)),
-                new CardDto(new Card(Kind.KING, Suit.CLUBS)),
-                new CardDto(new Card(Kind.QUEEN, Suit.CLUBS)),
-                new CardDto(new Card(Kind.JACK, Suit.CLUBS)),
-                new CardDto(new Card(Kind.TEN, Suit.CLUBS))
+                new Card(Kind.ACE, Suit.CLUBS),
+                new Card(Kind.KING, Suit.CLUBS),
+                new Card(Kind.QUEEN, Suit.CLUBS),
+                new Card(Kind.JACK, Suit.CLUBS),
+                new Card(Kind.TEN, Suit.CLUBS)
         );
     }
 
