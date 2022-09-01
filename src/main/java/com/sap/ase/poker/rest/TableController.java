@@ -5,6 +5,7 @@ import com.sap.ase.poker.dto.BetRequestDto;
 import com.sap.ase.poker.dto.CardDto;
 import com.sap.ase.poker.dto.GetTableResponseDto;
 import com.sap.ase.poker.dto.PlayerDto;
+import com.sap.ase.poker.model.IllegalActionException;
 import com.sap.ase.poker.model.IllegalAmountException;
 import com.sap.ase.poker.service.TableService;
 import org.springframework.http.ResponseEntity;
@@ -54,14 +55,9 @@ public class TableController {
 	}
 
 	@PostMapping("/actions")
-	public void placeBet(@RequestBody BetRequestDto betRequest) {
-		try {
-			int amount = betRequest.getArgs().length == 0 ? 0 : betRequest.getArgs()[0];
-			tableService.performAction(betRequest.getType(), amount);
-		} catch (IllegalAmountException e) {
-			e.printStackTrace();
-			throw new BadRequestException(e.getMessage());
-		}
+	public void placeBet(@RequestBody BetRequestDto betRequest) throws IllegalAmountException,IllegalActionException{
+		int amount = betRequest.getArgs().length == 0 ? 0 : betRequest.getArgs()[0];
+		tableService.performAction(betRequest.getType(), amount);
 	}
 
 	@PostMapping("/start")
