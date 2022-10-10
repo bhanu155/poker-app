@@ -1,5 +1,10 @@
 package com.sap.ase.poker.model;
 
+import com.sap.ase.poker.model.deck.Card;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Player {
 
     private String id;
@@ -8,6 +13,7 @@ public class Player {
 
     private int bet = 0;
     private boolean isActive = false;
+    private List<Card> handCards = new ArrayList<>();
 
     public Player(String id, String name, int cash) {
         this.id = id;
@@ -49,7 +55,7 @@ public class Player {
     }
 
     public void deductCash(int amount) {
-		cash -= amount;
+        cash -= amount;
     }
 
     public void setActive() {
@@ -62,5 +68,13 @@ public class Player {
 
     public boolean isActive() {
         return isActive;
+    }
+
+    public List<Card> getHandCards() {
+        return this.handCards;
+    }
+
+    public void setHandCards(List<Card> handCards) {
+        this.handCards = handCards;
     }
 }

@@ -2,8 +2,9 @@ package com.sap.ase.poker.model.deck;
 
 public class Card implements Comparable<Card> {
 
-    public final Kind kind;
-    public final Suit suit;
+    private final Kind kind;
+
+    private final Suit suit;
 
     public Card(Kind kind, Suit suit) {
         this.kind = kind;
@@ -31,17 +32,34 @@ public class Card implements Comparable<Card> {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Card other = (Card) obj;
-        if (kind != other.kind)
+        if (kind != other.kind) {
             return false;
-        if (suit != other.suit)
+        }
+        if (suit != other.suit) {
             return false;
+        }
         return true;
+    }
+
+    public Kind getKind() {
+        return kind;
+    }
+
+    public Suit getSuit() {
+        return suit;
+    }
+
+    public boolean notEquals(Card card) {
+        return !this.equals(card);
     }
 }

@@ -22,4 +22,8 @@ public enum Kind {
         this.rank = rank;
         this.value = value;
     }
+
+    public int getRank() {
+        return rank;
+    }
 }

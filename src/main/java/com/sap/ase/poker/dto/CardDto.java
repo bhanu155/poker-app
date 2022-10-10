@@ -13,8 +13,8 @@ public class CardDto {
     }
 
     public CardDto(Card card) {
-        suit = suitToString(card.suit);
-        rank = kindToString(card.kind);
+        suit = suitToString(card.getSuit());
+        rank = kindToString(card.getKind());
     }
 
     private String suitToString(Suit suit) {
@@ -70,7 +70,7 @@ public class CardDto {
         this.rank = rank;
     }
 
-    private class UnknownKindException extends RuntimeException {
+    private static class UnknownKindException extends RuntimeException {
         public UnknownKindException(Kind kind) {
             super("unknown kind: " + kind);
         }
