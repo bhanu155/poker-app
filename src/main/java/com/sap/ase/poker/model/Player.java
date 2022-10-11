@@ -26,8 +26,8 @@ public class Player {
     }
 
     public void bet(int bet) {
-        this.bet += bet;
-        this.cash -= bet;
+        this.bet+=bet;
+        deductCash(bet);
     }
 
     public String getId() {
