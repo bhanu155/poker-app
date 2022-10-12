@@ -126,7 +126,10 @@
     </build>
     <profiles>
         <profile>
-            <id>skip-smoke-tests</id>
+            <id>skipSmokeTests</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -140,6 +143,12 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>smoketest</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
         </profile>
     </profiles>
 </project>
