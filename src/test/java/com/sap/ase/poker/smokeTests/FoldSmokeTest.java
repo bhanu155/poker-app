@@ -3,10 +3,12 @@ package com.sap.ase.poker.smokeTests;
 import com.sap.ase.poker.dto.GetTableResponseDto;
 import com.sap.ase.poker.dto.PlayerDto;
 import com.sap.ase.poker.model.GameState;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Disabled
 public class FoldSmokeTest extends SmokeTest {
     @Test
     void fold_shouldMarkPlayerAsInactive() {
