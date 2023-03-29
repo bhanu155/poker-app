@@ -27,20 +27,20 @@ public class HandFixtures {
                 new Card(Kind.NINE, Suit.HEARTS),
                 new Card(Kind.SEVEN, Suit.HEARTS),
                 new Card(Kind.FIVE, Suit.CLUBS),
-                new Card(Kind.THREE, Suit.DIAMONDS),
-                new Card(Kind.TWO, Suit.SPADES)
+                new Card(Kind.FOUR, Suit.DIAMONDS),
+                new Card(Kind.THREE, Suit.SPADES)
         );
     }
 
     public static List<Card> highCardOfJack() {
         return Arrays.asList(
                 new Card(Kind.JACK, Suit.DIAMONDS),
+                new Card(Kind.TEN, Suit.SPADES),
                 new Card(Kind.NINE, Suit.HEARTS),
                 new Card(Kind.EIGHT, Suit.DIAMONDS),
                 new Card(Kind.SEVEN, Suit.HEARTS),
                 new Card(Kind.FIVE, Suit.CLUBS),
-                new Card(Kind.THREE, Suit.DIAMONDS),
-                new Card(Kind.TWO, Suit.SPADES)
+                new Card(Kind.FOUR, Suit.DIAMONDS)
         );
     }
 

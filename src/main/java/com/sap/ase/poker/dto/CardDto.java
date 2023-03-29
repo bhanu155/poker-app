@@ -71,6 +71,8 @@ public class CardDto {
     }
 
     private static class UnknownKindException extends RuntimeException {
+        private static final long serialVersionUID = -2572535919726168818L;
+
         public UnknownKindException(Kind kind) {
             super("unknown kind: " + kind);
         }

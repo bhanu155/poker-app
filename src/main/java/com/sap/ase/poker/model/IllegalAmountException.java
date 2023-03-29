@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class IllegalAmountException extends RuntimeException {
+    private static final long serialVersionUID = 2692611560005649670L;
+
     public IllegalAmountException(String message) {
         super(message);
     }
