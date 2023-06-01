@@ -150,12 +150,12 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>70%</minimum>
+                                            <minimum>95%</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>70%</minimum>
+                                            <minimum>95%</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
