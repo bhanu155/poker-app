@@ -16,21 +16,25 @@ import java.util.function.Supplier;
 public class TableService {
 
     private final Supplier<Deck> deckSupplier;
+    
+    private GameState gameState; 
+    
+    private List<Player> players;
+    
+    private static final int BONUS_CASH = 100;
 
     public TableService(Supplier<Deck> deckSupplier) {
         this.deckSupplier = deckSupplier;
+        gameState = GameState.OPEN;
+        players = new ArrayList<Player>();
     }
 
     public GameState getState() {
-        // TODO: implement me
-        return GameState.ENDED;
+        return gameState;
     }
 
     public List<Player> getPlayers() {
-        // TODO: implement me
-        return Arrays.asList(new Player("al-capone", "Al Capone", 100),
-                new Player("alice", "Alice", 100)
-        );
+    	return players;
     }
 
     public List<Card> getPlayerCards(String playerId) {
@@ -92,8 +96,8 @@ public class TableService {
     }
 
     public void addPlayer(String playerId, String playerName) {
-        // TODO: implement me
-        System.out.printf("Player joined the table: %s%n", playerId);
+       players.add(new Player(playerId, playerName, BONUS_CASH));
+       System.out.printf("Player joined the table: %s%n", playerId);
     }
 
     public void performAction(String action, int amount) throws IllegalAmountException {
