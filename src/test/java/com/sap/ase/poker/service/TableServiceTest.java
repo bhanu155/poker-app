@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,9 +34,23 @@ class TableServiceTest {
 	Supplier<Deck> deckSupplier;
 
 	@BeforeEach
-	void setUp() {
+	void setup() {
+//		Deck deck = Mockito.mock(Deck.class);
+//		PokerCardsSupplier pokerCardsSupplier = Mockito.mock(PokerCardsSupplier.class);
+//		RandomCardShuffler randomCardShuffler = Mockito.mock(RandomCardShuffler.class);
+//
+//		ShuffledDeckSupplier deckSupplier = Mockito.mock(ShuffledDeckSupplier.class);
+//
+//		tableService = new TableService(deckSupplier);
+
 		deckSupplier = new ShuffledDeckSupplier(new PokerCardsSupplier(), new RandomCardShuffler());
 		tableService = new TableService(deckSupplier);
+	}
+
+	private void addPlayers() {
+		tableService.addPlayer("SBR", "Raghav");
+		tableService.addPlayer("CB", "Chandra Bhanu");
+		tableService.addPlayer("TGS", "Thimmaraju");
 	}
 
 	@Test
@@ -74,9 +89,7 @@ class TableServiceTest {
 
 	@Test
 	void startShouldReturnPreFlop() {
-		tableService.addPlayer("SBR", "Raghav");
-		tableService.addPlayer("CB", "Chandra Bhanu");
-		tableService.addPlayer("TGS", "Thimmaraju");
+		addPlayers();
 		tableService.start();
 		GameState gameState = tableService.getState();
 		assertThat(gameState).isEqualTo(GameState.PRE_FLOP);
@@ -92,9 +105,7 @@ class TableServiceTest {
 
 	@Test
 	void startGameShouldDrawCardsAndActivatePlayersAndSetFirstPlayerAsCurrentPlayer() {
-		tableService.addPlayer("SBR", "Raghav");
-		tableService.addPlayer("CB", "Chandra Bhanu");
-		tableService.addPlayer("TGS", "Thimmaraju");
+		addPlayers();
 		tableService.start();
 		Player player = tableService.getPlayers().get(tableService.getPlayers().size() - 1);
 		assertThat(player.getHandCards()).hasSize(2);
@@ -116,9 +127,7 @@ class TableServiceTest {
 		List<Card> playerCards = tableService.getPlayerCards("SBR");
 		assertThat(playerCards).hasSize(0);
 
-		tableService.addPlayer("SBR", "Raghav");
-		tableService.addPlayer("CB", "Chandra Bhanu");
-		tableService.addPlayer("TGS", "Thimmaraju");
+		addPlayers();
 
 		playerCards = tableService.getPlayerCards("SBR");
 		assertThat(playerCards).hasSize(0);
@@ -130,9 +139,7 @@ class TableServiceTest {
 
 	@Test
 	void getCommunityCardsShouldReturnEmptyListWhenPreFlop() {
-		tableService.addPlayer("SBR", "Raghav");
-		tableService.addPlayer("CB", "Chandra Bhanu");
-		tableService.addPlayer("TGS", "Thimmaraju");
+		addPlayers();
 		tableService.start();
 		List<Card> communityCards = tableService.getCommunityCards();
 		assertThat(communityCards).hasSize(0);
@@ -140,9 +147,7 @@ class TableServiceTest {
 
 	@Test
 	void getCommunityCardsShouldReturnValidCards() {
-		tableService.addPlayer("SBR", "Raghav");
-		tableService.addPlayer("CB", "Chandra Bhanu");
-		tableService.addPlayer("TGS", "Thimmaraju");
+		addPlayers();
 		tableService.start();
 		tableService.performAction("check", 0);
 		tableService.performAction("check", 0);
@@ -154,9 +159,7 @@ class TableServiceTest {
 
 	@Test
 	void performCheckShouldUpdateCurrentPlayerToNext() {
-		tableService.addPlayer("SBR", "Raghav");
-		tableService.addPlayer("CB", "Chandra Bhanu");
-		tableService.addPlayer("TGS", "Thimmaraju");
+		addPlayers();
 		tableService.start();
 
 		tableService.performAction("check", 0);
@@ -179,9 +182,7 @@ class TableServiceTest {
 
 	@Test
 	void allPlayersCheckedInPreFlopShouldDrawThreeCommunityCards() {
-		tableService.addPlayer("SBR", "Raghav");
-		tableService.addPlayer("CB", "Chandra Bhanu");
-		tableService.addPlayer("TGS", "Thimmaraju");
+		addPlayers();
 		tableService.start();
 		tableService.performAction("check", 0);
 		tableService.performAction("check", 0);
@@ -193,9 +194,7 @@ class TableServiceTest {
 
 	@Test
 	void performCheckAllPlayersShouldUpdateFlopStatus() {
-		tableService.addPlayer("SBR", "Raghav");
-		tableService.addPlayer("CB", "Chandra Bhanu");
-		tableService.addPlayer("TGS", "Thimmaraju");
+		addPlayers();
 		tableService.start();
 		tableService.performAction("check", 0);
 		tableService.performAction("check", 0);
