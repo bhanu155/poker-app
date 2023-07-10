@@ -21,6 +21,8 @@ public class TableService {
     
     private List<Player> players;
     
+    private Player currentPlayer;
+    
     private static final int BONUS_CASH = 100;
 
     public TableService(Supplier<Deck> deckSupplier) {
@@ -56,8 +58,7 @@ public class TableService {
     }
 
     public Optional<Player> getCurrentPlayer() {
-        // TODO: implement me
-        return Optional.of(new Player("al-capone", "Al", 100));
+        return Optional.of(currentPlayer);
     }
 
     public Map<String, Integer> getBets() {
@@ -92,7 +93,19 @@ public class TableService {
     }
 
     public void start() {
-        // TODO: implement me
+    	if(players.size()>=2) {
+    		gameState = GameState.PRE_FLOP;
+    		startPreFlopRound();
+    	}    	
+    }
+    private void startPreFlopRound() {
+    	for(Player player : players) {
+    		player.getHandCards().add(deckSupplier.get().draw());
+    		player.getHandCards().add(deckSupplier.get().draw());
+    		player.setActive();
+    	}
+    	currentPlayer = players.get(0);
+    	
     }
 
     public void addPlayer(String playerId, String playerName) {

@@ -14,23 +14,27 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 import com.sap.ase.poker.model.GameState;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.deck.Deck;
+import com.sap.ase.poker.model.deck.PokerCardsSupplier;
+import com.sap.ase.poker.model.deck.RandomCardShuffler;
+import com.sap.ase.poker.model.deck.ShuffledDeckSupplier;
 
 @SpringBootTest
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class TableServiceTest {
 	
-	@Autowired
 	TableService tableService;
 	
-	@MockBean
 	Supplier<Deck> deckSupplier;
-	
 	@BeforeEach
 	void setUp(){
-		
+		deckSupplier = new ShuffledDeckSupplier(new PokerCardsSupplier(), new RandomCardShuffler());
+		tableService = new TableService(deckSupplier);
 	}
 	
 	@Test
@@ -68,6 +72,40 @@ class TableServiceTest {
 	            Arguments.of("CB", "Chandra Bhanu"),
 	            Arguments.of("TGS", "Thimmaraju")
 	    );
+	}
+	
+	@Test
+	void startShouldReturnPreFlop() {
+		tableService.addPlayer("SBR", "Raghav");
+		tableService.addPlayer("CB", "Chandra Bhanu");
+		tableService.addPlayer("TGS", "Thimmaraju");
+		tableService.start();
+		GameState gameState = tableService.getState();
+		assertThat(gameState).isEqualTo(GameState.PRE_FLOP);
+	}
+	
+	@Test
+	void lessThanTwoPlayerDontStartGame() {
+		tableService.addPlayer("SBR", "Raghav");
+		tableService.start();
+		GameState gameState = tableService.getState();
+		assertThat(gameState).isEqualTo(GameState.OPEN);
+	}
+	
+	@Test
+	void startGameShouldDrawCards() {
+		tableService.addPlayer("SBR", "Raghav");
+		tableService.addPlayer("CB", "Chandra Bhanu");
+		tableService.addPlayer("TGS", "Thimmaraju");
+		tableService.start();
+		Player player = tableService.getPlayers().get(tableService.getPlayers().size()-1);
+		assertThat(player.getHandCards()).hasSize(2);
+		assertThat(player.isActive()).isTrue();
+		Player currentPlayer = tableService.getCurrentPlayer().orElse(null);
+		assertThat(currentPlayer).isNotNull();
+		assertThat(currentPlayer.getId()).isEqualTo("SBR");
+		
+		
 	}
 
 	 
