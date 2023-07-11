@@ -1,6 +1,7 @@
 package com.sap.ase.poker.service;
 
 import com.sap.ase.poker.model.GameState;
+import com.sap.ase.poker.model.IllegalActionException;
 import com.sap.ase.poker.model.IllegalAmountException;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.deck.Card;
@@ -30,6 +31,8 @@ public class TableService {
 	private List<Card> communityCards;
 
 	private int currentBet;
+	
+	private boolean isRisePerformed;
 
 	private static final int BONUS_CASH = 100;
 
@@ -120,28 +123,37 @@ public class TableService {
 	}
 
 	public void performAction(String action, int amount) throws IllegalAmountException {
+		Player currentPlayer = players.get(currentPlayerIdx);
 		switch (action) {
 		case "check":
-			performCheckAction();
+			performCheckAction(currentPlayer);
 			break;
 		case "raise":
-			performRaiseAction(amount);
+			performRaiseAction(currentPlayer, amount);
 			break;
 		case "fold":
-			performFoldAction();
+			performFoldAction(currentPlayer);
+			break;
+		case "call":
+			performCallAction(currentPlayer);
 			break;
 		}
+		currentPlayer.setHasPlayed(true);
 		moveToNextActivePlayer();
 		drawCommunityCardsAndMoveToNextRound();
 		System.out.printf("Action performed: %s, amount: %d%n", action, amount);
 	}
 
-	private void performFoldAction() {
-		Player currentPlayer = getCurrentPlayer().orElse(null);
-		if (currentPlayer != null) {
-			currentPlayer.setInactive();
+	private void performCallAction(Player currentPlayer) {
+		if(!isRisePerformed) {
+			throw new IllegalActionException("Call Should not allow without Rise");
 		}
+		currentPlayer.bet(currentBet - currentPlayer.getBet());
+		
+	}
 
+	private void performFoldAction(Player currentPlayer) {
+			currentPlayer.setInactive();
 		int activePlayerCount = 0;
 		for (Player player : players) {
 			if (player.isActive())
@@ -159,11 +171,12 @@ public class TableService {
 		gameState = GameState.ENDED;
 	}
 
-	private void performRaiseAction(int amount) {
-		Player currentPlayer = getCurrentPlayer().orElse(null);
+	private void performRaiseAction(Player currentPlayer, int amount) {
 		if (isValidAmount(currentPlayer, amount)) {
 //			currentPlayer.deductCash(amount);
 			currentPlayer.bet(amount);
+			isRisePerformed = true;
+			currentBet = amount;
 		}
 
 	}
@@ -188,38 +201,38 @@ public class TableService {
 	}
 
 	private void drawCommunityCardsAndMoveToNextRound() {
-		boolean hasAllPlayed = true;
+		boolean isRoundEnded = true;
 
 		for (Player player : players) {
-			if (!player.isHasPlayed()) {
-				hasAllPlayed = false;
+			if (!player.isHasPlayed() || currentBet != player.getBet()) {
+				isRoundEnded = false;
 				break;
 			}
 		}
 
 		int cardCount = 0;
-		switch (getState().getValue()) {
-		case 0:
+		switch (gameState) {
+		case OPEN:
 			cardCount = 0;
 			break;
-		case 1:
+		case PRE_FLOP:
 			cardCount = 3;
 			break;
-		case 2:
+		case FLOP:
 			cardCount = 1;
 			break;
-		case 3:
+		case TURN:
 			cardCount = 1;
 			break;
-		case 4:
+		case RIVER:
 			cardCount = 0;
 			break;
-		case 5:
+		case ENDED:
 			cardCount = 0;
 			break;
 		}
 
-		if (hasAllPlayed) {
+		if (isRoundEnded) {
 			// draw comm cards
 			for (int i = 0; i < cardCount; i++) {
 				communityCards.add(deckSupplier.get().draw());
@@ -230,8 +243,10 @@ public class TableService {
 		}
 	}
 
-	private void performCheckAction() {
-		players.get(currentPlayerIdx).setHasPlayed(true);
+	private void performCheckAction(Player currentPlayer) {
+		if(currentPlayer.getBet()!= currentBet) {
+			throw new IllegalActionException("Check should not allow if bet amount rised");
+		}
 	}
 
 	private void moveToNextActivePlayer() {
