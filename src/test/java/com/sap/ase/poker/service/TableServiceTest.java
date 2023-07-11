@@ -316,24 +316,26 @@ class TableServiceTest {
 		assertThat(winner).isEqualTo(currentPlayer);
 		assertThat(tableService.getState()).isEqualTo(GameState.ENDED);
 	}
+
 	@Test
 	void performCallShouldNotAllowWithRise() {
 		addPlayers();
-		tableService.start();		
-		
+		tableService.start();
+
 		Exception exception = assertThrows(IllegalActionException.class, () -> {
 			tableService.performAction("call", 0);
 		});
-		String expectedMessage = "Call Should not allow without Rise";
+		String expectedMessage = "Call Should not allow without Raise";
 		String actualMessage = exception.getMessage();
 
-		assertThat(actualMessage).isEqualTo(expectedMessage);		
+		assertThat(actualMessage).isEqualTo(expectedMessage);
 	}
+
 	@Test
 	void performCallShouldAllowWithRiseAndDeductFromCurrentBetAmount() {
 		addPlayers();
-		tableService.start();	
-		
+		tableService.start();
+
 		tableService.performAction("raise", 20);
 		Player currentPlayer = tableService.getCurrentPlayer().orElse(null);
 		assertThat(currentPlayer).isNotNull();
@@ -341,65 +343,123 @@ class TableServiceTest {
 		tableService.performAction("call", 0);
 		assertThat(currentPlayer.getBet()).isEqualTo(20);
 		assertThat(currentPlayer.getCash()).isEqualTo(100 - currentPlayer.getBet());
-		
+
 	}
+
 	@Test
 	void performCallShouldMatchRerise() {
 		addPlayers();
-		tableService.start();	
-		
+		tableService.start();
+
 		tableService.performAction("raise", 10);
 		tableService.performAction("raise", 20);
 		tableService.performAction("raise", 30);
-		
+
 		Player currentPlayer = tableService.getCurrentPlayer().orElse(null);
 		assertThat(currentPlayer).isNotNull();
 		tableService.performAction("call", 0);
-		
+
 		assertThat(currentPlayer.getBet()).isEqualTo(30);
 		assertThat(currentPlayer.getCash()).isEqualTo(100 - currentPlayer.getBet());
 	}
+
 	@Test
 	void performCheckShouldNotAllowIfAnyBetRaised() {
 		addPlayers();
-		tableService.start();	
+		tableService.start();
 		tableService.performAction("raise", 10);
-		
+
 		Exception exception = assertThrows(IllegalActionException.class, () -> {
 			tableService.performAction("check", 0);
 		});
 		String expectedMessage = "Check should not allow if bet amount rised";
 		String actualMessage = exception.getMessage();
-		assertThat(actualMessage).isEqualTo(expectedMessage);	
-		
+		assertThat(actualMessage).isEqualTo(expectedMessage);
+
 	}
+
 	@Test
 	void BetAmountIsNotEqualShouldNotBeEndOfRound() {
 		addPlayers();
-		tableService.start();	
-		
+		tableService.start();
+
 		GameState gameState = tableService.getState();
 		System.out.println(gameState.name());
 		tableService.performAction("check", 0);
 		tableService.performAction("raise", 10);
 		tableService.performAction("call", 0);
-		
+
 		System.out.println(tableService.getState().name());
 		assertThat(tableService.getState()).isEqualTo(gameState);
 	}
+
 	@Test
 	void BetAmountIsEqualAndAllPlayersPlayedShouldBeEndOfRound() {
 		addPlayers();
-		tableService.start();	
-		
+		tableService.start();
+
 		GameState gameState = tableService.getState();
 		System.out.println(gameState.name());
 		tableService.performAction("check", 0);
 		tableService.performAction("raise", 10);
 		tableService.performAction("call", 0);
 		tableService.performAction("call", 0);
-		
+
 		System.out.println(tableService.getState().name());
 		assertThat(tableService.getState()).isNotEqualTo(gameState);
-	}	
+	}
+
+	@Test
+	void flopToRiverShouldDrawFourCommunityCards() {
+		addPlayers();
+		tableService.start();
+
+		tableService.performAction("raise", 10);
+		tableService.performAction("call", 0);
+		tableService.performAction("call", 0);
+
+		tableService.performAction("raise", 20);
+		tableService.performAction("fold", 0);
+		tableService.performAction("call", 0);
+
+		assertThat(tableService.getCommunityCards()).hasSize(4);
+
+	}
+
+	@Test
+	void endRoundShoudReturnTotalPot() {
+		addPlayers();
+		tableService.start();
+		tableService.performAction("raise", 10);
+		tableService.performAction("call", 0);
+		tableService.performAction("call", 0);
+
+		assertThat(tableService.getPot()).isEqualTo(30);
+	}
+
+	@Test
+	void getPotShouldReturnTotalPotValue() {
+		addPlayers();
+		tableService.start();
+		tableService.performAction("raise", 10);
+		tableService.performAction("call", 0);
+		tableService.performAction("call", 0);
+
+		assertThat(tableService.getPot()).isEqualTo(30);
+	}
+
+	@Test
+	void getBetsShouldReturnListOfAllPlayerBets() {
+		addPlayers();
+		tableService.start();
+		tableService.performAction("raise", 10);
+		tableService.performAction("call", 0);
+		tableService.performAction("call", 0);
+
+		assertThat(tableService.getBets()).hasSize(3);
+		assertThat(tableService.getBets().get("SBR")).isEqualTo(10);
+		assertThat(tableService.getBets().get("CB")).isEqualTo(10);
+		assertThat(tableService.getBets().get("TGS")).isEqualTo(10);
+
+	}
 }

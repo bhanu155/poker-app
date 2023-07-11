@@ -31,8 +31,12 @@ public class TableService {
 	private List<Card> communityCards;
 
 	private int currentBet;
-	
-	private boolean isRisePerformed;
+
+	private int pot;
+
+	Map<String, Integer> bets;
+
+	private boolean isRaisePerformed;
 
 	private static final int BONUS_CASH = 100;
 
@@ -44,6 +48,7 @@ public class TableService {
 		winner = null;
 		currentPlayerIdx = -1;
 		currentBet = 0;
+		bets = new HashMap<String, Integer>();
 	}
 
 	public GameState getState() {
@@ -76,18 +81,11 @@ public class TableService {
 	}
 
 	public Map<String, Integer> getBets() {
-		// TODO: implement me
-		return new HashMap<String, Integer>() {
-			{
-				put("al-capone", 100);
-				put("alice", 50);
-			}
-		};
+		return bets;
 	}
 
 	public int getPot() {
-		// TODO: implement me
-		return 150;
+		return pot;
 	}
 
 	public Optional<Player> getWinner() {
@@ -138,22 +136,25 @@ public class TableService {
 			performCallAction(currentPlayer);
 			break;
 		}
-		currentPlayer.setHasPlayed(true);
-		moveToNextActivePlayer();
-		drawCommunityCardsAndMoveToNextRound();
+		if (gameState != GameState.ENDED) {
+			currentPlayer.setHasPlayed(true);
+			moveToNextActivePlayer();
+			drawCommunityCardsAndMoveToNextRound();
+		}
+
 		System.out.printf("Action performed: %s, amount: %d%n", action, amount);
 	}
 
 	private void performCallAction(Player currentPlayer) {
-		if(!isRisePerformed) {
-			throw new IllegalActionException("Call Should not allow without Rise");
+		if (!isRaisePerformed) {
+			throw new IllegalActionException("Call Should not allow without Raise");
 		}
 		currentPlayer.bet(currentBet - currentPlayer.getBet());
-		
+
 	}
 
 	private void performFoldAction(Player currentPlayer) {
-			currentPlayer.setInactive();
+		currentPlayer.setInactive();
 		int activePlayerCount = 0;
 		for (Player player : players) {
 			if (player.isActive())
@@ -175,7 +176,7 @@ public class TableService {
 		if (isValidAmount(currentPlayer, amount)) {
 //			currentPlayer.deductCash(amount);
 			currentPlayer.bet(amount);
-			isRisePerformed = true;
+			isRaisePerformed = true;
 			currentBet = amount;
 		}
 
@@ -204,47 +205,70 @@ public class TableService {
 		boolean isRoundEnded = true;
 
 		for (Player player : players) {
-			if (!player.isHasPlayed() || currentBet != player.getBet()) {
+			if (player.isActive() && (!player.isHasPlayed() || currentBet != player.getBet())) {
 				isRoundEnded = false;
 				break;
 			}
 		}
 
-		int cardCount = 0;
-		switch (gameState) {
-		case OPEN:
-			cardCount = 0;
-			break;
-		case PRE_FLOP:
-			cardCount = 3;
-			break;
-		case FLOP:
-			cardCount = 1;
-			break;
-		case TURN:
-			cardCount = 1;
-			break;
-		case RIVER:
-			cardCount = 0;
-			break;
-		case ENDED:
-			cardCount = 0;
-			break;
-		}
-
 		if (isRoundEnded) {
+			int cardCount = 0;
+			switch (gameState) {
+			case OPEN:
+				cardCount = 0;
+				break;
+			case PRE_FLOP:
+				cardCount = 3;
+				break;
+			case FLOP:
+				cardCount = 1;
+				break;
+			case TURN:
+				cardCount = 1;
+				break;
+			case RIVER:
+				cardCount = 0;
+				break;
+			case ENDED:
+				cardCount = 0;
+				break;
+			}
+
 			// draw comm cards
 			for (int i = 0; i < cardCount; i++) {
 				communityCards.add(deckSupplier.get().draw());
 			}
 
-			// update status
+			collectPot();
 			gameState = gameState.next();
 		}
 	}
 
+	private void resetBets() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void collectPot() {
+		int roundPot = 0;
+
+		for (Player player : players) {
+			roundPot += player.getBet();
+			if (bets.containsKey(player.getId())) {
+				bets.put(player.getId(), player.getBet() + bets.get(player.getId()));
+			} else {
+				bets.put(player.getId(), player.getBet());
+			}
+
+			player.clearBet();
+		}
+
+		pot = roundPot;
+		currentBet = 0;
+	}
+
 	private void performCheckAction(Player currentPlayer) {
-		if(currentPlayer.getBet()!= currentBet) {
+		if (currentPlayer.getBet() != currentBet) {
 			throw new IllegalActionException("Check should not allow if bet amount rised");
 		}
 	}
