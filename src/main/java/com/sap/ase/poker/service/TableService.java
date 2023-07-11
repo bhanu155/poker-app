@@ -131,10 +131,9 @@ public class TableService {
 			performFoldAction();
 			break;
 		}
-		moveToNextPlayer();
+		moveToNextActivePlayer();
 		drawCommunityCardsAndMoveToNextRound();
 		System.out.printf("Action performed: %s, amount: %d%n", action, amount);
-		// TODO : not updating currentBet, need to update
 	}
 
 	private void performFoldAction() {
@@ -149,7 +148,7 @@ public class TableService {
 				activePlayerCount++;
 		}
 		if (activePlayerCount == 1) {
-			moveToNextPlayer();
+			moveToNextActivePlayer();
 			winner = players.get(currentPlayerIdx);
 			endGame();
 		}
@@ -235,7 +234,7 @@ public class TableService {
 		players.get(currentPlayerIdx).setHasPlayed(true);
 	}
 
-	private void moveToNextPlayer() {
+	private void moveToNextActivePlayer() {
 		do {
 			currentPlayerIdx = (currentPlayerIdx + 1) % players.size();
 		} while (!players.get(currentPlayerIdx).isActive());
