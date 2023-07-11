@@ -23,10 +23,12 @@ public class TableService {
 
 	private List<Player> players;
 
+	private Player winner;
+
 	private int currentPlayerIdx;
 
 	private List<Card> communityCards;
-	
+
 	private int currentBet;
 
 	private static final int BONUS_CASH = 100;
@@ -36,6 +38,7 @@ public class TableService {
 		communityCards = new ArrayList<>();
 		gameState = GameState.OPEN;
 		players = new ArrayList<Player>();
+		winner = null;
 		currentPlayerIdx = -1;
 		currentBet = 0;
 	}
@@ -85,8 +88,7 @@ public class TableService {
 	}
 
 	public Optional<Player> getWinner() {
-		// TODO: implement me
-		return Optional.of(new Player("al-capone", "Al capone", 500));
+		return Optional.of(winner);
 	}
 
 	public List<Card> getWinnerHand() {
@@ -125,41 +127,68 @@ public class TableService {
 		case "raise":
 			performRaiseAction(amount);
 			break;
+		case "fold":
+			performFoldAction();
+			break;
 		}
 		moveToNextPlayer();
-		drawCommunityCardsAndMoveToNextRound(3);
-
+		drawCommunityCardsAndMoveToNextRound();
 		System.out.printf("Action performed: %s, amount: %d%n", action, amount);
+		// TODO : not updating currentBet, need to update
+	}
+
+	private void performFoldAction() {
+		Player currentPlayer = getCurrentPlayer().orElse(null);
+		if (currentPlayer != null) {
+			currentPlayer.setInactive();
+		}
+
+		int activePlayerCount = 0;
+		for (Player player : players) {
+			if (player.isActive())
+				activePlayerCount++;
+		}
+		if (activePlayerCount == 1) {
+			moveToNextPlayer();
+			winner = players.get(currentPlayerIdx);
+			endGame();
+		}
+
+	}
+
+	private void endGame() {
+		gameState = GameState.ENDED;
 	}
 
 	private void performRaiseAction(int amount) {
 		Player currentPlayer = getCurrentPlayer().orElse(null);
-		if(isValidAmount(currentPlayer, amount)) {
-			currentPlayer.deductCash(amount);
+		if (isValidAmount(currentPlayer, amount)) {
+//			currentPlayer.deductCash(amount);
+			currentPlayer.bet(amount);
 		}
-		
+
 	}
 
 	private boolean isValidAmount(Player currentPlayer, int amount) {
-		if(amount <= currentBet) {
+		if (amount <= currentBet) {
 			throw new IllegalAmountException("Raise amount can not be less than or Equal to Current Bet");
 		}
-		
-		if(currentPlayer != null) {
-			if(amount > currentPlayer.getCash()) {
+
+		if (currentPlayer != null) {
+			if (amount > currentPlayer.getCash()) {
 				throw new IllegalAmountException("Raise amount can not be greater than available cash");
-			}else {
-				for(Player player : players) {
-					if(amount > player.getCash()) {
+			} else {
+				for (Player player : players) {
+					if (amount > player.getCash()) {
 						throw new IllegalAmountException("Raise amount should not exceed other players available cash");
 					}
 				}
-			}			
+			}
 		}
 		return true;
 	}
 
-	private void drawCommunityCardsAndMoveToNextRound(int cardCount) {
+	private void drawCommunityCardsAndMoveToNextRound() {
 		boolean hasAllPlayed = true;
 
 		for (Player player : players) {
@@ -167,6 +196,28 @@ public class TableService {
 				hasAllPlayed = false;
 				break;
 			}
+		}
+
+		int cardCount = 0;
+		switch (getState().getValue()) {
+		case 0:
+			cardCount = 0;
+			break;
+		case 1:
+			cardCount = 3;
+			break;
+		case 2:
+			cardCount = 1;
+			break;
+		case 3:
+			cardCount = 1;
+			break;
+		case 4:
+			cardCount = 0;
+			break;
+		case 5:
+			cardCount = 0;
+			break;
 		}
 
 		if (hasAllPlayed) {
@@ -185,7 +236,9 @@ public class TableService {
 	}
 
 	private void moveToNextPlayer() {
-		currentPlayerIdx = (currentPlayerIdx + 1) % players.size();
+		do {
+			currentPlayerIdx = (currentPlayerIdx + 1) % players.size();
+		} while (!players.get(currentPlayerIdx).isActive());
 	}
 
 }
