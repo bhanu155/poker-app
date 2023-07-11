@@ -26,6 +26,8 @@ public class TableService {
 	private int currentPlayerIdx;
 
 	private List<Card> communityCards;
+	
+	private int currentBet;
 
 	private static final int BONUS_CASH = 100;
 
@@ -35,6 +37,7 @@ public class TableService {
 		gameState = GameState.OPEN;
 		players = new ArrayList<Player>();
 		currentPlayerIdx = -1;
+		currentBet = 0;
 	}
 
 	public GameState getState() {
@@ -119,11 +122,41 @@ public class TableService {
 		case "check":
 			performCheckAction();
 			break;
+		case "raise":
+			performRaiseAction(amount);
+			break;
 		}
-
+		moveToNextPlayer();
 		drawCommunityCardsAndMoveToNextRound(3);
 
 		System.out.printf("Action performed: %s, amount: %d%n", action, amount);
+	}
+
+	private void performRaiseAction(int amount) {
+		Player currentPlayer = getCurrentPlayer().orElse(null);
+		if(isValidAmount(currentPlayer, amount)) {
+			currentPlayer.deductCash(amount);
+		}
+		
+	}
+
+	private boolean isValidAmount(Player currentPlayer, int amount) {
+		if(amount <= currentBet) {
+			throw new IllegalAmountException("Raise amount can not be less than or Equal to Current Bet");
+		}
+		
+		if(currentPlayer != null) {
+			if(amount > currentPlayer.getCash()) {
+				throw new IllegalAmountException("Raise amount can not be greater than available cash");
+			}else {
+				for(Player player : players) {
+					if(amount > player.getCash()) {
+						throw new IllegalAmountException("Raise amount should not exceed other players available cash");
+					}
+				}
+			}			
+		}
+		return true;
 	}
 
 	private void drawCommunityCardsAndMoveToNextRound(int cardCount) {
@@ -149,7 +182,6 @@ public class TableService {
 
 	private void performCheckAction() {
 		players.get(currentPlayerIdx).setHasPlayed(true);
-		moveToNextPlayer();
 	}
 
 	private void moveToNextPlayer() {

@@ -1,11 +1,13 @@
 package com.sap.ase.poker.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,6 +21,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 import com.sap.ase.poker.model.GameState;
+import com.sap.ase.poker.model.IllegalAmountException;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.deck.Card;
 import com.sap.ase.poker.model.deck.Deck;
@@ -201,6 +204,65 @@ class TableServiceTest {
 		tableService.performAction("check", 0);
 
 		assertThat(tableService.getState()).isEqualTo(GameState.FLOP);
+	}
+	@Test
+	void raiseAmountShouldGreaterThanCurrentBid() {
+		addPlayers();
+		tableService.start();
+			
+		Exception exception = assertThrows(IllegalAmountException.class, () -> {
+	        tableService.performAction("raise", 0);
+	    });
+		String expectedMessage = "Raise amount can not be less than or Equal to Current Bet";
+	    String actualMessage = exception.getMessage();
+
+	    assertThat(actualMessage).isEqualTo(expectedMessage);
+
+	}
+	@Test
+	void raiseAmountShouldLessThanAvailableCash() {
+		addPlayers();
+		tableService.start();
+			
+		Exception exception = assertThrows(IllegalAmountException.class, () -> {
+	        tableService.performAction("raise", 200);
+	    });
+		String expectedMessage = "Raise amount can not be greater than available cash";
+	    String actualMessage = exception.getMessage();
+
+	    assertThat(actualMessage).isEqualTo(expectedMessage);
+
+	}
+	@Test
+	void performRaiseShouldDeductPlayerCash() {
+		addPlayers();
+		tableService.start();
+		
+		Player currentPlayer = tableService.getCurrentPlayer().orElse(null);
+		assertThat(currentPlayer).isNotNull();
+		int currentCashamount = currentPlayer.getCash();
+		tableService.performAction("raise", 10);
+		assertThat(currentPlayer.getCash()).isEqualTo(currentCashamount - 10);
+		
+		currentPlayer = tableService.getCurrentPlayer().orElse(null);
+		assertThat(currentPlayer).isNotNull();
+		currentCashamount = currentPlayer.getCash();
+		tableService.performAction("raise", 20);
+		assertThat(currentPlayer.getCash()).isEqualTo(currentCashamount - 20);
+	}
+	@Test
+	void raiseAmountShouldNotExceedOtherPlayersAvailableCash() {
+		addPlayers();
+		tableService.start();
+		tableService.performAction("raise", 10);
+		
+		Exception exception = assertThrows(IllegalAmountException.class, () -> {
+	        tableService.performAction("raise", 95);
+	    });
+		String expectedMessage = "Raise amount should not exceed other players available cash";
+	    String actualMessage = exception.getMessage();
+
+	    assertThat(actualMessage).isEqualTo(expectedMessage);
 	}
 
 }
