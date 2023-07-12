@@ -111,14 +111,24 @@ public class TableService {
 	}
 
 	public void start() {
+		clearTable();
 		if (players.size() >= 2) {
 			gameState = GameState.PRE_FLOP;
 			startPreFlopRound();
 		}
 	}
 
+	private void clearTable() {
+		winner = null;
+		communityCards.clear();
+		bets.clear();
+		pot = 0;
+
+	}
+
 	private void startPreFlopRound() {
 		for (Player player : players) {
+			player.getHandCards().clear();
 			player.getHandCards().add(deckSupplier.get().draw());
 			player.getHandCards().add(deckSupplier.get().draw());
 			player.setActive();
@@ -128,12 +138,17 @@ public class TableService {
 	}
 
 	public void addPlayer(String playerId, String playerName) {
-		players.add(new Player(playerId, playerName, BONUS_CASH));
+		Player player = new Player(playerId, playerName, BONUS_CASH);
+		if (!players.contains(player)) {
+			players.add(player);
+		}
 		System.out.printf("Player joined the table: %s%n", playerId);
 	}
 
 	public void performAction(String action, int amount) throws IllegalAmountException {
 		Player currentPlayer = players.get(currentPlayerIdx);
+		if (currentPlayer == null)
+			return;
 		switch (action) {
 		case "check":
 			performCheckAction(currentPlayer);
@@ -144,7 +159,7 @@ public class TableService {
 		case "fold":
 			performFoldAction(currentPlayer);
 			break;
-		case "call":
+		default:// call action
 			performCallAction(currentPlayer);
 			break;
 		}
@@ -217,17 +232,16 @@ public class TableService {
 			throw new IllegalAmountException("Raise amount can not be less than or Equal to Current Bet");
 		}
 
-		if (currentPlayer != null) {
-			if (amount > currentPlayer.getCash()) {
-				throw new IllegalAmountException("Raise amount can not be greater than available cash");
-			} else {
-				for (Player player : players) {
-					if (amount > player.getCash()) {
-						throw new IllegalAmountException("Raise amount should not exceed other players available cash");
-					}
+		if (amount > currentPlayer.getCash()) {
+			throw new IllegalAmountException("Raise amount can not be greater than available cash");
+		} else {
+			for (Player player : players) {
+				if (amount > player.getCash()) {
+					throw new IllegalAmountException("Raise amount should not exceed other players available cash");
 				}
 			}
 		}
+
 		return true;
 	}
 
@@ -253,7 +267,7 @@ public class TableService {
 			case TURN:
 				cardCount = 1;
 				break;
-			case RIVER:
+			default:
 				cardCount = 0;
 				break;
 			}
@@ -267,7 +281,6 @@ public class TableService {
 			gameState = gameState.next();
 		}
 	}
-
 
 	private void collectPot() {
 		int roundPot = 0;

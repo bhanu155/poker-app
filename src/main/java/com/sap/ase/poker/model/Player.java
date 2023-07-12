@@ -100,8 +100,6 @@ public class Player {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
 		Player other = (Player) obj;
 		return Objects.equals(id, other.id);
 	}

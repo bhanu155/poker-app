@@ -480,6 +480,29 @@ class TableServiceTest {
 	}
 
 	@Test
+	void getWinnerShouldReturnEmptyDuringGame() {
+		addPlayers();
+		tableService.start();// 0
+
+		tableService.performAction("raise", 10);
+		tableService.performAction("call", 0);
+		tableService.performAction("call", 0);// 3
+
+		tableService.performAction("raise", 20);
+		tableService.performAction("fold", 0);
+		tableService.performAction("call", 0);// 1
+
+		tableService.performAction("raise", 20);
+		tableService.performAction("call", 0);// 1
+
+		tableService.performAction("raise", 20);
+		tableService.performAction("fold", 0);// End
+
+		Player winner = tableService.getWinner().orElse(null);
+		assertThat(winner).isNotNull();
+	}
+
+	@Test
 	void determineTheWinnerAtEndOfGame() {
 		addPlayers();
 		tableService.start();// 0
