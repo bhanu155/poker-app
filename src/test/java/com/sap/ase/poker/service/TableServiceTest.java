@@ -593,4 +593,13 @@ class TableServiceTest {
 
 	}
 
+	@Test
+	void duplicatePlayerListTest() {
+		tableService.addPlayer("CB", "Chandra");
+		tableService.addPlayer("CB", "Bhanu");
+
+		assertThat(tableService.getPlayers()).hasSize(1);
+
+	}
+
 }

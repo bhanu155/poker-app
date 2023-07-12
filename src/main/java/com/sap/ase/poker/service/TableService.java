@@ -31,7 +31,9 @@ public class TableService {
 
 	private Player winner;
 
-	private Hand winnerHand;
+	private Deck deck;
+
+	private List<Card> winnerHand;
 
 	private int currentPlayerIdx;
 
@@ -57,6 +59,7 @@ public class TableService {
 		currentPlayerIdx = -1;
 		currentBet = 0;
 		bets = new HashMap<String, Integer>();
+		deck = deckSupplier.get();
 	}
 
 	public GameState getState() {
@@ -107,15 +110,17 @@ public class TableService {
 			return new ArrayList<>();
 		}
 
-		return winnerHand.getCards();
+		return winnerHand;
 	}
 
 	public void start() {
 		clearTable();
+		deck.shuffle();
 		if (players.size() >= 2) {
 			gameState = GameState.PRE_FLOP;
 			startPreFlopRound();
 		}
+		
 	}
 
 	private void clearTable() {
@@ -129,8 +134,8 @@ public class TableService {
 	private void startPreFlopRound() {
 		for (Player player : players) {
 			player.getHandCards().clear();
-			player.getHandCards().add(deckSupplier.get().draw());
-			player.getHandCards().add(deckSupplier.get().draw());
+			player.getHandCards().add(deck.draw());
+			player.getHandCards().add(deck.draw());
 			player.setActive();
 		}
 		currentPlayerIdx = 0;
@@ -141,8 +146,8 @@ public class TableService {
 		Player player = new Player(playerId, playerName, BONUS_CASH);
 		if (!players.contains(player)) {
 			players.add(player);
+			System.out.printf("Player joined the table: %s%n", playerId);
 		}
-		System.out.printf("Player joined the table: %s%n", playerId);
 	}
 
 	public void performAction(String action, int amount) throws IllegalAmountException {
@@ -189,7 +194,8 @@ public class TableService {
 			for (Player player : winners.getWinners()) {
 				player.addCash(winningAmount);
 			}
-			winnerHand = winners.getWinningHand().orElse(null);
+
+			winnerHand = winners.getWinningHand().get().getCards();
 		}
 	}
 
@@ -274,7 +280,7 @@ public class TableService {
 
 			// draw comm cards
 			for (int i = 0; i < cardCount; i++) {
-				communityCards.add(deckSupplier.get().draw());
+				communityCards.add(deck.draw());
 			}
 
 			collectPot();
