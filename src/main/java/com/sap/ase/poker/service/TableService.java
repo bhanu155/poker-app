@@ -219,6 +219,7 @@ public class TableService {
 		if (activePlayerCount == 1) {
 			moveToNextActivePlayer();
 			winner = players.get(currentPlayerIdx);
+			winnerHand.clear();
 			collectPot();
 			winner.addCash(pot);
 			gameState = GameState.ENDED;
