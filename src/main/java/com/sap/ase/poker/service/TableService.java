@@ -1,5 +1,16 @@
 package com.sap.ase.poker.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.sap.ase.poker.model.GameState;
 import com.sap.ase.poker.model.IllegalActionException;
 import com.sap.ase.poker.model.IllegalAmountException;
@@ -8,12 +19,8 @@ import com.sap.ase.poker.model.deck.Card;
 import com.sap.ase.poker.model.deck.Deck;
 import com.sap.ase.poker.model.deck.Kind;
 import com.sap.ase.poker.model.deck.Suit;
-
-import org.springframework.boot.web.embedded.netty.NettyWebServer;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.function.Supplier;
+import com.sap.ase.poker.model.rules.WinnerRules;
+import com.sap.ase.poker.model.rules.Winners;
 
 @Service
 public class TableService {
@@ -37,6 +44,9 @@ public class TableService {
 	Map<String, Integer> bets;
 
 	private boolean isRaisePerformed;
+	
+	@Autowired
+	private WinnerRules winnerRules;
 
 	private static final int BONUS_CASH = 100;
 
@@ -89,6 +99,8 @@ public class TableService {
 	}
 
 	public Optional<Player> getWinner() {
+		if(winner == null)
+			return Optional.empty();
 		return Optional.of(winner);
 	}
 
@@ -140,9 +152,25 @@ public class TableService {
 			currentPlayer.setHasPlayed(true);
 			moveToNextActivePlayer();
 			drawCommunityCardsAndMoveToNextRound();
+			if(gameState.equals(GameState.ENDED)) {
+				determineWinners();
+			}
 		}
 
 		System.out.printf("Action performed: %s, amount: %d%n", action, amount);
+	}
+	
+	private void determineWinners() {
+		List<Player> activePlayers = new ArrayList<>();
+		for(Player player: players) {
+			if(player.isActive())
+				activePlayers.add(player);
+		}
+		
+		Winners winners = winnerRules.findWinners(communityCards, activePlayers);
+		if(!winners.getWinners().isEmpty()) {
+			winner = winners.getWinners().get(0);
+		}
 	}
 
 	private void performCallAction(Player currentPlayer) {
@@ -214,9 +242,6 @@ public class TableService {
 		if (isRoundEnded) {
 			int cardCount = 0;
 			switch (gameState) {
-			case OPEN:
-				cardCount = 0;
-				break;
 			case PRE_FLOP:
 				cardCount = 3;
 				break;
@@ -227,9 +252,6 @@ public class TableService {
 				cardCount = 1;
 				break;
 			case RIVER:
-				cardCount = 0;
-				break;
-			case ENDED:
 				cardCount = 0;
 				break;
 			}
@@ -278,5 +300,15 @@ public class TableService {
 			currentPlayerIdx = (currentPlayerIdx + 1) % players.size();
 		} while (!players.get(currentPlayerIdx).isActive());
 	}
+
+	public WinnerRules getWinnerRules() {
+		return winnerRules;
+	}
+
+	public void setWinnerRules(WinnerRules winnerRules) {
+		this.winnerRules = winnerRules;
+	}
+	
+	
 
 }

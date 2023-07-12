@@ -7,16 +7,12 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
@@ -29,6 +25,8 @@ import com.sap.ase.poker.model.deck.Deck;
 import com.sap.ase.poker.model.deck.PokerCardsSupplier;
 import com.sap.ase.poker.model.deck.RandomCardShuffler;
 import com.sap.ase.poker.model.deck.ShuffledDeckSupplier;
+import com.sap.ase.poker.model.rules.HandRules;
+import com.sap.ase.poker.model.rules.WinnerRules;
 
 @SpringBootTest
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -36,6 +34,8 @@ class TableServiceTest {
 
 	TableService tableService;
 	Supplier<Deck> deckSupplier;
+	
+	
 
 	@BeforeEach
 	void setup() {
@@ -410,7 +410,7 @@ class TableServiceTest {
 	}
 
 	@Test
-	void flopToRiverShouldDrawFourCommunityCards() {
+	void flopToTurnShouldDrawFourCommunityCards() {
 		addPlayers();
 		tableService.start();
 
@@ -423,6 +423,26 @@ class TableServiceTest {
 		tableService.performAction("call", 0);
 
 		assertThat(tableService.getCommunityCards()).hasSize(4);
+
+	}
+	
+	@Test
+	void turnToReverShouldDrawFourCommunityCards() {
+		addPlayers();
+		tableService.start();
+
+		tableService.performAction("raise", 10);
+		tableService.performAction("call", 0);
+		tableService.performAction("call", 0);
+
+		tableService.performAction("raise", 20);
+		tableService.performAction("fold", 0);
+		tableService.performAction("call", 0);
+		
+		tableService.performAction("raise", 20);
+		tableService.performAction("call", 0);
+
+		assertThat(tableService.getCommunityCards()).hasSize(5);
 
 	}
 
@@ -461,5 +481,32 @@ class TableServiceTest {
 		assertThat(tableService.getBets().get("CB")).isEqualTo(10);
 		assertThat(tableService.getBets().get("TGS")).isEqualTo(10);
 
+	}
+	
+	@Test
+	void determineTheWinnerAtEndOfGame() {
+		addPlayers();
+		tableService.start();//0
+
+		WinnerRules winnerRules = new WinnerRules(new HandRules());
+		tableService.setWinnerRules(winnerRules);
+		tableService.performAction("raise", 10);
+		tableService.performAction("call", 0);
+		tableService.performAction("call", 0);//3
+
+		tableService.performAction("raise", 20);
+		tableService.performAction("fold", 0);
+		tableService.performAction("call", 0);//1
+		
+		tableService.performAction("raise", 20);
+		tableService.performAction("call", 0);//1
+		
+		tableService.performAction("raise", 20);
+		tableService.performAction("call", 0);//End
+
+		assertThat(tableService.getState()).isEqualTo(GameState.ENDED);
+		
+		Player winner = tableService.getWinner().orElse(null);
+		assertThat(winner).isNotNull();
 	}
 }
