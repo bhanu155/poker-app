@@ -245,7 +245,7 @@ public class TableService {
 			throw new IllegalAmountException("Raise amount can not be greater than available cash");
 		} else {
 			for (Player player : players) {
-				if (amount > player.getCash()) {
+				if (player.isActive() && amount > player.getCash()) {
 					throw new IllegalAmountException("Raise amount should not exceed other players available cash");
 				}
 			}
