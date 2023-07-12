@@ -211,13 +211,11 @@ public class TableService {
 		if (activePlayerCount == 1) {
 			moveToNextActivePlayer();
 			winner = players.get(currentPlayerIdx);
-			endGame();
+			collectPot();
+			winner.addCash(pot);
+			gameState = GameState.ENDED;
 		}
 
-	}
-
-	private void endGame() {
-		gameState = GameState.ENDED;
 	}
 
 	private void performRaiseAction(Player currentPlayer, int amount) {
