@@ -3,9 +3,7 @@ package com.sap.ase.poker.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -37,14 +35,6 @@ class TableServiceTest {
 
 	@BeforeEach
 	void setup() {
-//		Deck deck = Mockito.mock(Deck.class);
-//		PokerCardsSupplier pokerCardsSupplier = Mockito.mock(PokerCardsSupplier.class);
-//		RandomCardShuffler randomCardShuffler = Mockito.mock(RandomCardShuffler.class);
-//
-//		ShuffledDeckSupplier deckSupplier = Mockito.mock(ShuffledDeckSupplier.class);
-//
-//		tableService = new TableService(deckSupplier);
-
 		deckSupplier = new ShuffledDeckSupplier(new PokerCardsSupplier(), new RandomCardShuffler());
 		tableService = new TableService(deckSupplier);
 	}
@@ -487,6 +477,8 @@ class TableServiceTest {
 	void getWinnerShouldReturnEmptyDuringGame() {
 		addPlayers();
 		tableService.start();// 0
+		
+		assertThat( tableService.getWinner().orElse(null)).isNull();
 
 		tableService.performAction("raise", 10);
 		tableService.performAction("call", 0);
@@ -504,6 +496,33 @@ class TableServiceTest {
 
 		Player winner = tableService.getWinner().orElse(null);
 		assertThat(winner).isNotNull();
+	}
+	
+	@Test
+	void secondGameStartZeroCashPlayerShouldNotActive() {
+		addPlayers();
+		tableService.start();// 0
+		
+
+		tableService.performAction("raise", 10);
+		tableService.performAction("call", 0);
+		tableService.performAction("call", 0);// 3
+
+		tableService.performAction("raise", 20);
+		tableService.performAction("fold", 0);
+		tableService.performAction("call", 0);// 1
+
+		tableService.performAction("raise", 20);
+		tableService.performAction("call", 0);// 1
+
+		tableService.performAction("raise", 20);
+		tableService.performAction("fold", 0);// End
+
+		Player winner = tableService.getWinner().orElse(null);
+		assertThat(winner).isNotNull();
+		tableService.getPlayers().get(0).addCash(-1* tableService.getPlayers().get(0).getCash());
+		tableService.start();
+		assertThat(tableService.getPlayers().get(0).isActive()).isFalse();
 	}
 
 	@Test
