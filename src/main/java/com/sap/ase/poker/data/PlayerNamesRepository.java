@@ -10,9 +10,9 @@ public class PlayerNamesRepository {
     private final Map<String, String> playerIdToName = new HashMap<>();
 
     public PlayerNamesRepository() {
-        playerIdToName.put("TGS", "Thimmaraju");
-        playerIdToName.put("SBR", "Raghav");
-        playerIdToName.put("CB", "Bhanu");
+        playerIdToName.put("al-capone", "Al Capone");
+        playerIdToName.put("pat-garret", "Pat Garret");
+        playerIdToName.put("wyatt-earp", "Wyatt Earp");
         playerIdToName.put("doc-holiday", "Doc Holiday");
         playerIdToName.put("wild-bill", "Wild Bill");
         playerIdToName.put("stu-ungar", "Stu Ungar");

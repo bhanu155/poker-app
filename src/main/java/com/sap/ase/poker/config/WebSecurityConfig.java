@@ -32,9 +32,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder()::encode)
                 .roles("USER");
         return new InMemoryUserDetailsManager(
-                userBuilder.username("TGS").password("all-in").build(),
-                userBuilder.username("SBR").password("all-in").build(),
-                userBuilder.username("CB").password("all-in").build(),
+                userBuilder.username("al-capone").password("all-in").build(),
+                userBuilder.username("pat-garret").password("all-in").build(),
+                userBuilder.username("wyatt-earp").password("all-in").build(),
                 userBuilder.username("doc-holiday").password("all-in").build(),
                 userBuilder.username("wild-bill").password("all-in").build(),
                 userBuilder.username("stu-ungar").password("all-in").build(),

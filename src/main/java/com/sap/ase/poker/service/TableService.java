@@ -22,6 +22,8 @@ import com.sap.ase.poker.model.rules.Winners;
 @Service
 public class TableService {
 
+	private final Supplier<Deck> deckSupplier;
+
 	private GameState gameState;
 
 	private List<Player> players;
@@ -47,6 +49,7 @@ public class TableService {
 	private static final int BONUS_CASH = 100;
 
 	public TableService(Supplier<Deck> deckSupplier) {
+		this.deckSupplier = deckSupplier;
 		communityCards = new ArrayList<>();
 		gameState = GameState.OPEN;
 		players = new ArrayList<Player>();
@@ -293,6 +296,8 @@ public class TableService {
 
 		for (Player player : players) {
 			roundPot += player.getBet();
+//			updatePlayerBet(player);
+
 			player.clearBet();
 			bets.put(player.getId(), 0);
 			player.setHasPlayed(false);
@@ -303,6 +308,12 @@ public class TableService {
 	}
 
 	private void updatePlayerBet(Player player) {
+//		if (bets.containsKey(player.getId())) {
+//			bets.put(player.getId(), player.getBet() + bets.get(player.getId()));
+//		} else {
+//			bets.put(player.getId(), player.getBet());
+//		}
+
 		bets.put(player.getId(), player.getBet());
 	}
 
