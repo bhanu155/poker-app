@@ -25,8 +25,6 @@ import com.sap.ase.poker.model.deck.Deck;
 import com.sap.ase.poker.model.deck.PokerCardsSupplier;
 import com.sap.ase.poker.model.deck.RandomCardShuffler;
 import com.sap.ase.poker.model.deck.ShuffledDeckSupplier;
-import com.sap.ase.poker.model.rules.HandRules;
-import com.sap.ase.poker.model.rules.WinnerRules;
 
 @SpringBootTest
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -486,8 +484,6 @@ class TableServiceTest {
 		addPlayers();
 		tableService.start();// 0
 
-		WinnerRules winnerRules = new WinnerRules(new HandRules());
-		tableService.setWinnerRules(winnerRules);
 		tableService.performAction("raise", 10);
 		tableService.performAction("call", 0);
 		tableService.performAction("call", 0);// 3
@@ -515,8 +511,6 @@ class TableServiceTest {
 
 		assertThat(tableService.getWinnerHand()).isEmpty();
 
-		WinnerRules winnerRules = new WinnerRules(new HandRules());
-		tableService.setWinnerRules(winnerRules);
 		tableService.performAction("raise", 10);
 		tableService.performAction("call", 0);
 		tableService.performAction("call", 0);// 3
@@ -540,8 +534,6 @@ class TableServiceTest {
 		addPlayers();
 		tableService.start();// 0
 
-		WinnerRules winnerRules = new WinnerRules(new HandRules());
-		tableService.setWinnerRules(winnerRules);
 		tableService.performAction("raise", 10);
 		tableService.performAction("fold", 0);
 		tableService.performAction("fold", 0);

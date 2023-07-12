@@ -50,4 +50,10 @@ class PlayerTest {
         assertThat(underTest.isActive()).isFalse();
 
     }
+    
+    @Test
+    void setId_ShouldReturnChangedID() {
+    	underTest.setId("RCG");
+    	assertThat(underTest.getId()).isEqualTo("RCG");
+    }
 }

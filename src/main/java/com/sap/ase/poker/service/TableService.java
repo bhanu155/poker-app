@@ -1,14 +1,12 @@
 package com.sap.ase.poker.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sap.ase.poker.model.GameState;
@@ -17,9 +15,8 @@ import com.sap.ase.poker.model.IllegalAmountException;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.deck.Card;
 import com.sap.ase.poker.model.deck.Deck;
-import com.sap.ase.poker.model.deck.Kind;
-import com.sap.ase.poker.model.deck.Suit;
 import com.sap.ase.poker.model.hands.Hand;
+import com.sap.ase.poker.model.rules.HandRules;
 import com.sap.ase.poker.model.rules.WinnerRules;
 import com.sap.ase.poker.model.rules.Winners;
 
@@ -47,9 +44,6 @@ public class TableService {
 	Map<String, Integer> bets;
 
 	private boolean isRaisePerformed;
-
-	@Autowired
-	private WinnerRules winnerRules;
 
 	private static final int BONUS_CASH = 100;
 
@@ -173,6 +167,7 @@ public class TableService {
 				activePlayers.add(player);
 		}
 
+		WinnerRules winnerRules = new WinnerRules(new HandRules());
 		Winners winners = winnerRules.findWinners(communityCards, activePlayers);
 		if (!winners.getWinners().isEmpty()) {
 			winner = winners.getWinners().get(0);
@@ -273,10 +268,6 @@ public class TableService {
 		}
 	}
 
-	private void resetBets() {
-		// TODO Auto-generated method stub
-
-	}
 
 	private void collectPot() {
 		int roundPot = 0;
@@ -306,14 +297,6 @@ public class TableService {
 		do {
 			currentPlayerIdx = (currentPlayerIdx + 1) % players.size();
 		} while (!players.get(currentPlayerIdx).isActive());
-	}
-
-	public WinnerRules getWinnerRules() {
-		return winnerRules;
-	}
-
-	public void setWinnerRules(WinnerRules winnerRules) {
-		this.winnerRules = winnerRules;
 	}
 
 }
