@@ -45,9 +45,9 @@ public abstract class Hand implements Comparable<Hand> {
         return this.cards;
     }
 
-    public void setCards(List<Card> cards) {
-        this.cards = cards;
-    }
+//    public void setCards(List<Card> cards) {
+//        this.cards = cards;
+//    }
 
     @Override
     public int compareTo(Hand hand) {

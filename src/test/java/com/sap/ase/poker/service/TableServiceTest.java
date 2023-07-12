@@ -3,7 +3,9 @@ package com.sap.ase.poker.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -470,12 +472,14 @@ class TableServiceTest {
 		tableService.start();
 		tableService.performAction("raise", 10);
 		tableService.performAction("call", 0);
+
+		assertThat(tableService.getBets().get("SBR")).isEqualTo(10);
+		assertThat(tableService.getBets().get("CB")).isEqualTo(10);
+
 		tableService.performAction("call", 0);
 
 		assertThat(tableService.getBets()).hasSize(3);
-		assertThat(tableService.getBets().get("SBR")).isEqualTo(10);
-		assertThat(tableService.getBets().get("CB")).isEqualTo(10);
-		assertThat(tableService.getBets().get("TGS")).isEqualTo(10);
+		assertThat(tableService.getBets().values()).containsOnly(0);
 
 	}
 
@@ -602,4 +606,11 @@ class TableServiceTest {
 
 	}
 
+	@Test
+	void verifyZeroBetsAfterGameStart() {
+		addPlayers();
+		tableService.start();
+		System.out.println(tableService.getBets().size());
+		assertThat(tableService.getBets().values()).containsOnly(0);
+	}
 }

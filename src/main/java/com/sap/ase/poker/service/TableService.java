@@ -120,13 +120,12 @@ public class TableService {
 			gameState = GameState.PRE_FLOP;
 			startPreFlopRound();
 		}
-		
+
 	}
 
 	private void clearTable() {
 		winner = null;
 		communityCards.clear();
-		bets.clear();
 		pot = 0;
 		currentBet = 0;
 	}
@@ -139,7 +138,7 @@ public class TableService {
 			player.setActive();
 		}
 		currentPlayerIdx = 0;
-
+		collectPot();
 	}
 
 	public void addPlayer(String playerId, String playerName) {
@@ -148,6 +147,7 @@ public class TableService {
 			players.add(player);
 			System.out.printf("Player joined the table: %s%n", playerId);
 		}
+		bets.put(playerId, 0);
 	}
 
 	public void performAction(String action, int amount) throws IllegalAmountException {
@@ -159,12 +159,14 @@ public class TableService {
 			break;
 		case "raise":
 			performRaiseAction(currentPlayer, amount);
+			updatePlayerBet(currentPlayer);
 			break;
 		case "fold":
 			performFoldAction(currentPlayer);
 			break;
 		default:// call action
 			performCallAction(currentPlayer);
+			updatePlayerBet(currentPlayer);
 			break;
 		}
 		if (gameState != GameState.ENDED) {
@@ -293,18 +295,25 @@ public class TableService {
 
 		for (Player player : players) {
 			roundPot += player.getBet();
-			if (bets.containsKey(player.getId())) {
-				bets.put(player.getId(), player.getBet() + bets.get(player.getId()));
-			} else {
-				bets.put(player.getId(), player.getBet());
-			}
+//			updatePlayerBet(player);
 
 			player.clearBet();
+			bets.put(player.getId(), 0);
 			player.setHasPlayed(false);
 		}
 
 		pot += roundPot;
 		currentBet = 0;
+	}
+
+	private void updatePlayerBet(Player player) {
+//		if (bets.containsKey(player.getId())) {
+//			bets.put(player.getId(), player.getBet() + bets.get(player.getId()));
+//		} else {
+//			bets.put(player.getId(), player.getBet());
+//		}
+
+		bets.put(player.getId(), player.getBet());
 	}
 
 	private void performCheckAction(Player currentPlayer) {
