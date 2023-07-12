@@ -34,8 +34,6 @@ class TableServiceTest {
 
 	TableService tableService;
 	Supplier<Deck> deckSupplier;
-	
-	
 
 	@BeforeEach
 	void setup() {
@@ -425,7 +423,7 @@ class TableServiceTest {
 		assertThat(tableService.getCommunityCards()).hasSize(4);
 
 	}
-	
+
 	@Test
 	void turnToReverShouldDrawFourCommunityCards() {
 		addPlayers();
@@ -438,7 +436,7 @@ class TableServiceTest {
 		tableService.performAction("raise", 20);
 		tableService.performAction("fold", 0);
 		tableService.performAction("call", 0);
-		
+
 		tableService.performAction("raise", 20);
 		tableService.performAction("call", 0);
 
@@ -482,31 +480,73 @@ class TableServiceTest {
 		assertThat(tableService.getBets().get("TGS")).isEqualTo(10);
 
 	}
-	
+
 	@Test
 	void determineTheWinnerAtEndOfGame() {
 		addPlayers();
-		tableService.start();//0
+		tableService.start();// 0
 
 		WinnerRules winnerRules = new WinnerRules(new HandRules());
 		tableService.setWinnerRules(winnerRules);
 		tableService.performAction("raise", 10);
 		tableService.performAction("call", 0);
-		tableService.performAction("call", 0);//3
+		tableService.performAction("call", 0);// 3
 
 		tableService.performAction("raise", 20);
 		tableService.performAction("fold", 0);
-		tableService.performAction("call", 0);//1
-		
+		tableService.performAction("call", 0);// 1
+
 		tableService.performAction("raise", 20);
-		tableService.performAction("call", 0);//1
-		
+		tableService.performAction("call", 0);// 1
+
 		tableService.performAction("raise", 20);
-		tableService.performAction("call", 0);//End
+		tableService.performAction("call", 0);// End
 
 		assertThat(tableService.getState()).isEqualTo(GameState.ENDED);
-		
+
 		Player winner = tableService.getWinner().orElse(null);
 		assertThat(winner).isNotNull();
+	}
+
+	@Test
+	void getWinnerHandShouldReturnWinningHand() {
+		addPlayers();
+		tableService.start();// 0
+
+		assertThat(tableService.getWinnerHand()).isEmpty();
+
+		WinnerRules winnerRules = new WinnerRules(new HandRules());
+		tableService.setWinnerRules(winnerRules);
+		tableService.performAction("raise", 10);
+		tableService.performAction("call", 0);
+		tableService.performAction("call", 0);// 3
+
+		tableService.performAction("raise", 20);
+		tableService.performAction("fold", 0);
+		tableService.performAction("call", 0);// 1
+
+		tableService.performAction("raise", 20);
+		tableService.performAction("call", 0);// 1
+
+		tableService.performAction("raise", 20);
+		tableService.performAction("call", 0);// End
+
+		assertThat(tableService.getWinnerHand()).hasSize(5);
+
+	}
+
+	@Test
+	void getWinnerHandShouldEmptyWhenAllFoldedBeforeGameEnded() {
+		addPlayers();
+		tableService.start();// 0
+
+		WinnerRules winnerRules = new WinnerRules(new HandRules());
+		tableService.setWinnerRules(winnerRules);
+		tableService.performAction("raise", 10);
+		tableService.performAction("fold", 0);
+		tableService.performAction("fold", 0);
+
+		assertThat(tableService.getWinnerHand()).isEmpty();
+
 	}
 }

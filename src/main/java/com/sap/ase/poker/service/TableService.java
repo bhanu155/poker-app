@@ -19,6 +19,7 @@ import com.sap.ase.poker.model.deck.Card;
 import com.sap.ase.poker.model.deck.Deck;
 import com.sap.ase.poker.model.deck.Kind;
 import com.sap.ase.poker.model.deck.Suit;
+import com.sap.ase.poker.model.hands.Hand;
 import com.sap.ase.poker.model.rules.WinnerRules;
 import com.sap.ase.poker.model.rules.Winners;
 
@@ -33,6 +34,8 @@ public class TableService {
 
 	private Player winner;
 
+	private Hand winnerHand;
+
 	private int currentPlayerIdx;
 
 	private List<Card> communityCards;
@@ -44,7 +47,7 @@ public class TableService {
 	Map<String, Integer> bets;
 
 	private boolean isRaisePerformed;
-	
+
 	@Autowired
 	private WinnerRules winnerRules;
 
@@ -56,6 +59,7 @@ public class TableService {
 		gameState = GameState.OPEN;
 		players = new ArrayList<Player>();
 		winner = null;
+		winnerHand = null;
 		currentPlayerIdx = -1;
 		currentBet = 0;
 		bets = new HashMap<String, Integer>();
@@ -99,15 +103,17 @@ public class TableService {
 	}
 
 	public Optional<Player> getWinner() {
-		if(winner == null)
+		if (winner == null)
 			return Optional.empty();
 		return Optional.of(winner);
 	}
 
 	public List<Card> getWinnerHand() {
-		// TODO: implement me
-		return Arrays.asList(new Card(Kind.ACE, Suit.CLUBS), new Card(Kind.KING, Suit.CLUBS),
-				new Card(Kind.QUEEN, Suit.CLUBS), new Card(Kind.JACK, Suit.CLUBS), new Card(Kind.TEN, Suit.CLUBS));
+		if (winnerHand == null) {
+			return new ArrayList<>();
+		}
+
+		return winnerHand.getCards();
 	}
 
 	public void start() {
@@ -152,24 +158,25 @@ public class TableService {
 			currentPlayer.setHasPlayed(true);
 			moveToNextActivePlayer();
 			drawCommunityCardsAndMoveToNextRound();
-			if(gameState.equals(GameState.ENDED)) {
+			if (gameState.equals(GameState.ENDED)) {
 				determineWinners();
 			}
 		}
 
 		System.out.printf("Action performed: %s, amount: %d%n", action, amount);
 	}
-	
+
 	private void determineWinners() {
 		List<Player> activePlayers = new ArrayList<>();
-		for(Player player: players) {
-			if(player.isActive())
+		for (Player player : players) {
+			if (player.isActive())
 				activePlayers.add(player);
 		}
-		
+
 		Winners winners = winnerRules.findWinners(communityCards, activePlayers);
-		if(!winners.getWinners().isEmpty()) {
+		if (!winners.getWinners().isEmpty()) {
 			winner = winners.getWinners().get(0);
+			winnerHand = winners.getWinningHand().orElse(null);
 		}
 	}
 
@@ -308,7 +315,5 @@ public class TableService {
 	public void setWinnerRules(WinnerRules winnerRules) {
 		this.winnerRules = winnerRules;
 	}
-	
-	
 
 }
