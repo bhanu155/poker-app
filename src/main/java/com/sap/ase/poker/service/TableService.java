@@ -105,10 +105,6 @@ public class TableService {
 	}
 
 	public List<Card> getWinnerHand() {
-		if (winnerHand == null) {
-			return new ArrayList<>();
-		}
-
 		return winnerHand;
 	}
 

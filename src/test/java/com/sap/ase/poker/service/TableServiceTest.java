@@ -613,4 +613,9 @@ class TableServiceTest {
 		System.out.println(tableService.getBets().size());
 		assertThat(tableService.getBets().values()).containsOnly(0);
 	}
+	
+	@Test
+	void foldAfterLastRoundShouldReturnWinner() {
+		//222
+	}
 }
