@@ -504,16 +504,16 @@ class TableServiceTest {
 
 	@Test
 	void determineTheWinnerAtEndOfGame() {
-		addPlayers();
+		tableService.addPlayer("SBR", "Raghav");
+		tableService.addPlayer("TGS", "Thimmaraju");
+
 		tableService.start();// 0
 
 		tableService.performAction("raise", 10);
 		tableService.performAction("call", 0);
-		tableService.performAction("call", 0);// 3
 
 		tableService.performAction("raise", 20);
-		tableService.performAction("fold", 0);
-		tableService.performAction("call", 0);// 1
+		tableService.performAction("call", 0);
 
 		tableService.performAction("raise", 20);
 		tableService.performAction("call", 0);// 1
@@ -522,9 +522,10 @@ class TableServiceTest {
 		tableService.performAction("call", 0);// End
 
 		assertThat(tableService.getState()).isEqualTo(GameState.ENDED);
-
 		Player winner = tableService.getWinner().orElse(null);
 		assertThat(winner).isNotNull();
+
+		assertThat(winner.getCash()).isEqualByComparingTo(170);
 	}
 
 	@Test
@@ -564,4 +565,32 @@ class TableServiceTest {
 		assertThat(tableService.getWinnerHand()).isEmpty();
 
 	}
+
+	@Test
+	void multipleActionTest() {
+		addPlayers();
+		tableService.start();// 0
+
+		tableService.performAction("raise", 10);
+		tableService.performAction("call", 0);
+		tableService.performAction("call", 0);// 3
+
+		tableService.performAction("check", 0);
+
+		assertThat(tableService.getCommunityCards()).hasSize(3);
+
+		tableService.performAction("check", 0);
+		tableService.performAction("check", 0);
+
+		assertThat(tableService.getCommunityCards()).hasSize(4);
+
+		tableService.performAction("raise", 10);
+		tableService.performAction("fold", 0);
+		tableService.performAction("raise", 20);
+		tableService.performAction("call", 0);
+
+		assertThat(tableService.getCommunityCards()).hasSize(5);
+
+	}
+
 }

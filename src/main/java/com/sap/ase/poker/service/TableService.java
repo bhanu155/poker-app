@@ -123,7 +123,7 @@ public class TableService {
 		communityCards.clear();
 		bets.clear();
 		pot = 0;
-
+		currentBet = 0;
 	}
 
 	private void startPreFlopRound() {
@@ -147,8 +147,7 @@ public class TableService {
 
 	public void performAction(String action, int amount) throws IllegalAmountException {
 		Player currentPlayer = players.get(currentPlayerIdx);
-		if (currentPlayer == null)
-			return;
+
 		switch (action) {
 		case "check":
 			performCheckAction(currentPlayer);
@@ -186,6 +185,10 @@ public class TableService {
 		Winners winners = winnerRules.findWinners(communityCards, activePlayers);
 		if (!winners.getWinners().isEmpty()) {
 			winner = winners.getWinners().get(0);
+			int winningAmount = pot / winners.getWinners().size();
+			for (Player player : winners.getWinners()) {
+				player.addCash(winningAmount);
+			}
 			winnerHand = winners.getWinningHand().orElse(null);
 		}
 	}
@@ -219,7 +222,6 @@ public class TableService {
 
 	private void performRaiseAction(Player currentPlayer, int amount) {
 		if (isValidAmount(currentPlayer, amount)) {
-//			currentPlayer.deductCash(amount);
 			currentPlayer.bet(amount);
 			isRaisePerformed = true;
 			currentBet = amount;
@@ -294,9 +296,10 @@ public class TableService {
 			}
 
 			player.clearBet();
+			player.setHasPlayed(false);
 		}
 
-		pot = roundPot;
+		pot += roundPot;
 		currentBet = 0;
 	}
 
