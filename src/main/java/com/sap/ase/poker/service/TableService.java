@@ -15,7 +15,6 @@ import com.sap.ase.poker.model.IllegalAmountException;
 import com.sap.ase.poker.model.Player;
 import com.sap.ase.poker.model.deck.Card;
 import com.sap.ase.poker.model.deck.Deck;
-import com.sap.ase.poker.model.hands.Hand;
 import com.sap.ase.poker.model.rules.HandRules;
 import com.sap.ase.poker.model.rules.WinnerRules;
 import com.sap.ase.poker.model.rules.Winners;
@@ -55,7 +54,7 @@ public class TableService {
 		gameState = GameState.OPEN;
 		players = new ArrayList<Player>();
 		winner = null;
-		winnerHand = null;
+		winnerHand = new ArrayList<>();
 		currentPlayerIdx = -1;
 		currentBet = 0;
 		bets = new HashMap<String, Integer>();
@@ -133,9 +132,14 @@ public class TableService {
 	private void startPreFlopRound() {
 		for (Player player : players) {
 			player.getHandCards().clear();
-			player.getHandCards().add(deck.draw());
-			player.getHandCards().add(deck.draw());
-			player.setActive();
+
+			if (player.getCash() > 0) {
+				player.getHandCards().add(deck.draw());
+				player.getHandCards().add(deck.draw());
+				player.setActive();
+			} else {
+				player.setInactive();
+			}
 		}
 		currentPlayerIdx = 0;
 		collectPot();
